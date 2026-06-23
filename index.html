@@ -144,7 +144,7 @@
     <div class="stats">
       <div class="stat" title="Total number of distinct local markets in the dataset, each built from real Redfin housing data. We keep satellite towns separate from big cities so the numbers stay accurate."><div class="num" id="st-total">–</div><div class="lbl">Markets Tracked</div></div>
       <div class="stat" title="Markets located in states where we are already actively operating, so we can move on a deal here without setting up a new area from scratch."><div class="num" id="st-active">–</div><div class="lbl">Active-State Markets</div></div>
-      <div class="stat" title="Markets in states we are not in yet \u2014 candidates for expansion if the numbers justify the move."><div class="num" id="st-exp">–</div><div class="lbl">Expansion Markets</div></div>
+      <div class="stat" title="Markets in states we are not in yet — candidates for expansion if the numbers justify the move."><div class="num" id="st-exp">–</div><div class="lbl">Expansion Markets</div></div>
       <div class="stat" title="Smaller, viable markets that look underrated: low competition and strong opportunity, but big enough to actually find sellers, agents and cash buyers."><div class="num" id="st-gems">–</div><div class="lbl">Hidden Gems</div></div>
       <div class="stat" title="The highest Ad Score in the list. Ad Score rates how well-suited a market is to paid advertising, based on opportunity, size and lead volume."><div class="num" id="st-ad">–</div><div class="lbl">Top Ad Score</div></div>
     </div>
@@ -162,7 +162,7 @@
 <div class="tab-panel" id="tab-overview" style="display:block">
   <div class="viewbar"><span class="vlbl">Show:</span><button class="viewbtn on" onclick="setOverviewView('ALL',this)">All Markets</button><button class="viewbtn" onclick="setOverviewView('ACTIVE',this)">Active States</button><button class="viewbtn" onclick="setOverviewView('EXP',this)">Expansion</button><button class="viewbtn" onclick="setOverviewView('LEADS',this)">Lead-Backed</button></div>
   <div class="grid2">
-    <div class="card gem full"><h3><span class="dot" style="background:#e8b84a"></span>✨ Hidden Gems — Low Competition, Cheap Leads, Strong Fundamentals <span class="sub">small markets the big players miss</span></h3><div class="scrollpanel" id="panel-gems"></div></div>
+    <div class="card gem full"><h3><span class="dot" style="background:#e8b84a"></span>✨ Hidden Gems — Low Competition, Strong Fundamentals, Right-Sized <span class="sub">small markets the big players miss</span></h3><div class="scrollpanel" id="panel-gems"></div></div>
     <div class="card"><h3><span class="dot" style="background:#5a9e35"></span>Top 25 — Best Markets for Ads</h3><div class="scrollpanel" id="panel-ad"></div></div>
     <div class="card"><h3><span class="dot" style="background:#9cc23a"></span>Top 25 — Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e07b2e"></span>Top 10 — Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
@@ -228,12 +228,12 @@
       </div>
       <div>
         <div class="calc-out">
-          <div class="calc-metric"><div class="cm-num" id="ppc-cpl">\u2013</div><div class="cm-lbl">Effective Cost Per Lead</div></div>
-          <div class="calc-metric"><div class="cm-num" id="ppc-leads">\u2013</div><div class="cm-lbl">Leads Per Month</div></div>
-          <div class="calc-metric"><div class="cm-num" id="ppc-cpd">\u2013</div><div class="cm-lbl">Cost Per Contract</div></div>
-          <div class="calc-metric"><div class="cm-num" id="ppc-roi">\u2013</div><div class="cm-lbl">Return on Ad Spend</div></div>
-          <div class="calc-metric"><div class="cm-num" id="ppc-deals">\u2013</div><div class="cm-lbl">Deals Per Month</div></div>
-          <div class="calc-metric"><div class="cm-num" id="ppc-net">\u2013</div><div class="cm-lbl">Est. Monthly Net Profit</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-cpl">–</div><div class="cm-lbl">Effective Cost Per Lead</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-leads">–</div><div class="cm-lbl">Leads Per Month</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-cpd">–</div><div class="cm-lbl">Cost Per Contract</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-roi">–</div><div class="cm-lbl">Return on Ad Spend</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-deals">–</div><div class="cm-lbl">Deals Per Month</div></div>
+          <div class="calc-metric"><div class="cm-num" id="ppc-net">–</div><div class="cm-lbl">Est. Monthly Net Profit</div></div>
         </div>
         <div class="verdict" id="ppc-verdict"></div>
       </div>
@@ -243,10 +243,10 @@
 </div>
 <div class="tab-panel" id="tab-backlog">
   <div class="card">
-    <h3>Lead Backlog \u2014 markets we have cost data for but are not tracking yet</h3>
+    <h3>Lead Backlog — markets we have cost data for but are not tracking yet</h3>
     <p style="color:#9aa0b5;font-size:13px;line-height:1.6;max-width:760px">These are markets where at least one real PropertyLeads lead has come through, but that are not yet in the main dataset above. They are the running list of places to pull full housing data on next and decide whether to add. Grouped by state, sorted alphabetically.</p>
     <div class="backlog-wrap">
-      <input class="bk-search" id="bk-search" type="text" placeholder="Filter by city or state\u2026" oninput="renderBacklog()">
+      <input class="bk-search" id="bk-search" type="text" placeholder="Filter by city or state…" oninput="renderBacklog()">
       <div style="color:#7d8398;font-size:12px;margin:4px 0 8px"><span id="bk-count"></span></div>
       <div class="backlog-grid" id="backlog-grid"></div>
     </div>
@@ -255,7 +255,7 @@
 <div class="tab-panel" id="tab-scoring">
   <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) · Months of Inventory 25% (ideal 1.5-3.5mo) · Cash Sales % 20% (ideal 15-35%) · Sale/List Velocity 15% · Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
   <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity 40% · Metro Size 20% · Our Lead Flow 20% · Price-Drop Motivation 10% · Affordability 10%.</div></div></div>
-  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">ROI Score (0-100) — NEW</div><div class="gdesc">Rewards strong deal fundamentals in markets where competition is low. It is built mainly from the Opportunity score, with a bonus for low competition, and a penalty for markets too small to reliably source deals, agents or cash buyers. Lead cost is deliberately left out for now \u2014 our cost figures are still being verified, so they are shown for reference only and do not move the score.</div></div></div>
+  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">ROI Score (0-100) — NEW</div><div class="gdesc">Rewards strong deal fundamentals in markets where competition is low. It is built mainly from the Opportunity score, with a bonus for low competition, and a penalty for markets too small to reliably source deals, agents or cash buyers. Lead cost is deliberately left out for now — our cost figures are still being verified, so they are shown for reference only and do not move the score.</div></div></div>
   <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">✨ Hidden Gem Flag</div><div class="gdesc">A market is flagged a Hidden Gem when it is small (under ~150k), low competition (≤3 of 10), below-average lead cost, and still scores 55+ on opportunity — the cheap, easy markets bigger players overlook.</div></div></div>
   <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Novation / MLS</div><div class="gdesc">DOM &lt; 20, MOI &lt; 2, Sale/List &gt; 100% — fast, tight, full-price markets.</div></div></div>
   <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Wholesale</div><div class="gdesc">DOM 20-45 with Cash % &gt; 18% — strong investor buyer pool.</div></div></div>
