@@ -10,7 +10,7 @@
   :root{
     --navy:#1a1a2e; --navy2:#16162a; --navy3:#0f0f1e; --navy-card:#20203a; --navy-card2:#252544;
     --gold:#e8b84a; --gold-dim:#c79b35; --gold-soft:rgba(232,184,74,.12);
-    --green:#3a6b1e; --green2:#2d5016; --green-bright:#5a9e35;
+    --green:#3a6b1e; --green2:#2d5016; --green-bright:#5a9e35;h
     --cream:#faf8f5; --cream2:#f0ede8; --ink:#e8e6f0; --muted:#9a98b0; --muted2:#6e6c86;
     --line:#2e2e4d; --line2:#383860;
     --good:#5a9e35; --ok:#9cc23a; --mod:#e8b84a; --weak:#e07b2e; --poor:#d14545;
@@ -541,7 +541,7 @@ function opp(m){return Math.round(sDOM(m.dom)*0.25+sMOI(m.moi)*0.25+sCash(m.cash
 function adScore(m){return Math.round(m.opp*0.40+sPop(m.pop)*0.20+sLead(m.leads)*0.20+50*0.10+50*0.10);}
 /* ROI score: opportunity adjusted for lead cost. Cheap leads boost, expensive penalize. */
 function sLeadCost(lc){if(lc<=32)return 100;if(lc<=45)return 85;if(lc<=58)return 68;if(lc<=72)return 50;if(lc<=85)return 32;return 15;}
-function roiScore(m){return Math.round(m.opp*0.55+sLeadCost(m.leadCost)*0.30+(10-m.comp)*1.5);}
+function roiScore(m){return Math.round(m.opp*0.78+(10-m.comp)*2.2);}
 function exitStrat(m){
   if(m.dom<20&&m.moi<2&&m.slr>100)return ["Novation / MLS","#5a9e35"];
   if(m.pg>2&&m.moi<2.5)return ["Hold / Sub-2","#3aa0d6"];
