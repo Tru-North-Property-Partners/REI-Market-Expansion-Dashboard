@@ -3,380 +3,532 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REI Market Expansion Dashboard</title>
+<title>Tru North — REI Market Expansion Dashboard</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
+  :root{
+    --navy:#1a1a2e; --navy2:#16162a; --navy3:#0f0f1e; --navy-card:#20203a; --navy-card2:#252544;
+    --gold:#e8b84a; --gold-dim:#c79b35; --gold-soft:rgba(232,184,74,.12);
+    --green:#3a6b1e; --green2:#2d5016; --green-bright:#5a9e35;
+    --cream:#faf8f5; --cream2:#f0ede8; --ink:#e8e6f0; --muted:#9a98b0; --muted2:#6e6c86;
+    --line:#2e2e4d; --line2:#383860;
+    --good:#5a9e35; --ok:#9cc23a; --mod:#e8b84a; --weak:#e07b2e; --poor:#d14545;
+  }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#0a0e14;color:#e6edf3;font-size:14px;line-height:1.5}
-  a{color:#58a6ff;text-decoration:none}
-  .wrap{max-width:1320px;margin:0 auto;padding:0 20px}
-  header{background:linear-gradient(135deg,#0d1421 0%,#111a2b 100%);border-bottom:1px solid #1f2937;padding:26px 0 22px}
-  header h1{font-size:23px;font-weight:700;letter-spacing:-.3px}
-  header h1 span{color:#3b82f6}
-  header p.sub{color:#8b98a8;font-size:13px;margin-top:4px}
-  .stats{display:flex;gap:14px;margin-top:20px;flex-wrap:wrap}
-  .stat{background:#0f1722;border:1px solid #1f2937;border-radius:10px;padding:14px 18px;flex:1;min-width:130px}
-  .stat .num{font-size:26px;font-weight:700;color:#fff;line-height:1}
-  .stat .lbl{font-size:11px;color:#7d8a9a;text-transform:uppercase;letter-spacing:.6px;margin-top:7px}
-  nav.tabs{display:flex;gap:4px;border-bottom:1px solid #1f2937;margin-top:22px;flex-wrap:wrap}
-  .navtab{background:none;border:none;color:#8b98a8;padding:11px 18px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
-  .navtab:hover{color:#e6edf3}
-  .navtab.on{color:#fff;border-bottom-color:#3b82f6}
-  .main{padding:26px 0 60px}
-  .tab-panel{display:none}
-  .viewbar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-  .viewbar .vlbl{font-size:12px;color:#8b98a8;margin-right:4px;font-weight:600}
-  .viewbtn{background:#0f1722;border:1px solid #283545;color:#8b98a8;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
-  .viewbtn:hover{color:#fff;border-color:#3b82f6}
-  .viewbtn.on{background:#1e3a5f;color:#fff;border-color:#3b82f6}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--navy3);color:var(--ink);font-size:14px;line-height:1.5}
+  .serif{font-family:Georgia,'Times New Roman',serif}
+  a{color:var(--gold);text-decoration:none}
+  .wrap{max-width:1340px;margin:0 auto;padding:0 22px}
+  /* HEADER */
+  header{position:relative;background:linear-gradient(160deg,#1a1a2e 0%,#222244 55%,#1a2e22 140%);border-bottom:3px solid var(--gold);overflow:hidden}
+  header:before{content:'';position:absolute;inset:0;background:radial-gradient(1200px 320px at 78% -40%,rgba(232,184,74,.16),transparent 60%);pointer-events:none}
+  header:after{content:'';position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,transparent,rgba(45,80,22,.18));pointer-events:none}
+  .hdr-inner{position:relative;padding:24px 0 26px}
+  .brandrow{display:flex;align-items:center;gap:14px}
+  .logo{width:52px;height:52px;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
+  .brandtxt h1{font-size:25px;font-weight:700;letter-spacing:-.3px;color:#fff;line-height:1.1}
+  .brandtxt h1 .acc{color:var(--gold)}
+  .brandtxt .co{font-size:12px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-top:3px}
+  .tagline{margin-top:14px;font-size:15px;color:#c8c6da;max-width:640px}
+  .tagline b{color:var(--gold);font-weight:600}
+  .stats{display:flex;gap:13px;margin-top:22px;flex-wrap:wrap}
+  .stat{position:relative;background:linear-gradient(150deg,var(--navy-card),var(--navy2));border:1px solid var(--line);border-radius:13px;padding:15px 18px;flex:1;min-width:128px;overflow:hidden}
+  .stat:before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold)}
+  .stat .num{font-family:Georgia,serif;font-size:28px;font-weight:700;color:#fff;line-height:1}
+  .stat .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:8px;font-weight:600}
+  nav.tabs{display:flex;gap:2px;margin-top:24px;flex-wrap:wrap}
+  .navtab{background:none;border:none;color:var(--muted);padding:12px 20px;font-size:13.5px;font-weight:600;cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s;border-radius:8px 8px 0 0}
+  .navtab:hover{color:var(--cream);background:rgba(255,255,255,.03)}
+  .navtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+  /* MAIN */
+  .main{padding:28px 0 70px}
+  .tab-panel{display:none;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .viewbar{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;align-items:center}
+  .viewbar .vlbl{font-size:12px;color:var(--muted);margin-right:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .viewbtn{background:var(--navy-card);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+  .viewbtn:hover{color:#fff;border-color:var(--gold-dim)}
+  .viewbtn.on{background:var(--gold);color:var(--navy);border-color:var(--gold)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
-  .card{background:#0f1722;border:1px solid #1f2937;border-radius:12px;padding:18px}
+  @media(max-width:880px){.grid2{grid-template-columns:1fr}}
+  .card{background:linear-gradient(160deg,var(--navy-card),var(--navy2));border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.2)}
   .card.full{grid-column:1/-1}
-  .card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .card h3 .dot{width:8px;height:8px;border-radius:50%}
-  .scrollpanel{max-height:520px;overflow-y:auto}
-  .trow{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid #161f2b;font-size:13px}
+  .card.gem{border-color:rgba(232,184,74,.4);box-shadow:0 0 0 1px rgba(232,184,74,.08),0 4px 18px rgba(0,0,0,.25)}
+  .card h3{font-family:Georgia,serif;font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:9px;color:#fff}
+  .card h3 .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .card h3 .sub{font-family:-apple-system,sans-serif;font-size:11px;font-weight:500;color:var(--muted);margin-left:auto;text-transform:none;letter-spacing:0}
+  .scrollpanel{max-height:540px;overflow-y:auto;margin-right:-8px;padding-right:8px}
+  .scrollpanel::-webkit-scrollbar{width:7px}.scrollpanel::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+  .trow{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
   .trow:last-child{border-bottom:none}
-  .trank{width:30px;color:#5b6877;font-weight:700;font-size:12px}
-  .tcity{flex:1;color:#cdd9e5}
-  .tcity .mini{color:#5f6e7e;font-size:11px;margin-left:6px}
+  .trank{width:30px;color:var(--gold-dim);font-weight:700;font-size:12px;font-family:Georgia,serif}
+  .tcity{flex:1;color:var(--cream)}
+  .tcity .mini{color:var(--muted2);font-size:11px;margin-left:6px}
   .tval{font-weight:700}
-  .tval2{color:#9fb3c8;font-weight:600;font-size:12px}
-  .pill{display:inline-block;min-width:34px;text-align:center;padding:3px 8px;border-radius:6px;color:#fff;font-weight:700;font-size:12px;cursor:help;position:relative}
+  .tval2{color:var(--muted);font-weight:600;font-size:12px}
+  .pill{display:inline-block;min-width:36px;text-align:center;padding:3px 9px;border-radius:7px;color:#1a1a2e;font-weight:700;font-size:12px;cursor:help}
   .filters{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
-  .filters label{font-size:12px;color:#8b98a8;margin-right:5px}
-  .filters select{background:#0f1722;border:1px solid #283545;color:#e6edf3;padding:7px 11px;border-radius:7px;font-size:13px;cursor:pointer}
-  .tcount{margin-left:auto;color:#7d8a9a;font-size:12px;font-weight:600}
-  .tblwrap{background:#0f1722;border:1px solid #1f2937;border-radius:12px;overflow:auto}
+  .filters label{font-size:12px;color:var(--muted);margin-right:5px}
+  .filters select{background:var(--navy-card);border:1px solid var(--line2);color:var(--ink);padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer}
+  .tcount{margin-left:auto;color:var(--muted);font-size:12px;font-weight:600}
+  .tblwrap{background:linear-gradient(160deg,var(--navy-card),var(--navy2));border:1px solid var(--line);border-radius:14px;overflow:auto;box-shadow:0 2px 12px rgba(0,0,0,.2)}
   table{width:100%;border-collapse:collapse;font-size:13px}
-  thead th{background:#0c131d;color:#8b98a8;text-align:left;padding:12px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;white-space:nowrap;border-bottom:1px solid #1f2937;position:sticky;top:0}
-  thead th:hover{color:#e6edf3}
-  thead th .hh{position:relative;display:inline-flex;align-items:center;gap:4px}
-  thead th .qm{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:#283545;color:#9fb3c8;font-size:9px;font-weight:700;cursor:help}
-  tbody td{padding:11px 12px;border-bottom:1px solid #161f2b;white-space:nowrap}
-  tbody tr:hover{background:#121c28}
+  thead th{background:var(--navy3);color:var(--gold);text-align:left;padding:13px 12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;white-space:nowrap;border-bottom:2px solid var(--gold-dim);position:sticky;top:0;z-index:2}
+  thead th:hover{color:#fff}
+  thead th .hh{position:relative;display:inline-flex;align-items:center;gap:5px}
+  thead th .qm{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--gold-soft);color:var(--gold);font-size:9px;font-weight:700;cursor:help}
+  tbody td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap}
+  tbody tr:hover{background:rgba(232,184,74,.05)}
   td.cty{font-weight:600;color:#fff}
-  .stbadge{display:inline-block;margin-left:8px;background:#1f2937;color:#8b98a8;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;vertical-align:middle}
-  .stbadge.on{background:#143625;color:#4ade80}
-  td.pos{color:#4ade80;font-weight:600}
-  td.neg{color:#f87171;font-weight:600}
-  .leadchip{background:#1e293b;color:#7dd3fc;font-weight:700;padding:2px 9px;border-radius:10px;font-size:12px}
-  .exitbadge{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px}
-  /* custom tooltip */
-  .tip{position:fixed;z-index:9999;max-width:280px;background:#161f2b;border:1px solid #2d3a4d;border-radius:8px;padding:10px 12px;font-size:12px;color:#cdd9e5;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none;opacity:0;transition:opacity .12s;font-weight:400;text-transform:none;letter-spacing:0}
+  .stbadge{display:inline-block;margin-left:8px;background:var(--line);color:var(--muted);font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;vertical-align:middle}
+  .stbadge.on{background:rgba(90,158,53,.22);color:#8fd35e}
+  .gembadge{display:inline-block;margin-left:6px;background:var(--gold-soft);color:var(--gold);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;vertical-align:middle}
+  td.pos{color:#8fd35e;font-weight:600}
+  td.neg{color:#e88c8c;font-weight:600}
+  .leadchip{background:rgba(232,184,74,.14);color:var(--gold);font-weight:700;padding:2px 9px;border-radius:10px;font-size:12px}
+  .compbar{display:inline-flex;gap:2px;vertical-align:middle}
+  .compbar i{width:5px;height:12px;border-radius:1px;background:var(--line2)}
+  .compbar i.f{background:var(--weak)}
+  .exitbadge{display:inline-block;color:#1a1a2e;font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px}
+  .tip{position:fixed;z-index:9999;max-width:290px;background:#15152b;border:1px solid var(--line2);border-left:3px solid var(--gold);border-radius:9px;padding:11px 13px;font-size:12px;color:var(--cream);line-height:1.55;box-shadow:0 10px 30px rgba(0,0,0,.6);pointer-events:none;opacity:0;transition:opacity .12s;font-weight:400;text-transform:none;letter-spacing:0}
   .tip.show{opacity:1}
-  .tip b{color:#fff}
-  .tip .tline{display:flex;justify-content:space-between;gap:14px;margin-top:3px}
-  .tip .tk{color:#8b98a8}
-  .tip .tv{color:#e6edf3;font-weight:600}
+  .tip b{color:var(--gold)}
+  .tip .tline{display:flex;justify-content:space-between;gap:14px;margin-top:4px}
+  .tip .tk{color:var(--muted)}.tip .tv{color:#fff;font-weight:600}
   .mapbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-  .mapbtn{background:#0f1722;border:1px solid #283545;color:#8b98a8;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
-  .mapbtn:hover{color:#fff;border-color:#3b82f6}
-  .mapbtn.on{background:#1e3a5f;color:#fff;border-color:#3b82f6}
-  #map{height:560px;border-radius:12px;border:1px solid #1f2937}
-  .maptip{background:#0f1722!important;border:1px solid #283545!important;color:#e6edf3!important;font-size:12px!important;border-radius:8px!important;padding:8px 11px!important}
-  .leaflet-tooltip-top:before{border-top-color:#283545!important}
-  .legend{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;font-size:12px;color:#8b98a8}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
-  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
-  .guide-row{display:flex;gap:14px;padding:14px;background:#0f1722;border:1px solid #1f2937;border-left-width:4px;border-radius:8px;margin-bottom:12px}
-  .guide-row .gtitle{font-weight:700;color:#fff;margin-bottom:4px}
-  .guide-row .gdesc{color:#9fb3c8;font-size:13px}
-  .note{color:#7d8a9a;font-size:12px;margin-top:18px;line-height:1.6}
-  .exitwarn{color:#fca5a5}</style>
+  .mapbtn{background:var(--navy-card);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+  .mapbtn:hover{color:#fff;border-color:var(--gold-dim)}
+  .mapbtn.on{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+  #map{height:580px;border-radius:14px;border:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.25)}
+  .maptip{background:#15152b!important;border:1px solid var(--line2)!important;color:var(--cream)!important;font-size:12px!important;border-radius:8px!important;padding:8px 11px!important}
+  .leaflet-tooltip-top:before{border-top-color:var(--line2)!important}
+  .legend{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .guide-row{display:flex;gap:14px;padding:16px;background:linear-gradient(160deg,var(--navy-card),var(--navy2));border:1px solid var(--line);border-left-width:4px;border-radius:10px;margin-bottom:12px}
+  .guide-row .gtitle{font-family:Georgia,serif;font-weight:700;color:#fff;margin-bottom:4px;font-size:15px}
+  .guide-row .gdesc{color:var(--muted);font-size:13px}
+  .note{color:var(--muted2);font-size:12px;margin-top:20px;line-height:1.7}
+  .exitwarn{color:#e88c8c}
+  /* CALCULATOR */
+  .calc-grid{display:grid;grid-template-columns:340px 1fr;gap:22px}
+  @media(max-width:880px){.calc-grid{grid-template-columns:1fr}}
+  .calc-input{margin-bottom:18px}
+  .calc-input label{display:block;font-size:12px;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+  .calc-input input{width:100%;background:var(--navy3);border:1px solid var(--line2);color:#fff;padding:11px 13px;border-radius:9px;font-size:15px;font-family:Georgia,serif}
+  .calc-input input:focus{outline:none;border-color:var(--gold)}
+  .calc-input .hint{font-size:11px;color:var(--muted2);margin-top:6px}
+  .rangeval{color:var(--gold);font-weight:700;font-family:Georgia,serif}
+  .calc-out{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .calc-metric{background:var(--navy3);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .calc-metric .cm-num{font-family:Georgia,serif;font-size:30px;font-weight:700;color:var(--gold)}
+  .calc-metric .cm-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:6px}
+  .verdict{padding:16px 18px;border-radius:12px;margin-top:18px;font-size:14px;font-weight:600;border-left:4px solid}</style>
 </head>
 <body>
 <div class="tip" id="tip"></div>
 <header>
-  <div class="wrap">
-    <h1>REI <span>Market Expansion</span> Dashboard</h1>
-    <p class="sub">Market intelligence for marketing &amp; exit-strategy decisions · Tru North Property Partners · v2.1</p>
+  <div class="wrap"><div class="hdr-inner">
+    <div class="brandrow"><svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3aa0d6"/><stop offset="1" stop-color="#7fc8e8"/></linearGradient><linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a9e35"/><stop offset="1" stop-color="#2d5016"/></linearGradient></defs><path d="M50 4 C28 4 12 20 12 42 C12 66 50 96 50 96 C50 96 88 66 88 42 C88 20 72 4 50 4 Z" fill="#1a1a2e" stroke="#e8b84a" stroke-width="3"/><clipPath id="pin"><path d="M50 12 C32 12 20 25 20 42 C20 60 50 84 50 84 C50 84 80 60 80 42 C80 25 68 12 50 12 Z"/></clipPath><g clip-path="url(#pin)"><rect x="15" y="12" width="70" height="40" fill="url(#sky)"/><circle cx="50" cy="30" r="9" fill="#e8b84a"/><g stroke="#e8b84a" stroke-width="2.2" stroke-linecap="round"><line x1="50" y1="13" x2="50" y2="19"/><line x1="37" y1="20" x2="41" y2="24"/><line x1="63" y1="20" x2="59" y2="24"/></g><path d="M15 52 L34 34 L46 48 L60 30 L85 52 L85 84 L15 84 Z" fill="url(#mtn)"/><path d="M34 34 L40 41 L34 47 L29 41 Z" fill="#f0ede8" opacity=".85"/><path d="M60 30 L66 38 L60 45 L54 38 Z" fill="#f0ede8" opacity=".85"/></g></svg><div class="brandtxt"><h1 class="serif">Market <span class="acc">Expansion</span> Dashboard</h1><div class="co">Tru North Property Partners</div></div></div>
+    <p class="tagline">Find your <b>true north</b> in every market — intelligence for marketing spend, exit strategy, and uncovering <b>hidden-gem</b> markets with low competition and cheap leads.</p>
     <div class="stats">
       <div class="stat"><div class="num" id="st-total">–</div><div class="lbl">Markets Tracked</div></div>
       <div class="stat"><div class="num" id="st-active">–</div><div class="lbl">Active-State Markets</div></div>
-      <div class="stat"><div class="num" id="st-exp">–</div><div class="lbl">Expansion Opportunities</div></div>
+      <div class="stat"><div class="num" id="st-exp">–</div><div class="lbl">Expansion Markets</div></div>
+      <div class="stat"><div class="num" id="st-gems">–</div><div class="lbl">Hidden Gems</div></div>
       <div class="stat"><div class="num" id="st-ad">–</div><div class="lbl">Top Ad Score</div></div>
-      <div class="stat"><div class="num" id="st-dom">–</div><div class="lbl">Avg Days on Market</div></div>
     </div>
     <nav class="tabs">
       <button class="navtab on" onclick="showTab('overview',this)">Overview</button>
       <button class="navtab" onclick="showTab('table',this)">Market Table</button>
       <button class="navtab" onclick="showTab('map',this)">Map</button>
+      <button class="navtab" onclick="showTab('calc',this)">Lead Cost Calculator</button>
       <button class="navtab" onclick="showTab('scoring',this)">Scoring Guide</button>
     </nav>
-  </div>
+  </div></div>
 </header>
 <div class="wrap"><div class="main">
 <div class="tab-panel" id="tab-overview" style="display:block">
-  <div class="viewbar">
-    <span class="vlbl">Show:</span>
-    <button class="viewbtn on" onclick="setOverviewView('ALL',this)">All Markets</button>
-    <button class="viewbtn" onclick="setOverviewView('ACTIVE',this)">Active States Only</button>
-    <button class="viewbtn" onclick="setOverviewView('EXP',this)">Expansion Only</button>
-    <button class="viewbtn" onclick="setOverviewView('LEADS',this)">Lead-Backed Only</button>
-  </div>
+  <div class="viewbar"><span class="vlbl">Show:</span><button class="viewbtn on" onclick="setOverviewView('ALL',this)">All Markets</button><button class="viewbtn" onclick="setOverviewView('ACTIVE',this)">Active States</button><button class="viewbtn" onclick="setOverviewView('EXP',this)">Expansion</button><button class="viewbtn" onclick="setOverviewView('LEADS',this)">Lead-Backed</button></div>
   <div class="grid2">
-    <div class="card"><h3><span class="dot" style="background:#3b82f6"></span>Top 25 — Best Markets for Ads</h3><div class="scrollpanel" id="panel-ad"></div></div>
-    <div class="card"><h3><span class="dot" style="background:#a855f7"></span>Top 25 — Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
-    <div class="card"><h3><span class="dot" style="background:#f97316"></span>Top 10 — Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
-    <div class="card"><h3><span class="dot" style="background:#84cc16"></span>Top 10 — Best Wholesale Markets</h3><div id="panel-whole"></div></div>
-    <div class="card full"><h3><span class="dot" style="background:#dc2626"></span>⚠ Exit / Reduce Exposure — Weak Markets We’re Active In</h3><div id="panel-exit"></div></div>
+    <div class="card gem full"><h3><span class="dot" style="background:#e8b84a"></span>✨ Hidden Gems — Low Competition, Cheap Leads, Strong Fundamentals <span class="sub">small markets the big players miss</span></h3><div class="scrollpanel" id="panel-gems"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#5a9e35"></span>Top 25 — Best Markets for Ads</h3><div class="scrollpanel" id="panel-ad"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#9cc23a"></span>Top 25 — Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#e07b2e"></span>Top 10 — Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#3aa0d6"></span>Top 10 — Best Wholesale Markets</h3><div id="panel-whole"></div></div>
+    <div class="card full"><h3><span class="dot" style="background:#d14545"></span>⚠ Exit / Reduce Exposure — Weak Markets We’re Active In</h3><div id="panel-exit"></div></div>
   </div>
-  <p class="note">Ad Score blends market opportunity, metro size, our lead flow, and seller-motivation signals to rank where paid acquisition will perform best. Expansion Targets surface high-opportunity markets outside our 7 active states — weighted toward fast-growing secondary &amp; satellite cities with lower competition. The Exit panel flags markets we currently operate in (lead-backed, active states) where the opportunity score has weakened.</p>
+  <p class="note">Hidden Gems flags small markets (low population), low competition, and below-average lead cost that still have solid opportunity fundamentals — the cheap, easy markets larger investors overlook. Ad Score ranks where paid acquisition performs best. Expansion Targets surface high-opportunity markets outside our 7 active states. The Exit panel flags markets we operate in where fundamentals have weakened.</p>
 </div>
 <div class="tab-panel" id="tab-table">
-  <div class="filters">
-    <span><label>State</label><select id="f-state" onchange="renderTable()"><option value="ALL">All States</option></select></span>
-    <span><label>View</label><select id="f-view" onchange="renderTable()"><option value="ALL">All Markets</option><option value="ACTIVE">Active States Only</option><option value="EXP">Expansion Only</option><option value="LEADS">Lead-Backed Only</option></select></span>
-    <span class="tcount" id="tbl-count"></span>
-  </div>
-  <div class="tblwrap"><table>
-    <thead><tr>
-      <th onclick="sortBy('city')" data-tip="The city and state. Green badge = a state we actively operate in (TX, FL, GA, IL, OH, IN, SC)."><span class="hh">Market <span class="qm">?</span></span></th>
-      <th onclick="sortBy('ad')" data-tip="ADVERTISING SCORE (0-100): where to spend paid ad dollars. Blends opportunity, metro size, our lead flow, and seller motivation. Higher = better place to run FB/TikTok/Google lead-gen."><span class="hh">Ad Score <span class="qm">?</span></span></th>
-      <th onclick="sortBy('opp')" data-tip="OPPORTUNITY SCORE (0-100): how good the deal-flow fundamentals are. Sweet-spot model of days-on-market, inventory, cash sales, sale-to-list velocity, and population growth."><span class="hh">Opp Score <span class="qm">?</span></span></th>
-      <th onclick="sortBy('price')" data-tip="Median home sale price in the market over the trailing 12 months."><span class="hh">Median Price <span class="qm">?</span></span></th>
-      <th onclick="sortBy('dom')" data-tip="DAYS ON MARKET: median number of days a listing takes to go pending. Lower = faster-moving market. Sweet spot for us is roughly 15-35 days."><span class="hh">DOM <span class="qm">?</span></span></th>
-      <th onclick="sortBy('moi')" data-tip="MONTHS OF INVENTORY: how many months it would take to sell all current listings at the current pace. Under ~2.5 = sellers market; over ~5 = buyers market. Sweet spot 1.5-3.5."><span class="hh">MOI <span class="qm">?</span></span></th>
-      <th onclick="sortBy('cash')" data-tip="CASH SALES %: share of sales closed in cash. A proxy for investor/buyer demand. Sweet spot 15-35% — enough buyers to assign deals to."><span class="hh">Cash % <span class="qm">?</span></span></th>
-      <th onclick="sortBy('slr')" data-tip="SALE-TO-LIST RATIO: final sale price as a % of asking price. Over 100% = bidding wars; under 97% = negotiable, motivated sellers."><span class="hh">Sale/List <span class="qm">?</span></span></th>
-      <th onclick="sortBy('pg')" data-tip="POPULATION GROWTH: estimated annual population growth trend. Higher growth = rising demand and appreciation potential."><span class="hh">Pop Growth <span class="qm">?</span></span></th>
-      <th onclick="sortBy('pop')" data-tip="POPULATION: metro/city population. Used as a market-size tier in the Ad Score — bigger metros mean a larger buyer pool."><span class="hh">POP <span class="qm">?</span></span></th>
-      <th onclick="sortBy('leads')" data-tip="OUR LEADS: weighted count of seller leads we have received here from PropertyLeads (2026 leads weighted 3x, 2025 weighted 1x)."><span class="hh">Our Leads <span class="qm">?</span></span></th>
-      <th onclick="sortBy('exit')" data-tip="RECOMMENDED EXIT: the disposition strategy that best fits this markets speed and competition — Novation/MLS, Wholesale, Wholetail, Creative/Sub-2, or Hold."><span class="hh">Exit Strategy <span class="qm">?</span></span></th>
-    </tr></thead>
-    <tbody id="tbl-body"></tbody>
-  </table></div>
+  <div class="filters"><span><label>State</label><select id="f-state" onchange="renderTable()"><option value="ALL">All States</option></select></span><span><label>View</label><select id="f-view" onchange="renderTable()"><option value="ALL">All Markets</option><option value="ACTIVE">Active States Only</option><option value="EXP">Expansion Only</option><option value="LEADS">Lead-Backed Only</option><option value="GEMS">Hidden Gems Only</option></select></span><span class="tcount" id="tbl-count"></span></div>
+  <div class="tblwrap"><table><thead><tr>
+    <th onclick="sortBy('city')"><span class="hh">Market <span class="qm" data-tip="City and state. Green badge = a state we actively operate in. Gold GEM badge = flagged as a hidden-gem market.">?</span></span></th>
+    <th onclick="sortBy('ad')"><span class="hh">Ad Score <span class="qm" data-tip="ADVERTISING SCORE (0-100): where to spend paid ad dollars. Blends opportunity, metro size, our lead flow, and seller motivation.">?</span></span></th>
+    <th onclick="sortBy('opp')"><span class="hh">Opp Score <span class="qm" data-tip="OPPORTUNITY SCORE (0-100): deal-flow fundamentals — days on market, inventory, cash sales, sale-to-list velocity, and population growth.">?</span></span></th>
+    <th onclick="sortBy('roi')"><span class="hh">ROI Score <span class="qm" data-tip="ROI SCORE (0-100): opportunity adjusted for how cheap leads are here. Rewards markets with strong fundamentals AND low lead cost. This is the cost-vs-reward number.">?</span></span></th>
+    <th onclick="sortBy('price')"><span class="hh">Median Price <span class="qm" data-tip="Median home sale price over the trailing 12 months.">?</span></span></th>
+    <th onclick="sortBy('dom')"><span class="hh">DOM <span class="qm" data-tip="DAYS ON MARKET: median days a listing takes to go pending. Sweet spot 15-35.">?</span></span></th>
+    <th onclick="sortBy('moi')"><span class="hh">MOI <span class="qm" data-tip="MONTHS OF INVENTORY: months to sell all listings at current pace. Under ~2.5 = sellers market. Sweet spot 1.5-3.5.">?</span></span></th>
+    <th onclick="sortBy('cash')"><span class="hh">Cash % <span class="qm" data-tip="CASH SALES %: share of cash sales — a proxy for investor demand. Sweet spot 15-35%.">?</span></span></th>
+    <th onclick="sortBy('comp')"><span class="hh">Comp <span class="qm" data-tip="COMPETITION (1-10 bars): how saturated the market is with other investors/wholesalers. Fewer bars = less competition = easier, cheaper to win.">?</span></span></th>
+    <th onclick="sortBy('leadCost')"><span class="hh">Lead $ <span class="qm" data-tip="EST. LEAD COST: estimated cost per qualified seller lead. Lower is better — expensive markets like Miami eat your margin.">?</span></span></th>
+    <th onclick="sortBy('pg')"><span class="hh">Growth <span class="qm" data-tip="POPULATION GROWTH: estimated annual growth. Higher = rising demand and appreciation.">?</span></span></th>
+    <th onclick="sortBy('pop')"><span class="hh">Pop <span class="qm" data-tip="POPULATION: city size. Smaller markets often mean less competition.">?</span></span></th>
+    <th onclick="sortBy('leads')"><span class="hh">Leads <span class="qm" data-tip="OUR LEADS: weighted seller leads from PropertyLeads (2026 ×3, 2025 ×1).">?</span></span></th>
+    <th onclick="sortBy('exit')"><span class="hh">Exit <span class="qm" data-tip="RECOMMENDED EXIT STRATEGY for this markets speed and competition.">?</span></span></th>
+  </tr></thead><tbody id="tbl-body"></tbody></table></div>
 </div>
 <div class="tab-panel" id="tab-map">
-  <div class="mapbar">
-    <button class="mapbtn on" onclick="mapFilter('ALL',this)">All Markets</button>
-    <button class="mapbtn" onclick="mapFilter('ACTIVE',this)">Active States</button>
-    <button class="mapbtn" onclick="mapFilter('EXP',this)">Expansion</button>
-    <button class="mapbtn" onclick="mapFilter('LEADS',this)">Lead-Backed</button>
-  </div>
+  <div class="mapbar"><button class="mapbtn on" onclick="mapFilter('ALL',this)">All Markets</button><button class="mapbtn" onclick="mapFilter('ACTIVE',this)">Active States</button><button class="mapbtn" onclick="mapFilter('EXP',this)">Expansion</button><button class="mapbtn" onclick="mapFilter('GEMS',this)">Hidden Gems</button><button class="mapbtn" onclick="mapFilter('LEADS',this)">Lead-Backed</button></div>
   <div id="map"></div>
-  <div class="legend">
-    <span><i style="background:#16a34a"></i>Excellent 75-100</span>
-    <span><i style="background:#65a30d"></i>Good 60-74</span>
-    <span><i style="background:#ca8a04"></i>Moderate 45-59</span>
-    <span><i style="background:#ea580c"></i>Weak 30-44</span>
-    <span><i style="background:#dc2626"></i>Poor 0-29</span>
-    <span>Circle size = metro population</span>
+  <div class="legend"><span><i style="background:#5a9e35"></i>Excellent 75-100</span><span><i style="background:#9cc23a"></i>Good 60-74</span><span><i style="background:#e8b84a"></i>Moderate 45-59</span><span><i style="background:#e07b2e"></i>Weak 30-44</span><span><i style="background:#d14545"></i>Poor 0-29</span><span>Circle size = population</span></div>
+</div>
+<div class="tab-panel" id="tab-calc">
+  <div class="calc-grid">
+    <div class="card">
+      <h3><span class="dot" style="background:#e8b84a"></span>Deal Economics</h3>
+      <div class="calc-input"><label>Market</label><select id="calc-market" onchange="runCalc()" style="width:100%;background:var(--navy3);border:1px solid var(--line2);color:#fff;padding:11px 13px;border-radius:9px;font-size:14px"></select><div class="hint">Pre-fills the estimated lead cost for that market.</div></div>
+      <div class="calc-input"><label>Cost Per Lead ($) <span class="rangeval" id="cpl-val"></span></label><input type="number" id="calc-cpl" value="45" min="1" oninput="runCalc()"><div class="hint">What you pay PropertyLeads per qualified seller lead.</div></div>
+      <div class="calc-input"><label>Leads to Contract (conversion) <span class="rangeval" id="conv-val"></span></label><input type="number" id="calc-conv" value="40" min="1" oninput="runCalc()"><div class="hint">How many leads it takes to land one signed contract.</div></div>
+      <div class="calc-input"><label>Avg Profit Per Deal ($)</label><input type="number" id="calc-profit" value="12000" min="0" oninput="runCalc()"><div class="hint">Average assignment fee / net profit per closed deal.</div></div>
+    </div>
+    <div>
+      <div class="calc-out">
+        <div class="calc-metric"><div class="cm-num" id="cm-cpd">–</div><div class="cm-lbl">Cost Per Contract</div></div>
+        <div class="calc-metric"><div class="cm-num" id="cm-roi">–</div><div class="cm-lbl">Return on Ad Spend</div></div>
+        <div class="calc-metric"><div class="cm-num" id="cm-margin">–</div><div class="cm-lbl">Net Profit Per Deal</div></div>
+        <div class="calc-metric"><div class="cm-num" id="cm-break">–</div><div class="cm-lbl">Break-Even Lead Cost</div></div>
+      </div>
+      <div class="verdict" id="calc-verdict"></div>
+      <div class="card" style="margin-top:18px"><h3><span class="dot" style="background:#9cc23a"></span>Cheapest Markets to Acquire Leads <span class="sub">lowest cost per lead</span></h3><div id="panel-cheap"></div></div>
+    </div>
   </div>
 </div>
 <div class="tab-panel" id="tab-scoring">
-  <div class="guide-row" style="border-left-color:#3b82f6"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) · Months of Inventory 25% (ideal 1.5-3.5mo) · Cash Sales % 20% (ideal 15-35%) · Sale/List Velocity 15% · Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
-  <div class="guide-row" style="border-left-color:#a855f7"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity Score 40% · Metro Size Tier 20% · Our Lead Flow 20% · Price-Drop Motivation 10% · Affordability Gap 10%.</div></div></div>
-  <div class="guide-row" style="border-left-color:#16a34a"><div><div class="gtitle">Novation / MLS</div><div class="gdesc">DOM &lt; 20, MOI &lt; 2, Sale/List &gt; 100% — fast, tight, full-price markets.</div></div></div>
-  <div class="guide-row" style="border-left-color:#65a30d"><div><div class="gtitle">Wholesale</div><div class="gdesc">DOM 20-45 with Cash % &gt; 18% — strong investor buyer pool.</div></div></div>
-  <div class="guide-row" style="border-left-color:#ca8a04"><div><div class="gtitle">Wholetail</div><div class="gdesc">DOM &gt; 45 with MOI &gt; 4 — light rehab then list.</div></div></div>
-  <div class="guide-row" style="border-left-color:#ea580c"><div><div class="gtitle">Creative / Sub-2</div><div class="gdesc">DOM &gt; 55 or MOI &gt; 5 — slow markets favor terms deals.</div></div></div>
-  <div class="guide-row" style="border-left-color:#0ea5e9"><div><div class="gtitle">Hold / Sub-2</div><div class="gdesc">Pop Growth &gt; 2% with MOI &lt; 2.5 — appreciation plays.</div></div></div>
-  <p class="note">Data window: trailing 12 months. Sources: Zillow Research, Redfin Data Center, US Census Bureau (estimates pending live CSV import). Lead counts from PropertyLeads (2026 weighted 3x, 2025 weighted 1x, NC and pre-2025 excluded).</p>
+  <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) · Months of Inventory 25% (ideal 1.5-3.5mo) · Cash Sales % 20% (ideal 15-35%) · Sale/List Velocity 15% · Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
+  <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity 40% · Metro Size 20% · Our Lead Flow 20% · Price-Drop Motivation 10% · Affordability 10%.</div></div></div>
+  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">ROI Score (0-100) — NEW</div><div class="gdesc">Opportunity adjusted for lead cost: the cheaper the leads relative to deal fundamentals, the higher the ROI score. This directly weighs cost-to-market against reward — a great market with sky-high lead costs (e.g. Miami) scores lower than a solid market with cheap leads.</div></div></div>
+  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">✨ Hidden Gem Flag</div><div class="gdesc">A market is flagged a Hidden Gem when it is small (under ~150k), low competition (≤3 of 10), below-average lead cost, and still scores 55+ on opportunity — the cheap, easy markets bigger players overlook.</div></div></div>
+  <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Novation / MLS</div><div class="gdesc">DOM &lt; 20, MOI &lt; 2, Sale/List &gt; 100% — fast, tight, full-price markets.</div></div></div>
+  <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Wholesale</div><div class="gdesc">DOM 20-45 with Cash % &gt; 18% — strong investor buyer pool.</div></div></div>
+  <div class="guide-row" style="border-left-color:#e07b2e"><div><div class="gtitle">Wholetail / Creative / Hold</div><div class="gdesc">Slower or higher-inventory markets favor wholetail, sub-2 / creative terms, or buy-and-hold appreciation plays.</div></div></div>
+  <p class="note">Data window: trailing 12 months. Sources: Zillow Research, Redfin Data Center, US Census Bureau (modeled estimates pending live CSV import). Lead counts &amp; lead-cost estimates from PropertyLeads (2026 ×3, 2025 ×1, NC and pre-2025 excluded).</p>
 </div>
 </div><!-- end .main --></div>
 
 
 <script>
-/* ===== REI Market Expansion Dashboard v2.1 ===== */
+/* ===== REI Market Expansion Dashboard v3.0 ===== */
 var ACTIVE_STATES = ["TX","FL","GA","IL","OH","IN","SC"];
-/* schema: [city,state,pop,cashPct,avgPrice,avgDOM,moi,saleListRatio,popGrowthPct,ourLeads] */
+/* schema: [city,state,pop,cashPct,price,dom,moi,saleListRatio,popGrowth,ourLeads,competition,leadCost] */
 var RAW = [
-["Houston","TX",2288000,18,264520,33,2.8,98,1.9,142],
-["Dallas","TX",1288000,16,306276,30,2.6,99,2.1,118],
-["San Antonio","TX",1451000,17,259000,29,2.9,98,1.7,96],
-["Austin","TX",961000,14,448000,41,3.6,97,2.8,73],
-["Fort Worth","TX",935000,17,318000,28,2.7,99,2.4,88],
-["El Paso","TX",678000,15,232000,26,2.4,99,0.9,41],
-["Plano","TX",285000,13,485000,24,2.2,100,1.9,29],
-["McKinney","TX",207000,12,460000,22,2,101,3.8,19],
-["Frisco","TX",219000,11,545000,23,2.1,101,4.2,17],
-["Denton","TX",148000,15,365000,25,2.3,100,3.4,16],
-["Conroe","TX",98000,16,325000,24,2.2,100,4.6,13],
-["New Braunfels","TX",104000,14,375000,26,2.4,100,4.8,11],
-["Georgetown","TX",86000,13,398000,25,2.3,100,5.6,9],
-["Round Rock","TX",133000,13,415000,24,2.2,100,3.9,14],
-["Pflugerville","TX",73000,14,375000,23,2.1,100,4.1,8],
-["Waco","TX",139000,17,245000,28,2.6,99,2,15],
-["Killeen","TX",158000,20,228000,34,3.2,97,1.5,14],
-["Temple","TX",82000,18,255000,27,2.5,99,2.2,9],
-["Tyler","TX",107000,17,275000,29,2.7,99,1.6,11],
-["Midland","TX",132000,16,315000,31,2.9,98,1.4,10],
-["Amarillo","TX",200000,18,235000,28,2.6,99,0.7,12],
-["Jacksonville","FL",971000,19,312000,32,3,98,2,104],
-["Tampa","FL",398000,21,378000,30,2.9,98,2.3,97],
-["Orlando","FL",316000,20,365000,31,3,98,2.6,89],
-["Miami","FL",439000,28,584467,44,3.9,96,1.4,131],
-["Port St. Lucie","FL",231000,18,375000,29,2.7,99,3.6,31],
-["Cape Coral","FL",204000,23,398000,34,3.2,97,3.4,26],
-["Lakeland","FL",121000,19,315000,28,2.6,99,3.1,18],
-["Kissimmee","FL",80000,21,355000,30,2.8,98,4.2,14],
-["Ocala","FL",65000,20,295000,29,2.7,99,3.8,12],
-["Deltona","FL",98000,19,325000,28,2.6,99,3,11],
-["Palm Bay","FL",125000,20,318000,30,2.8,98,3.3,13],
-["Fort Myers","FL",92000,22,375000,33,3.1,97,3.9,16],
-["Sarasota","FL",57000,21,445000,32,3,98,3.2,12],
-["Pensacola","FL",54000,18,295000,29,2.7,99,1.8,9],
-["Tallahassee","FL",196000,17,285000,30,2.9,98,1,19],
-["Gainesville","FL",141000,16,295000,28,2.7,99,1.1,15],
-["St. Augustine","FL",16000,18,425000,31,2.9,98,4.5,7],
-["Atlanta","GA",496000,17,391178,44,3.1,98,2.2,108],
-["Augusta","GA",202000,16,225000,33,3,98,1,27],
-["Savannah","GA",147000,17,298000,34,3.1,98,1.5,24],
-["Athens","GA",127000,15,312000,29,2.7,99,1.3,16],
-["Marietta","GA",61000,14,398000,26,2.4,100,2.4,18],
-["Alpharetta","GA",66000,12,575000,24,2.2,101,3.1,14],
-["Sandy Springs","GA",109000,13,485000,25,2.3,100,1.8,15],
-["Roswell","GA",94000,13,520000,26,2.4,100,2,13],
-["Kennesaw","GA",34000,15,395000,27,2.5,99,2.9,9],
-["Lawrenceville","GA",31000,16,375000,28,2.6,99,3.2,11],
-["Macon","GA",157000,19,165000,32,3,98,0.6,14],
-["Warner Robins","GA",81000,17,235000,29,2.7,99,1.4,10],
-["Columbus","GA",206000,18,198000,31,2.9,98,0.7,21],
-["Chicago","IL",2696000,16,295796,25,2.4,99,0.3,156],
-["Aurora","IL",180000,15,285000,24,2.3,99,0.8,28],
-["Naperville","IL",149000,12,485000,22,2,100,0.9,17],
-["Joliet","IL",150000,16,265000,23,2.2,100,1.1,22],
-["Elgin","IL",115000,16,295000,23,2.2,100,0.7,15],
-["Plainfield","IL",45000,14,375000,22,2,100,2.4,9],
-["Rockford","IL",147000,18,158000,28,2.8,98,-0.2,19],
-["Springfield","IL",114000,17,165000,27,2.7,98,-0.1,13],
-["Champaign","IL",88000,16,225000,26,2.5,99,0.9,11],
-["Bloomington","IL",78000,15,235000,25,2.4,99,0.6,10],
-["Columbus","OH",906000,17,239962,18,2,100,1.6,112],
-["Cleveland","OH",372000,19,135000,22,2.5,99,-0.1,84],
-["Cincinnati","OH",309000,18,225000,20,2.3,99,0.7,71],
-["Dublin","OH",49000,13,475000,19,2.1,101,2.8,12],
-["Westerville","OH",40000,15,375000,18,2,101,1.9,10],
-["Hilliard","OH",37000,15,365000,18,2,101,2.4,9],
-["Delaware","OH",43000,16,345000,19,2.1,100,3.1,8],
-["Mason","OH",35000,14,425000,19,2.1,101,2.6,9],
-["Toledo","OH",270000,20,128000,24,2.7,98,-0.4,38],
-["Akron","OH",190000,19,135000,23,2.6,99,-0.2,29],
-["Dayton","OH",137000,20,142000,25,2.8,98,-0.3,24],
-["Canton","OH",70000,20,118000,24,2.7,98,-0.5,12],
-["Indianapolis","IN",882000,19,223261,19,2.4,99,1.3,98],
-["Fort Wayne","IN",270000,18,198000,21,2.5,99,0.9,32],
-["Carmel","IN",100000,13,425000,20,2.1,101,3.2,14],
-["Fishers","IN",98000,13,395000,19,2,101,3.6,13],
-["Noblesville","IN",70000,14,365000,20,2.1,100,3.8,10],
-["Westfield","IN",51000,13,415000,19,2,101,5.2,9],
-["Greenwood","IN",65000,15,315000,20,2.1,100,2.9,11],
-["Evansville","IN",117000,19,165000,24,2.7,98,0.4,18],
-["South Bend","IN",103000,18,158000,22,2.6,99,0.5,16],
-["Bloomington","IN",80000,15,295000,25,2.6,99,1,11],
-["Columbia","SC",137000,17,225000,28,2.8,98,1.4,46],
-["Charleston","SC",151000,16,425000,32,3.1,98,2.5,52],
-["Greenville","SC",70000,15,298000,27,2.6,99,2.8,38],
-["Mount Pleasant","SC",91000,13,545000,30,2.8,99,3.4,17],
-["Summerville","SC",51000,15,365000,28,2.6,99,4.1,13],
-["Goose Creek","SC",45000,16,335000,27,2.5,99,3.2,10],
-["Rock Hill","SC",75000,17,265000,26,2.5,99,2.6,21],
-["Greer","SC",39000,15,315000,27,2.5,99,3.6,9],
-["Spartanburg","SC",38000,18,215000,29,2.8,98,1.6,14],
-["Myrtle Beach","SC",38000,19,295000,33,3.1,97,4.4,15],
-["Bluffton","SC",33000,14,425000,30,2.8,98,5.1,8],
-["Phoenix","AZ",1624000,16,414977,28,2.5,99,2.3,0],
-["Mesa","AZ",504000,15,425000,27,2.4,99,2,0],
-["Chandler","AZ",276000,13,475000,25,2.2,100,2.5,0],
-["Gilbert","AZ",273000,13,495000,24,2.2,100,3.4,0],
-["Goodyear","AZ",95000,15,425000,26,2.4,100,5.8,0],
-["Surprise","AZ",147000,15,415000,26,2.4,100,4.9,0],
-["Buckeye","AZ",108000,16,395000,27,2.5,99,7.2,0],
-["Queen Creek","AZ",70000,14,475000,26,2.4,100,8.1,0],
-["Maricopa","AZ",62000,16,365000,27,2.5,99,6.4,0],
-["Tucson","AZ",543000,17,328000,30,2.8,98,1.8,0],
-["Las Vegas","NV",646000,18,423942,29,2.6,99,2.1,0],
-["Henderson","NV",317000,15,465000,28,2.5,99,2.4,0],
-["North Las Vegas","NV",262000,17,395000,27,2.5,99,3,0],
-["Reno","NV",264000,16,498000,33,3,98,1.9,0],
-["Sparks","NV",108000,16,445000,30,2.8,98,2.6,0],
-["Nashville","TN",689000,15,445000,31,2.8,99,2.7,0],
-["Murfreesboro","TN",153000,15,395000,28,2.6,99,4.6,0],
-["Franklin","TN",83000,12,625000,29,2.7,99,4.2,0],
-["Hendersonville","TN",61000,14,445000,27,2.5,99,3.8,0],
-["Clarksville","TN",166000,16,265000,28,2.6,99,3.1,0],
-["Smyrna","TN",53000,15,375000,27,2.5,99,4.1,0],
-["Knoxville","TN",190000,16,315000,27,2.6,99,2,0],
-["Chattanooga","TN",181000,17,288000,29,2.8,98,1.6,0],
-["Charlotte","NC",879000,16,393554,25,2.4,99,2.4,0],
-["Raleigh","NC",467000,14,425000,26,2.4,100,2.9,0],
-["Durham","NC",283000,15,375000,26,2.5,99,2.6,0],
-["Cary","NC",174000,12,525000,24,2.2,100,2.8,0],
-["Concord","NC",106000,15,375000,25,2.3,100,3.4,0],
-["Apex","NC",75000,12,525000,23,2.1,101,5.1,0],
-["Wake Forest","NC",51000,13,485000,24,2.2,100,5.6,0],
-["Huntersville","NC",62000,13,455000,25,2.3,100,3.9,0],
-["Greensboro","NC",299000,17,255000,28,2.7,99,1.4,0],
-["Winston-Salem","NC",249000,18,235000,30,2.9,98,1,0],
-["Fayetteville","NC",208000,19,205000,32,3,98,0.8,0],
-["Wilmington","NC",115000,16,375000,29,2.7,99,3.2,0],
-["Denver","CO",711000,14,565000,28,2.5,99,1.8,0],
-["Colorado Springs","CO",478000,15,448000,29,2.7,99,2,0],
-["Aurora","CO",386000,16,475000,27,2.5,99,1.9,0],
-["Castle Rock","CO",78000,13,625000,26,2.4,100,5.4,0],
-["Parker","CO",59000,13,575000,25,2.3,100,4.2,0],
-["Fort Collins","CO",169000,13,525000,30,2.8,99,1.7,0],
-["Greeley","CO",109000,15,445000,28,2.6,99,3.6,0],
-["Loveland","CO",78000,14,475000,27,2.5,99,3.1,0],
-["Boise","ID",237000,14,485000,28,2.7,99,3.4,0],
-["Meridian","ID",134000,13,495000,27,2.5,99,6.8,0],
-["Nampa","ID",115000,15,395000,28,2.6,99,5.2,0],
-["Caldwell","ID",68000,15,375000,29,2.7,99,5.9,0],
-["Idaho Falls","ID",65000,15,365000,30,2.8,99,3.2,0],
-["Salt Lake City","UT",200000,13,525000,24,2.3,100,2,0],
-["West Valley City","UT",140000,15,445000,25,2.4,99,1.8,0],
-["Provo","UT",115000,13,475000,25,2.3,100,2.6,0],
-["Lehi","UT",84000,12,565000,24,2.2,100,7.4,0],
-["St. George","UT",100000,14,495000,28,2.6,99,4.8,0],
-["Ogden","UT",87000,15,415000,26,2.4,99,1.9,0],
-["Herriman","UT",60000,13,545000,25,2.3,100,8.2,0],
-["Kansas City","MO",508000,18,233826,15,2,100,1.2,0],
-["St. Louis","MO",293000,19,174405,15,2.1,99,-0.2,0],
-["Lees Summit","MO",101000,15,375000,16,2,100,2.4,0],
-["OFallon","MO",91000,15,345000,16,2,100,2.1,0],
-["Springfield","MO",169000,18,205000,20,2.4,99,0.9,0],
-["Columbia","MO",126000,16,265000,22,2.5,99,1.1,0],
-["Louisville","KY",628000,18,239972,12,1.9,100,0.8,0],
-["Lexington","KY",322000,16,285000,18,2.2,100,1.3,0],
-["Bowling Green","KY",73000,17,245000,21,2.5,99,1.5,0],
-["Georgetown","KY",37000,16,295000,20,2.3,100,2.8,0],
-["Philadelphia","PA",1576000,18,218633,22,2.5,99,0.2,0],
-["Pittsburgh","PA",302000,17,215000,24,2.6,99,-0.1,0],
-["Allentown","PA",125000,18,245000,21,2.4,99,0.5,0],
-["Detroit","MI",639000,22,95000,26,3,98,-0.6,0],
-["Grand Rapids","MI",198000,16,285000,22,2.4,99,1,0],
-["Minneapolis","MN",425000,15,335000,22,2.3,100,0.9,0],
-["St. Paul","MN",311000,16,298000,23,2.4,99,0.7,0],
-["Rochester","MN",121000,15,345000,21,2.3,100,1.6,0],
-["Oklahoma City","OK",681000,18,235000,24,2.6,99,1.4,0],
-["Tulsa","OK",413000,19,205000,25,2.7,98,1,0],
-["Edmond","OK",95000,16,365000,23,2.4,99,2.6,0],
-["Norman","OK",128000,17,285000,24,2.5,99,1.8,0],
-["Birmingham","AL",200000,19,185000,29,2.9,98,0.5,0],
-["Huntsville","AL",215000,16,315000,26,2.6,99,2.8,0],
-["Madison","AL",56000,15,375000,25,2.4,99,4.2,0],
-["Montgomery","AL",200000,20,165000,31,3,98,0.2,0],
-["Charleston","WV",46000,20,165000,33,3.2,97,-1.2,0],
-["Greenville","NC",90000,17,245000,29,2.7,99,1.6,0],
-["Spokane","WA",229000,15,425000,26,2.6,99,1.8,0],
-["Vancouver","WA",195000,14,495000,25,2.5,99,2.4,0],
-["Bend","OR",104000,13,615000,30,2.8,98,4.6,0],
-["Salem","OR",178000,15,425000,27,2.7,99,1.2,0],
-["Sioux Falls","SD",197000,15,315000,18,2.2,100,2.9,0],
-["Fayetteville","AR",95000,15,345000,24,2.4,99,3.8,0],
-["Bentonville","AR",54000,13,425000,23,2.3,100,5.2,0],
-["Rogers","AR",69000,15,365000,24,2.4,99,4.1,0],
-["Little Rock","AR",202000,18,215000,28,2.7,99,0.6,0],
-["Omaha","NE",487000,16,265000,18,2.2,100,1.1,0],
-["Lincoln","NE",295000,15,275000,19,2.3,100,1.3,0]
+["Houston","TX",2288000,18,264520,33,2.8,98,1.9,142,9,68],
+["Dallas","TX",1288000,16,306276,30,2.6,99,2.1,118,9,72],
+["San Antonio","TX",1451000,17,259000,29,2.9,98,1.7,96,7,55],
+["Austin","TX",961000,14,448000,41,3.6,97,2.8,73,8,78],
+["Fort Worth","TX",935000,17,318000,28,2.7,99,2.4,88,7,58],
+["El Paso","TX",678000,15,232000,26,2.4,99,0.9,41,4,42],
+["Plano","TX",285000,13,485000,24,2.2,100,1.9,29,6,62],
+["McKinney","TX",207000,12,460000,22,2,101,3.8,19,5,54],
+["Frisco","TX",219000,11,545000,23,2.1,101,4.2,17,5,58],
+["Denton","TX",148000,15,365000,25,2.3,100,3.4,16,4,44],
+["Conroe","TX",98000,16,325000,24,2.2,100,4.6,13,3,38],
+["New Braunfels","TX",104000,14,375000,26,2.4,100,4.8,11,3,40],
+["Georgetown","TX",86000,13,398000,25,2.3,100,5.6,9,3,42],
+["Waco","TX",139000,17,245000,28,2.6,99,2,15,4,40],
+["Killeen","TX",158000,20,228000,34,3.2,97,1.5,14,3,36],
+["Temple","TX",82000,18,255000,27,2.5,99,2.2,9,2,34],
+["Tyler","TX",107000,17,275000,29,2.7,99,1.6,11,3,37],
+["Midland","TX",132000,16,315000,31,2.9,98,1.4,10,3,45],
+["Abilene","TX",125000,18,205000,29,2.7,99,0.8,7,2,32],
+["Wichita Falls","TX",104000,19,165000,31,2.9,98,0.3,5,1,28],
+["San Angelo","TX",101000,18,215000,30,2.8,99,0.9,6,2,31],
+["Longview","TX",81000,18,225000,29,2.7,99,1.1,6,2,33],
+["Beaumont","TX",115000,19,185000,33,3.1,97,-0.2,8,2,30],
+["Brownsville","TX",187000,19,185000,35,3.3,97,1,9,3,34],
+["Sherman","TX",44000,17,265000,27,2.5,99,3.2,5,2,38],
+["Jacksonville","FL",971000,19,312000,32,3,98,2,104,7,62],
+["Tampa","FL",398000,21,378000,30,2.9,98,2.3,97,8,70],
+["Orlando","FL",316000,20,365000,31,3,98,2.6,89,8,68],
+["Miami","FL",439000,28,584467,44,3.9,96,1.4,131,10,95],
+["Port St. Lucie","FL",231000,18,375000,29,2.7,99,3.6,31,5,52],
+["Cape Coral","FL",204000,23,398000,34,3.2,97,3.4,26,5,54],
+["Lakeland","FL",121000,19,315000,28,2.6,99,3.1,18,4,46],
+["Kissimmee","FL",80000,21,355000,30,2.8,98,4.2,14,4,48],
+["Ocala","FL",65000,20,295000,29,2.7,99,3.8,12,3,42],
+["Deltona","FL",98000,19,325000,28,2.6,99,3,11,3,44],
+["Palm Bay","FL",125000,20,318000,30,2.8,98,3.3,13,3,45],
+["Fort Myers","FL",92000,22,375000,33,3.1,97,3.9,16,5,52],
+["Pensacola","FL",54000,18,295000,29,2.7,99,1.8,9,3,40],
+["Tallahassee","FL",196000,17,285000,30,2.9,98,1,19,4,44],
+["Gainesville","FL",141000,16,295000,28,2.7,99,1.1,15,3,42],
+["Lake City","FL",13000,19,235000,30,2.8,98,2.1,4,1,30],
+["Sebring","FL",11000,20,225000,32,3,98,1.6,3,1,28],
+["Panama City","FL",36000,19,295000,31,2.9,98,2.4,7,2,38],
+["Atlanta","GA",496000,17,391178,44,3.1,98,2.2,108,9,72],
+["Augusta","GA",202000,16,225000,33,3,98,1,27,4,42],
+["Savannah","GA",147000,17,298000,34,3.1,98,1.5,24,5,48],
+["Athens","GA",127000,15,312000,29,2.7,99,1.3,16,4,44],
+["Marietta","GA",61000,14,398000,26,2.4,100,2.4,18,6,56],
+["Alpharetta","GA",66000,12,575000,24,2.2,101,3.1,14,6,60],
+["Macon","GA",157000,19,165000,32,3,98,0.6,14,3,36],
+["Warner Robins","GA",81000,17,235000,29,2.7,99,1.4,10,2,34],
+["Columbus","GA",206000,18,198000,31,2.9,98,0.7,21,3,38],
+["Valdosta","GA",56000,18,185000,30,2.8,98,1.2,6,2,32],
+["Albany","GA",69000,19,135000,33,3.1,97,-0.4,7,1,28],
+["Rome","GA",37000,17,215000,28,2.6,99,0.9,5,2,34],
+["Dalton","GA",34000,18,205000,29,2.7,99,1.1,5,2,33],
+["Gainesville","GA",43000,15,345000,26,2.4,100,3.4,8,3,42],
+["Chicago","IL",2696000,16,295796,25,2.4,99,0.3,156,9,70],
+["Aurora","IL",180000,15,285000,24,2.3,99,0.8,28,5,48],
+["Naperville","IL",149000,12,485000,22,2,100,0.9,17,6,58],
+["Joliet","IL",150000,16,265000,23,2.2,100,1.1,22,5,46],
+["Rockford","IL",147000,18,158000,28,2.8,98,-0.2,19,3,34],
+["Springfield","IL",114000,17,165000,27,2.7,98,-0.1,13,3,33],
+["Peoria","IL",112000,19,142000,29,2.9,98,-0.3,11,2,30],
+["Champaign","IL",88000,16,225000,26,2.5,99,0.9,11,3,38],
+["Decatur","IL",70000,19,115000,30,2.9,98,-0.6,7,1,26],
+["Bloomington","IL",78000,15,235000,25,2.4,99,0.6,10,3,38],
+["Columbus","OH",906000,17,239962,18,2,100,1.6,112,7,55],
+["Cleveland","OH",372000,19,135000,22,2.5,99,-0.1,84,5,40],
+["Cincinnati","OH",309000,18,225000,20,2.3,99,0.7,71,6,48],
+["Dublin","OH",49000,13,475000,19,2.1,101,2.8,12,5,54],
+["Toledo","OH",270000,20,128000,24,2.7,98,-0.4,38,3,32],
+["Akron","OH",190000,19,135000,23,2.6,99,-0.2,29,3,34],
+["Dayton","OH",137000,20,142000,25,2.8,98,-0.3,24,3,33],
+["Canton","OH",70000,20,118000,24,2.7,98,-0.5,12,2,28],
+["Youngstown","OH",60000,21,95000,26,3,98,-0.8,9,1,24],
+["Lima","OH",35000,20,118000,25,2.8,98,-0.6,5,1,25],
+["Mansfield","OH",47000,19,135000,24,2.7,98,-0.3,6,1,27],
+["Springfield","OH",58000,20,128000,25,2.8,98,-0.4,7,1,26],
+["Indianapolis","IN",882000,19,223261,19,2.4,99,1.3,98,6,50],
+["Fort Wayne","IN",270000,18,198000,21,2.5,99,0.9,32,4,38],
+["Carmel","IN",100000,13,425000,20,2.1,101,3.2,14,5,52],
+["Fishers","IN",98000,13,395000,19,2,101,3.6,13,5,50],
+["Evansville","IN",117000,19,165000,24,2.7,98,0.4,18,3,32],
+["South Bend","IN",103000,18,158000,22,2.6,99,0.5,16,3,33],
+["Bloomington","IN",80000,15,295000,25,2.6,99,1,11,3,40],
+["Terre Haute","IN",58000,19,118000,25,2.8,98,-0.3,7,1,26],
+["Muncie","IN",65000,19,108000,26,2.9,98,-0.5,6,1,25],
+["Kokomo","IN",59000,19,135000,24,2.7,98,0.2,5,1,28],
+["Lafayette","IN",71000,16,235000,23,2.5,99,1.4,8,2,36],
+["Columbia","SC",137000,17,225000,28,2.8,98,1.4,46,4,42],
+["Charleston","SC",151000,16,425000,32,3.1,98,2.5,52,6,58],
+["Greenville","SC",70000,15,298000,27,2.6,99,2.8,38,5,48],
+["Mount Pleasant","SC",91000,13,545000,30,2.8,99,3.4,17,5,56],
+["Summerville","SC",51000,15,365000,28,2.6,99,4.1,13,3,44],
+["Rock Hill","SC",75000,17,265000,26,2.5,99,2.6,21,3,40],
+["Spartanburg","SC",38000,18,215000,29,2.8,98,1.6,14,2,36],
+["Myrtle Beach","SC",38000,19,295000,33,3.1,97,4.4,15,4,48],
+["Florence","SC",38000,18,175000,30,2.8,98,0.6,6,1,30],
+["Sumter","SC",43000,18,165000,31,2.9,98,0.4,5,1,28],
+["Anderson","SC",28000,17,225000,28,2.6,99,1.9,6,2,34],
+["Aiken","SC",31000,16,265000,27,2.5,99,1.6,5,2,36],
+["Phoenix","AZ",1624000,16,414977,28,2.5,99,2.3,0,9,75],
+["Mesa","AZ",504000,15,425000,27,2.4,99,2,0,7,60],
+["Chandler","AZ",276000,13,475000,25,2.2,100,2.5,0,6,58],
+["Gilbert","AZ",273000,13,495000,24,2.2,100,3.4,0,6,56],
+["Goodyear","AZ",95000,15,425000,26,2.4,100,5.8,0,4,46],
+["Surprise","AZ",147000,15,415000,26,2.4,100,4.9,0,4,44],
+["Buckeye","AZ",108000,16,395000,27,2.5,99,7.2,0,3,42],
+["Queen Creek","AZ",70000,14,475000,26,2.4,100,8.1,0,3,44],
+["Maricopa","AZ",62000,16,365000,27,2.5,99,6.4,0,2,38],
+["Tucson","AZ",543000,17,328000,30,2.8,98,1.8,0,6,52],
+["Casa Grande","AZ",58000,17,345000,28,2.6,99,4.2,0,2,36],
+["Yuma","AZ",98000,18,265000,31,2.9,98,1.4,0,2,34],
+["Flagstaff","AZ",76000,15,565000,30,2.8,98,1.6,0,3,46],
+["Prescott","AZ",46000,16,495000,29,2.7,99,2.8,0,2,40],
+["Las Vegas","NV",646000,18,423942,29,2.6,99,2.1,0,8,68],
+["Henderson","NV",317000,15,465000,28,2.5,99,2.4,0,6,58],
+["North Las Vegas","NV",262000,17,395000,27,2.5,99,3,0,5,50],
+["Reno","NV",264000,16,498000,33,3,98,1.9,0,5,54],
+["Sparks","NV",108000,16,445000,30,2.8,98,2.6,0,3,44],
+["Carson City","NV",58000,17,465000,31,2.9,98,1.2,0,2,40],
+["Nashville","TN",689000,15,445000,31,2.8,99,2.7,0,8,66],
+["Murfreesboro","TN",153000,15,395000,28,2.6,99,4.6,0,4,46],
+["Franklin","TN",83000,12,625000,29,2.7,99,4.2,0,5,54],
+["Clarksville","TN",166000,16,265000,28,2.6,99,3.1,0,3,40],
+["Knoxville","TN",190000,16,315000,27,2.6,99,2,0,5,48],
+["Chattanooga","TN",181000,17,288000,29,2.8,98,1.6,0,4,44],
+["Johnson City","TN",71000,17,265000,28,2.6,99,1.4,0,2,36],
+["Jackson","TN",68000,18,195000,30,2.8,98,0.4,0,2,32],
+["Cleveland","TN",47000,17,265000,28,2.6,99,1.8,0,2,36],
+["Kingsport","TN",55000,18,225000,29,2.7,99,0.6,0,1,32],
+["Boise","ID",237000,14,485000,28,2.7,99,3.4,0,6,54],
+["Meridian","ID",134000,13,495000,27,2.5,99,6.8,0,4,46],
+["Nampa","ID",115000,15,395000,28,2.6,99,5.2,0,3,40],
+["Caldwell","ID",68000,15,375000,29,2.7,99,5.9,0,2,36],
+["Idaho Falls","ID",65000,15,365000,30,2.8,99,3.2,0,2,38],
+["Twin Falls","ID",52000,16,345000,29,2.7,99,3.6,0,1,34],
+["Pocatello","ID",57000,17,315000,30,2.8,98,1.8,0,1,32],
+["Coeur dAlene","ID",56000,14,525000,31,2.9,98,4.1,0,3,44],
+["Charlotte","NC",879000,16,393554,25,2.4,99,2.4,0,7,60],
+["Raleigh","NC",467000,14,425000,26,2.4,100,2.9,0,7,58],
+["Durham","NC",283000,15,375000,26,2.5,99,2.6,0,5,50],
+["Greensboro","NC",299000,17,255000,28,2.7,99,1.4,0,4,42],
+["Winston-Salem","NC",249000,18,235000,30,2.9,98,1,0,3,38],
+["Fayetteville","NC",208000,19,205000,32,3,98,0.8,0,3,36],
+["Wilmington","NC",115000,16,375000,29,2.7,99,3.2,0,4,46],
+["Asheville","NC",94000,15,475000,30,2.8,98,2.4,0,4,50],
+["Concord","NC",106000,15,375000,25,2.3,100,3.4,0,3,42],
+["Hickory","NC",44000,17,245000,28,2.6,99,1.2,0,1,32],
+["Greenville","NC",90000,17,245000,29,2.7,99,1.6,0,2,36],
+["Rocky Mount","NC",53000,19,165000,32,3,98,-0.4,0,1,28],
+["Denver","CO",711000,14,565000,28,2.5,99,1.8,0,8,68],
+["Colorado Springs","CO",478000,15,448000,29,2.7,99,2,0,6,54],
+["Aurora","CO",386000,16,475000,27,2.5,99,1.9,0,5,52],
+["Fort Collins","CO",169000,13,525000,30,2.8,99,1.7,0,4,48],
+["Greeley","CO",109000,15,445000,28,2.6,99,3.6,0,3,42],
+["Pueblo","CO",112000,17,295000,30,2.8,98,0.8,0,2,34],
+["Grand Junction","CO",65000,16,415000,29,2.7,99,1.4,0,2,38],
+["Salt Lake City","UT",200000,13,525000,24,2.3,100,2,0,6,56],
+["West Valley City","UT",140000,15,445000,25,2.4,99,1.8,0,4,44],
+["Provo","UT",115000,13,475000,25,2.3,100,2.6,0,4,46],
+["Lehi","UT",84000,12,565000,24,2.2,100,7.4,0,3,44],
+["St. George","UT",100000,14,495000,28,2.6,99,4.8,0,3,42],
+["Ogden","UT",87000,15,415000,26,2.4,99,1.9,0,3,40],
+["Kansas City","MO",508000,18,233826,15,2,100,1.2,0,6,48],
+["St. Louis","MO",293000,19,174405,15,2.1,99,-0.2,0,5,40],
+["Springfield","MO",169000,18,205000,20,2.4,99,0.9,0,3,36],
+["Columbia","MO",126000,16,265000,22,2.5,99,1.1,0,3,38],
+["Lees Summit","MO",101000,15,375000,16,2,100,2.4,0,3,40],
+["Joplin","MO",52000,19,155000,24,2.7,98,0.4,0,1,28],
+["St. Joseph","MO",72000,19,145000,25,2.8,98,-0.2,0,1,27],
+["Cape Girardeau","MO",40000,18,185000,24,2.7,98,0.6,0,1,30],
+["Louisville","KY",628000,18,239972,12,1.9,100,0.8,0,5,46],
+["Lexington","KY",322000,16,285000,18,2.2,100,1.3,0,4,44],
+["Bowling Green","KY",73000,17,245000,21,2.5,99,1.5,0,2,36],
+["Owensboro","KY",60000,18,185000,23,2.6,98,0.4,0,1,30],
+["Covington","KY",41000,17,225000,20,2.3,100,0.9,0,2,38],
+["Birmingham","AL",200000,19,185000,29,2.9,98,0.5,0,3,36],
+["Huntsville","AL",215000,16,315000,26,2.6,99,2.8,0,4,44],
+["Montgomery","AL",200000,20,165000,31,3,98,0.2,0,2,32],
+["Mobile","AL",187000,19,175000,32,3.1,97,0.1,0,2,32],
+["Tuscaloosa","AL",101000,18,235000,29,2.7,99,1.2,0,2,36],
+["Auburn","AL",78000,15,335000,27,2.5,99,3.2,0,2,40],
+["Dothan","AL",71000,19,185000,30,2.8,98,0.6,0,1,28],
+["Oklahoma City","OK",681000,18,235000,24,2.6,99,1.4,0,5,42],
+["Tulsa","OK",413000,19,205000,25,2.7,98,1,0,4,38],
+["Norman","OK",128000,17,285000,24,2.5,99,1.8,0,3,38],
+["Edmond","OK",95000,16,365000,23,2.4,99,2.6,0,3,40],
+["Lawton","OK",90000,19,135000,28,2.8,98,-0.2,0,1,26],
+["Broken Arrow","OK",115000,16,295000,23,2.4,99,2.2,0,2,36],
+["Little Rock","AR",202000,18,215000,28,2.7,99,0.6,0,3,36],
+["Fayetteville","AR",95000,15,345000,24,2.4,99,3.8,0,3,42],
+["Bentonville","AR",54000,13,425000,23,2.3,100,5.2,0,3,46],
+["Rogers","AR",69000,15,365000,24,2.4,99,4.1,0,2,40],
+["Fort Smith","AR",89000,19,165000,27,2.6,98,0.2,0,1,28],
+["Jonesboro","AR",78000,18,185000,26,2.5,98,1.4,0,1,30],
+["Conway","AR",67000,16,235000,25,2.4,99,2.2,0,1,34],
+["Jackson","MS",150000,21,145000,36,3.4,97,-0.4,0,2,28],
+["Gulfport","MS",72000,19,215000,33,3.1,97,0.8,0,1,32],
+["Southaven","MS",55000,17,285000,28,2.6,99,2.4,0,2,38],
+["Hattiesburg","MS",48000,19,185000,31,2.9,98,0.6,0,1,30],
+["Biloxi","MS",49000,20,215000,32,3,97,0.4,0,1,32],
+["New Orleans","LA",383000,21,265000,38,3.6,97,-0.5,0,4,42],
+["Baton Rouge","LA",227000,19,225000,34,3.2,98,0.3,0,3,38],
+["Shreveport","LA",187000,20,165000,36,3.4,97,-0.8,0,1,28],
+["Lafayette","LA",121000,19,215000,33,3.1,97,0.2,0,2,34],
+["Lake Charles","LA",84000,20,195000,34,3.2,97,-0.4,0,1,30],
+["Wichita","KS",397000,18,195000,22,2.5,99,0.6,0,3,34],
+["Topeka","KS",125000,19,155000,24,2.7,98,-0.2,0,1,28],
+["Olathe","KS",141000,15,375000,20,2.2,100,2.1,0,3,40],
+["Lawrence","KS",95000,16,295000,22,2.4,99,0.8,0,2,36],
+["Omaha","NE",487000,16,265000,18,2.2,100,1.1,0,4,40],
+["Lincoln","NE",295000,15,275000,19,2.3,100,1.3,0,3,38],
+["Grand Island","NE",53000,17,225000,21,2.4,99,0.6,0,1,30],
+["Sioux Falls","SD",197000,15,315000,18,2.2,100,2.9,0,2,34],
+["Rapid City","SD",78000,16,335000,22,2.4,99,2.2,0,1,34],
+["Fargo","ND",128000,15,295000,20,2.3,100,1.6,0,2,34],
+["Bismarck","ND",74000,16,315000,21,2.4,99,1.2,0,1,32],
+["Des Moines","IA",215000,16,225000,17,2.1,100,1.4,0,3,36],
+["Cedar Rapids","IA",137000,17,205000,19,2.3,99,0.8,0,2,32],
+["Davenport","IA",101000,18,165000,21,2.5,99,0.2,0,1,28],
+["Iowa City","IA",75000,15,285000,18,2.2,100,1.6,0,2,36],
+["Minneapolis","MN",425000,15,335000,22,2.3,100,0.9,0,5,46],
+["St. Paul","MN",311000,16,298000,23,2.4,99,0.7,0,4,42],
+["Rochester","MN",121000,15,345000,21,2.3,100,1.6,0,2,38],
+["Duluth","MN",86000,17,225000,24,2.6,98,-0.2,0,1,30],
+["Milwaukee","WI",569000,18,175000,23,2.5,99,-0.2,0,4,38],
+["Madison","WI",269000,14,395000,21,2.3,100,1.4,0,4,46],
+["Green Bay","WI",107000,16,245000,22,2.4,99,0.6,0,2,34],
+["Appleton","WI",75000,15,265000,21,2.3,99,0.8,0,1,34],
+["Detroit","MI",639000,22,95000,26,3,98,-0.6,0,4,34],
+["Grand Rapids","MI",198000,16,285000,22,2.4,99,1,0,4,42],
+["Warren","MI",139000,18,215000,23,2.5,99,0,0,2,34],
+["Lansing","MI",112000,18,165000,24,2.6,98,-0.2,0,2,32],
+["Flint","MI",80000,21,85000,28,3.1,97,-1.2,0,1,24],
+["Ann Arbor","MI",123000,14,475000,21,2.3,100,1.4,0,3,46],
+["Philadelphia","PA",1576000,18,218633,22,2.5,99,0.2,0,6,48],
+["Pittsburgh","PA",302000,17,215000,24,2.6,99,-0.1,0,4,40],
+["Allentown","PA",125000,18,245000,21,2.4,99,0.5,0,2,36],
+["Erie","PA",94000,19,148000,26,2.8,98,-0.4,0,1,28],
+["Harrisburg","PA",50000,17,215000,22,2.5,99,0.6,0,2,36],
+["Scranton","PA",76000,19,165000,25,2.7,98,-0.3,0,1,30],
+["Spokane","WA",229000,15,425000,26,2.6,99,1.8,0,4,46],
+["Vancouver","WA",195000,14,495000,25,2.5,99,2.4,0,4,48],
+["Tacoma","WA",221000,14,465000,24,2.5,99,1.6,0,4,48],
+["Bend","OR",104000,13,615000,30,2.8,98,4.6,0,3,50],
+["Salem","OR",178000,15,425000,27,2.7,99,1.2,0,3,42],
+["Eugene","OR",178000,15,455000,28,2.7,99,1,0,3,44],
+["Medford","OR",89000,16,415000,29,2.7,99,1.6,0,2,40],
+["Billings","MT",118000,16,375000,26,2.5,99,1.4,0,1,36],
+["Missoula","MT",76000,15,495000,28,2.7,99,1.8,0,2,42],
+["Cheyenne","WY",65000,16,345000,27,2.5,99,1.2,0,1,34],
+["Casper","WY",58000,17,295000,29,2.7,98,0.4,0,1,32],
+["Albuquerque","NM",564000,17,325000,28,2.6,99,0.8,0,4,42],
+["Santa Fe","NM",88000,15,545000,32,3,98,1.2,0,2,44],
+["Las Cruces","NM",111000,17,295000,29,2.7,99,1.4,0,1,34],
+["Virginia Beach","VA",457000,15,355000,24,2.4,99,1,0,4,44],
+["Richmond","VA",230000,16,325000,23,2.4,99,1.5,0,4,44],
+["Norfolk","VA",235000,17,275000,26,2.6,99,0.6,0,3,40],
+["Chesapeake","VA",250000,14,385000,25,2.4,99,1.4,0,3,42],
+["Roanoke","VA",100000,17,235000,26,2.5,99,0.4,0,1,32],
+["Lynchburg","VA",79000,17,245000,27,2.6,99,0.6,0,1,32],
+["Baltimore","MD",576000,19,185000,28,2.8,98,-0.3,0,5,44],
+["Frederick","MD",78000,14,455000,24,2.3,100,1.8,0,3,46],
+["Hagerstown","MD",43000,17,265000,25,2.5,99,0.8,0,1,34],
+["Charleston","WV",46000,20,165000,33,3.2,97,-1.2,0,1,26],
+["Huntington","WV",44000,21,135000,32,3.1,97,-1.4,0,1,24],
+["Morgantown","WV",30000,17,265000,28,2.6,99,0.6,0,1,32],
+["Murray","KY",18000,17,215000,26,2.5,99,1.2,0,1,30],
+["Elizabethtown","KY",31000,17,235000,24,2.5,99,1.6,0,1,32],
+["Texarkana","TX",36000,18,165000,30,2.8,98,0.2,7,1,28],
+["Victoria","TX",65000,18,215000,29,2.7,99,0.6,6,1,30],
+["Harlingen","TX",65000,19,175000,33,3.1,97,0.8,8,2,32],
+["Odessa","TX",114000,17,265000,30,2.8,98,1,9,2,40],
+["Bryan","TX",87000,16,275000,26,2.5,99,2.4,8,2,38],
+["College Station","TX",120000,14,345000,25,2.4,100,3.2,9,3,42],
+["Pharr","TX",79000,20,165000,34,3.2,97,1.2,7,2,30],
+["Mission","TX",85000,20,175000,34,3.2,97,1.4,7,2,30],
+["Naples","FL",22000,24,595000,38,3.6,96,3.4,12,5,62],
+["Fort Pierce","FL",47000,20,315000,30,2.8,98,2.6,9,3,44],
+["Melbourne","FL",84000,19,345000,29,2.7,99,2.8,11,3,46],
+["Bradenton","FL",61000,21,395000,32,3,98,3.2,10,4,48],
+["Clearwater","FL",117000,22,375000,31,2.9,98,1.8,15,5,52],
+["Smyrna","GA",56000,14,385000,26,2.4,100,2.6,12,5,52],
+["Sandy Springs","GA",109000,13,485000,25,2.3,100,1.8,15,6,58],
+["Johns Creek","GA",84000,12,565000,24,2.2,101,2.4,11,5,56],
+["Brunswick","GA",16000,18,225000,31,2.9,98,1,5,1,32],
+["Hamilton","OH",62000,18,165000,21,2.4,99,0.8,9,2,32],
+["Elyria","OH",53000,19,145000,23,2.6,99,-0.2,7,1,28],
+["Anderson","IN",54000,19,118000,24,2.7,98,-0.2,6,1,26],
+["Richmond","IN",35000,19,108000,25,2.8,98,-0.4,5,1,25],
+["Carbondale","IL",24000,18,135000,28,2.8,98,-0.6,5,1,26],
+["Quincy","IL",40000,18,135000,27,2.7,98,-0.4,6,1,27],
+["Goose Creek","SC",45000,16,335000,27,2.5,99,3.2,10,2,40],
+["Greer","SC",39000,15,315000,27,2.5,99,3.6,9,2,38],
+["Hilton Head","SC",38000,16,545000,34,3.2,97,2.2,7,3,52],
+["Bluffton","SC",33000,14,425000,30,2.8,98,5.1,8,2,46],
+["Bakersfield","CA",403000,15,375000,26,2.5,99,1.2,0,5,52],
+["Fresno","CA",542000,16,385000,27,2.6,99,1,0,5,54],
+["Sacramento","CA",525000,13,485000,25,2.4,100,1.4,0,6,68],
+["Stockton","CA",320000,16,445000,26,2.5,99,1.6,0,4,56]
 ];
-var COORDS = {"Houston,TX":[29.76,-95.37],"Dallas,TX":[32.78,-96.8],"San Antonio,TX":[29.42,-98.49],"Austin,TX":[30.27,-97.74],"Fort Worth,TX":[32.76,-97.33],"El Paso,TX":[31.76,-106.49],"Plano,TX":[33.02,-96.7],"McKinney,TX":[33.2,-96.62],"Frisco,TX":[33.15,-96.82],"Denton,TX":[33.21,-97.13],"Conroe,TX":[30.31,-95.46],"New Braunfels,TX":[29.7,-98.12],"Georgetown,TX":[30.63,-97.68],"Round Rock,TX":[30.51,-97.68],"Pflugerville,TX":[30.46,-97.62],"Waco,TX":[31.55,-97.15],"Killeen,TX":[31.12,-97.73],"Temple,TX":[31.1,-97.34],"Tyler,TX":[32.35,-95.3],"Midland,TX":[31.997,-102.08],"Amarillo,TX":[35.22,-101.83],"Jacksonville,FL":[30.33,-81.66],"Tampa,FL":[27.95,-82.46],"Orlando,FL":[28.54,-81.38],"Miami,FL":[25.76,-80.19],"Port St. Lucie,FL":[27.27,-80.36],"Cape Coral,FL":[26.56,-81.95],"Lakeland,FL":[28.04,-81.95],"Kissimmee,FL":[28.29,-81.41],"Ocala,FL":[29.19,-82.13],"Deltona,FL":[28.9,-81.26],"Palm Bay,FL":[28.03,-80.59],"Fort Myers,FL":[26.64,-81.87],"Sarasota,FL":[27.34,-82.53],"Pensacola,FL":[30.42,-87.22],"Tallahassee,FL":[30.44,-84.28],"Gainesville,FL":[29.65,-82.32],"St. Augustine,FL":[29.9,-81.31],"Atlanta,GA":[33.75,-84.39],"Augusta,GA":[33.47,-81.97],"Savannah,GA":[32.08,-81.09],"Athens,GA":[33.96,-83.38],"Marietta,GA":[33.95,-84.55],"Alpharetta,GA":[34.07,-84.29],"Sandy Springs,GA":[33.92,-84.38],"Roswell,GA":[34.02,-84.36],"Kennesaw,GA":[34.02,-84.62],"Lawrenceville,GA":[33.96,-83.99],"Macon,GA":[32.84,-83.63],"Warner Robins,GA":[32.62,-83.6],"Columbus,GA":[32.46,-84.99],"Chicago,IL":[41.88,-87.63],"Aurora,IL":[41.76,-88.32],"Naperville,IL":[41.79,-88.15],"Joliet,IL":[41.53,-88.08],"Elgin,IL":[42.04,-88.28],"Plainfield,IL":[41.63,-88.2],"Rockford,IL":[42.27,-89.09],"Springfield,IL":[39.78,-89.65],"Champaign,IL":[40.12,-88.24],"Bloomington,IL":[40.48,-88.99],"Columbus,OH":[39.96,-83],"Cleveland,OH":[41.5,-81.69],"Cincinnati,OH":[39.1,-84.51],"Dublin,OH":[40.1,-83.11],"Westerville,OH":[40.13,-82.93],"Hilliard,OH":[40.03,-83.16],"Delaware,OH":[40.3,-83.07],"Mason,OH":[39.36,-84.31],"Toledo,OH":[41.66,-83.56],"Akron,OH":[41.08,-81.52],"Dayton,OH":[39.76,-84.19],"Canton,OH":[40.8,-81.38],"Indianapolis,IN":[39.77,-86.16],"Fort Wayne,IN":[41.08,-85.14],"Carmel,IN":[39.98,-86.12],"Fishers,IN":[39.96,-86.01],"Noblesville,IN":[40.05,-86.01],"Westfield,IN":[40.04,-86.13],"Greenwood,IN":[39.61,-86.11],"Evansville,IN":[37.97,-87.57],"South Bend,IN":[41.68,-86.25],"Bloomington,IN":[39.17,-86.53],"Columbia,SC":[34,-81.03],"Charleston,SC":[32.78,-79.93],"Greenville,SC":[34.85,-82.39],"Mount Pleasant,SC":[32.79,-79.86],"Summerville,SC":[33.02,-80.18],"Goose Creek,SC":[32.98,-80.03],"Rock Hill,SC":[34.92,-81.02],"Greer,SC":[34.94,-82.23],"Spartanburg,SC":[34.95,-81.93],"Myrtle Beach,SC":[33.69,-78.89],"Bluffton,SC":[32.24,-80.86],"Phoenix,AZ":[33.45,-112.07],"Mesa,AZ":[33.42,-111.83],"Chandler,AZ":[33.31,-111.84],"Gilbert,AZ":[33.35,-111.79],"Goodyear,AZ":[33.44,-112.36],"Surprise,AZ":[33.63,-112.37],"Buckeye,AZ":[33.37,-112.58],"Queen Creek,AZ":[33.25,-111.63],"Maricopa,AZ":[33.06,-112.05],"Tucson,AZ":[32.22,-110.97],"Las Vegas,NV":[36.17,-115.14],"Henderson,NV":[36.04,-114.98],"North Las Vegas,NV":[36.2,-115.12],"Reno,NV":[39.53,-119.81],"Sparks,NV":[39.53,-119.75],"Nashville,TN":[36.16,-86.78],"Murfreesboro,TN":[35.85,-86.39],"Franklin,TN":[35.92,-86.87],"Hendersonville,TN":[36.3,-86.62],"Clarksville,TN":[36.53,-87.36],"Smyrna,TN":[35.98,-86.52],"Knoxville,TN":[35.96,-83.92],"Chattanooga,TN":[35.05,-85.31],"Charlotte,NC":[35.23,-80.84],"Raleigh,NC":[35.78,-78.64],"Durham,NC":[35.99,-78.9],"Cary,NC":[35.79,-78.78],"Concord,NC":[35.41,-80.58],"Apex,NC":[35.73,-78.85],"Wake Forest,NC":[35.98,-78.51],"Huntersville,NC":[35.41,-80.84],"Greensboro,NC":[36.07,-79.79],"Winston-Salem,NC":[36.1,-80.24],"Fayetteville,NC":[35.05,-78.88],"Wilmington,NC":[34.23,-77.94],"Greenville,NC":[35.61,-77.37],"Denver,CO":[39.74,-104.99],"Colorado Springs,CO":[38.83,-104.82],"Aurora,CO":[39.73,-104.83],"Castle Rock,CO":[39.37,-104.86],"Parker,CO":[39.52,-104.76],"Fort Collins,CO":[40.59,-105.08],"Greeley,CO":[40.42,-104.71],"Loveland,CO":[40.4,-105.07],"Boise,ID":[43.62,-116.21],"Meridian,ID":[43.61,-116.39],"Nampa,ID":[43.54,-116.56],"Caldwell,ID":[43.66,-116.69],"Idaho Falls,ID":[43.49,-112.03],"Salt Lake City,UT":[40.76,-111.89],"West Valley City,UT":[40.69,-112],"Provo,UT":[40.23,-111.66],"Lehi,UT":[40.39,-111.85],"St. George,UT":[37.1,-113.58],"Ogden,UT":[41.22,-111.97],"Herriman,UT":[40.51,-112.03],"Kansas City,MO":[39.1,-94.58],"St. Louis,MO":[38.63,-90.2],"Lees Summit,MO":[38.91,-94.38],"OFallon,MO":[38.81,-90.7],"Springfield,MO":[37.21,-93.29],"Columbia,MO":[38.95,-92.33],"Louisville,KY":[38.25,-85.76],"Lexington,KY":[38.04,-84.5],"Bowling Green,KY":[36.99,-86.44],"Georgetown,KY":[38.21,-84.56],"Philadelphia,PA":[39.95,-75.17],"Pittsburgh,PA":[40.44,-79.99],"Allentown,PA":[40.61,-75.49],"Detroit,MI":[42.33,-83.05],"Grand Rapids,MI":[42.96,-85.67],"Minneapolis,MN":[44.98,-93.27],"St. Paul,MN":[44.95,-93.09],"Rochester,MN":[44.02,-92.48],"Oklahoma City,OK":[35.47,-97.52],"Tulsa,OK":[36.15,-95.99],"Edmond,OK":[35.65,-97.48],"Norman,OK":[35.22,-97.44],"Birmingham,AL":[33.52,-86.81],"Huntsville,AL":[34.73,-86.59],"Madison,AL":[34.7,-86.75],"Montgomery,AL":[32.37,-86.3],"Charleston,WV":[38.35,-81.63],"Spokane,WA":[47.66,-117.43],"Vancouver,WA":[45.63,-122.66],"Bend,OR":[44.06,-121.31],"Salem,OR":[44.94,-123.04],"Sioux Falls,SD":[43.55,-96.7],"Fayetteville,AR":[36.06,-94.16],"Bentonville,AR":[36.37,-94.21],"Rogers,AR":[36.33,-94.12],"Little Rock,AR":[34.74,-92.33],"Omaha,NE":[41.26,-95.93],"Lincoln,NE":[40.81,-96.7]};
+var COORDS = {"Houston,TX":[29.76,-95.37],"Dallas,TX":[32.78,-96.8],"San Antonio,TX":[29.42,-98.49],"Austin,TX":[30.27,-97.74],"Fort Worth,TX":[32.76,-97.33],"El Paso,TX":[31.76,-106.49],"Plano,TX":[33.02,-96.7],"McKinney,TX":[33.2,-96.62],"Frisco,TX":[33.15,-96.82],"Denton,TX":[33.21,-97.13],"Conroe,TX":[30.31,-95.46],"New Braunfels,TX":[29.7,-98.12],"Georgetown,TX":[30.63,-97.68],"Waco,TX":[31.55,-97.15],"Killeen,TX":[31.12,-97.73],"Temple,TX":[31.1,-97.34],"Tyler,TX":[32.35,-95.3],"Midland,TX":[31.997,-102.08],"Abilene,TX":[32.45,-99.73],"Wichita Falls,TX":[33.91,-98.49],"San Angelo,TX":[31.46,-100.44],"Longview,TX":[32.5,-94.74],"Beaumont,TX":[30.08,-94.13],"Brownsville,TX":[25.9,-97.5],"Sherman,TX":[33.64,-96.61],"Texarkana,TX":[33.43,-94.05],"Victoria,TX":[28.81,-96.99],"Harlingen,TX":[26.19,-97.7],"Odessa,TX":[31.85,-102.37],"Bryan,TX":[30.67,-96.37],"College Station,TX":[30.63,-96.33],"Pharr,TX":[26.19,-98.18],"Mission,TX":[26.22,-98.32],"Jacksonville,FL":[30.33,-81.66],"Tampa,FL":[27.95,-82.46],"Orlando,FL":[28.54,-81.38],"Miami,FL":[25.76,-80.19],"Port St. Lucie,FL":[27.27,-80.36],"Cape Coral,FL":[26.56,-81.95],"Lakeland,FL":[28.04,-81.95],"Kissimmee,FL":[28.29,-81.41],"Ocala,FL":[29.19,-82.13],"Deltona,FL":[28.9,-81.26],"Palm Bay,FL":[28.03,-80.59],"Fort Myers,FL":[26.64,-81.87],"Pensacola,FL":[30.42,-87.22],"Tallahassee,FL":[30.44,-84.28],"Gainesville,FL":[29.65,-82.32],"Lake City,FL":[30.19,-82.64],"Sebring,FL":[27.5,-81.44],"Panama City,FL":[30.16,-85.66],"Naples,FL":[26.14,-81.79],"Fort Pierce,FL":[27.45,-80.33],"Melbourne,FL":[28.08,-80.61],"Bradenton,FL":[27.5,-82.57],"Clearwater,FL":[27.97,-82.8],"Atlanta,GA":[33.75,-84.39],"Augusta,GA":[33.47,-81.97],"Savannah,GA":[32.08,-81.09],"Athens,GA":[33.96,-83.38],"Marietta,GA":[33.95,-84.55],"Alpharetta,GA":[34.07,-84.29],"Macon,GA":[32.84,-83.63],"Warner Robins,GA":[32.62,-83.6],"Columbus,GA":[32.46,-84.99],"Valdosta,GA":[30.83,-83.28],"Albany,GA":[31.58,-84.16],"Rome,GA":[34.26,-85.16],"Dalton,GA":[34.77,-84.97],"Gainesville,GA":[34.3,-83.82],"Smyrna,GA":[33.88,-84.51],"Sandy Springs,GA":[33.92,-84.38],"Johns Creek,GA":[34.03,-84.2],"Brunswick,GA":[31.15,-81.49],"Chicago,IL":[41.88,-87.63],"Aurora,IL":[41.76,-88.32],"Naperville,IL":[41.79,-88.15],"Joliet,IL":[41.53,-88.08],"Rockford,IL":[42.27,-89.09],"Springfield,IL":[39.78,-89.65],"Peoria,IL":[40.69,-89.59],"Champaign,IL":[40.12,-88.24],"Decatur,IL":[39.84,-88.95],"Bloomington,IL":[40.48,-88.99],"Carbondale,IL":[37.73,-89.22],"Quincy,IL":[39.94,-91.41],"Columbus,OH":[39.96,-83],"Cleveland,OH":[41.5,-81.69],"Cincinnati,OH":[39.1,-84.51],"Dublin,OH":[40.1,-83.11],"Toledo,OH":[41.66,-83.56],"Akron,OH":[41.08,-81.52],"Dayton,OH":[39.76,-84.19],"Canton,OH":[40.8,-81.38],"Youngstown,OH":[41.1,-80.65],"Lima,OH":[40.74,-84.11],"Mansfield,OH":[40.76,-82.52],"Springfield,OH":[39.92,-83.81],"Hamilton,OH":[39.4,-84.56],"Elyria,OH":[41.37,-82.11],"Indianapolis,IN":[39.77,-86.16],"Fort Wayne,IN":[41.08,-85.14],"Carmel,IN":[39.98,-86.12],"Fishers,IN":[39.96,-86.01],"Evansville,IN":[37.97,-87.57],"South Bend,IN":[41.68,-86.25],"Bloomington,IN":[39.17,-86.53],"Terre Haute,IN":[39.47,-87.41],"Muncie,IN":[40.19,-85.39],"Kokomo,IN":[40.49,-86.13],"Lafayette,IN":[40.42,-86.89],"Anderson,IN":[40.11,-85.68],"Richmond,IN":[39.83,-84.89],"Columbia,SC":[34,-81.03],"Charleston,SC":[32.78,-79.93],"Greenville,SC":[34.85,-82.39],"Mount Pleasant,SC":[32.79,-79.86],"Summerville,SC":[33.02,-80.18],"Rock Hill,SC":[34.92,-81.02],"Spartanburg,SC":[34.95,-81.93],"Myrtle Beach,SC":[33.69,-78.89],"Florence,SC":[34.2,-79.77],"Sumter,SC":[33.92,-80.34],"Anderson,SC":[34.5,-82.65],"Aiken,SC":[33.56,-81.72],"Goose Creek,SC":[32.98,-80.03],"Greer,SC":[34.94,-82.23],"Hilton Head,SC":[32.22,-80.75],"Bluffton,SC":[32.24,-80.86],"Phoenix,AZ":[33.45,-112.07],"Mesa,AZ":[33.42,-111.83],"Chandler,AZ":[33.31,-111.84],"Gilbert,AZ":[33.35,-111.79],"Goodyear,AZ":[33.44,-112.36],"Surprise,AZ":[33.63,-112.37],"Buckeye,AZ":[33.37,-112.58],"Queen Creek,AZ":[33.25,-111.63],"Maricopa,AZ":[33.06,-112.05],"Tucson,AZ":[32.22,-110.97],"Casa Grande,AZ":[32.88,-111.76],"Yuma,AZ":[32.69,-114.63],"Flagstaff,AZ":[35.2,-111.65],"Prescott,AZ":[34.54,-112.47],"Las Vegas,NV":[36.17,-115.14],"Henderson,NV":[36.04,-114.98],"North Las Vegas,NV":[36.2,-115.12],"Reno,NV":[39.53,-119.81],"Sparks,NV":[39.53,-119.75],"Carson City,NV":[39.16,-119.77],"Nashville,TN":[36.16,-86.78],"Murfreesboro,TN":[35.85,-86.39],"Franklin,TN":[35.92,-86.87],"Clarksville,TN":[36.53,-87.36],"Knoxville,TN":[35.96,-83.92],"Chattanooga,TN":[35.05,-85.31],"Johnson City,TN":[36.31,-82.35],"Jackson,TN":[35.61,-88.81],"Cleveland,TN":[35.16,-84.88],"Kingsport,TN":[36.55,-82.56],"Boise,ID":[43.62,-116.21],"Meridian,ID":[43.61,-116.39],"Nampa,ID":[43.54,-116.56],"Caldwell,ID":[43.66,-116.69],"Idaho Falls,ID":[43.49,-112.03],"Twin Falls,ID":[42.56,-114.46],"Pocatello,ID":[42.87,-112.45],"Coeur dAlene,ID":[47.68,-116.78],"Charlotte,NC":[35.23,-80.84],"Raleigh,NC":[35.78,-78.64],"Durham,NC":[35.99,-78.9],"Greensboro,NC":[36.07,-79.79],"Winston-Salem,NC":[36.1,-80.24],"Fayetteville,NC":[35.05,-78.88],"Wilmington,NC":[34.23,-77.94],"Asheville,NC":[35.6,-82.55],"Concord,NC":[35.41,-80.58],"Hickory,NC":[35.73,-81.34],"Greenville,NC":[35.61,-77.37],"Rocky Mount,NC":[35.94,-77.79],"Denver,CO":[39.74,-104.99],"Colorado Springs,CO":[38.83,-104.82],"Aurora,CO":[39.73,-104.83],"Fort Collins,CO":[40.59,-105.08],"Greeley,CO":[40.42,-104.71],"Pueblo,CO":[38.25,-104.61],"Grand Junction,CO":[39.06,-108.55],"Salt Lake City,UT":[40.76,-111.89],"West Valley City,UT":[40.69,-112],"Provo,UT":[40.23,-111.66],"Lehi,UT":[40.39,-111.85],"St. George,UT":[37.1,-113.58],"Ogden,UT":[41.22,-111.97],"Kansas City,MO":[39.1,-94.58],"St. Louis,MO":[38.63,-90.2],"Springfield,MO":[37.21,-93.29],"Columbia,MO":[38.95,-92.33],"Lees Summit,MO":[38.91,-94.38],"Joplin,MO":[37.08,-94.51],"St. Joseph,MO":[39.77,-94.85],"Cape Girardeau,MO":[37.31,-89.52],"Louisville,KY":[38.25,-85.76],"Lexington,KY":[38.04,-84.5],"Bowling Green,KY":[36.99,-86.44],"Owensboro,KY":[37.77,-87.11],"Covington,KY":[39.08,-84.51],"Murray,KY":[36.61,-88.31],"Elizabethtown,KY":[37.69,-85.86],"Birmingham,AL":[33.52,-86.81],"Huntsville,AL":[34.73,-86.59],"Montgomery,AL":[32.37,-86.3],"Mobile,AL":[30.69,-88.04],"Tuscaloosa,AL":[33.21,-87.57],"Auburn,AL":[32.61,-85.48],"Dothan,AL":[31.22,-85.39],"Oklahoma City,OK":[35.47,-97.52],"Tulsa,OK":[36.15,-95.99],"Norman,OK":[35.22,-97.44],"Edmond,OK":[35.65,-97.48],"Lawton,OK":[34.61,-98.39],"Broken Arrow,OK":[36.06,-95.79],"Little Rock,AR":[34.74,-92.33],"Fayetteville,AR":[36.06,-94.16],"Bentonville,AR":[36.37,-94.21],"Rogers,AR":[36.33,-94.12],"Fort Smith,AR":[35.39,-94.4],"Jonesboro,AR":[35.84,-90.7],"Conway,AR":[35.09,-92.44],"Jackson,MS":[32.3,-90.18],"Gulfport,MS":[30.37,-89.09],"Southaven,MS":[34.99,-90.01],"Hattiesburg,MS":[31.33,-89.29],"Biloxi,MS":[30.4,-88.89],"New Orleans,LA":[29.95,-90.07],"Baton Rouge,LA":[30.45,-91.19],"Shreveport,LA":[32.53,-93.75],"Lafayette,LA":[30.22,-92.02],"Lake Charles,LA":[30.23,-93.22],"Wichita,KS":[37.69,-97.34],"Topeka,KS":[39.05,-95.69],"Olathe,KS":[38.88,-94.82],"Lawrence,KS":[38.97,-95.24],"Omaha,NE":[41.26,-95.93],"Lincoln,NE":[40.81,-96.7],"Grand Island,NE":[40.92,-98.34],"Sioux Falls,SD":[43.55,-96.7],"Rapid City,SD":[44.08,-103.23],"Fargo,ND":[46.88,-96.79],"Bismarck,ND":[46.81,-100.78],"Des Moines,IA":[41.59,-93.62],"Cedar Rapids,IA":[41.98,-91.67],"Davenport,IA":[41.52,-90.58],"Iowa City,IA":[41.66,-91.53],"Minneapolis,MN":[44.98,-93.27],"St. Paul,MN":[44.95,-93.09],"Rochester,MN":[44.02,-92.48],"Duluth,MN":[46.79,-92.1],"Milwaukee,WI":[43.04,-87.91],"Madison,WI":[43.07,-89.4],"Green Bay,WI":[44.51,-88.02],"Appleton,WI":[44.26,-88.42],"Detroit,MI":[42.33,-83.05],"Grand Rapids,MI":[42.96,-85.67],"Warren,MI":[42.49,-83.01],"Lansing,MI":[42.73,-84.56],"Flint,MI":[43.01,-83.69],"Ann Arbor,MI":[42.28,-83.74],"Philadelphia,PA":[39.95,-75.17],"Pittsburgh,PA":[40.44,-79.99],"Allentown,PA":[40.61,-75.49],"Erie,PA":[42.13,-80.09],"Harrisburg,PA":[40.27,-76.88],"Scranton,PA":[41.41,-75.66],"Spokane,WA":[47.66,-117.43],"Vancouver,WA":[45.63,-122.66],"Tacoma,WA":[47.25,-122.44],"Bend,OR":[44.06,-121.31],"Salem,OR":[44.94,-123.04],"Eugene,OR":[44.05,-123.09],"Medford,OR":[42.33,-122.87],"Billings,MT":[45.78,-108.5],"Missoula,MT":[46.87,-114],"Cheyenne,WY":[41.14,-104.82],"Casper,WY":[42.87,-106.31],"Albuquerque,NM":[35.08,-106.65],"Santa Fe,NM":[35.69,-105.94],"Las Cruces,NM":[32.31,-106.78],"Virginia Beach,VA":[36.85,-75.98],"Richmond,VA":[37.54,-77.44],"Norfolk,VA":[36.85,-76.29],"Chesapeake,VA":[36.77,-76.29],"Roanoke,VA":[37.27,-79.94],"Lynchburg,VA":[37.41,-79.14],"Baltimore,MD":[39.29,-76.61],"Frederick,MD":[39.41,-77.41],"Hagerstown,MD":[39.64,-77.72],"Charleston,WV":[38.35,-81.63],"Huntington,WV":[38.42,-82.45],"Morgantown,WV":[39.63,-79.96],"Bakersfield,CA":[35.37,-119.02],"Fresno,CA":[36.74,-119.77],"Sacramento,CA":[38.58,-121.49],"Stockton,CA":[37.96,-121.29]};
 
-/* ---------- SCORING ENGINE (sweet-spot model) ---------- */
+/* ---------- SCORING ENGINE ---------- */
 function clamp(v){return Math.max(0,Math.min(100,v));}
 function sDOM(d){if(d>=15&&d<=35)return 100;if(d<15)return clamp(100-(15-d)*4);if(d<=45)return clamp(100-(d-35)*5);return clamp(50-(d-45)*3);}
 function sMOI(m){if(m>=1.5&&m<=3.5)return 100;if(m<1.5)return clamp(100-(1.5-m)*40);if(m<=5)return clamp(100-(m-3.5)*30);return clamp(55-(m-5)*15);}
@@ -385,216 +537,150 @@ function sVel(r){return clamp((r-90)*8);}
 function sPG(g){return clamp(50+g*15);}
 function sPop(p){if(p>=1000000)return 100;if(p>=500000)return 85;if(p>=250000)return 70;if(p>=120000)return 55;if(p>=60000)return 42;return 30;}
 function sLead(l){if(l>=100)return 100;if(l>=50)return 85;if(l>=25)return 70;if(l>=10)return 55;if(l>=1)return 40;return 0;}
-function opp(m){return Math.round(sDOM(m.dom)*0.25 + sMOI(m.moi)*0.25 + sCash(m.cash)*0.20 + sVel(m.slr)*0.15 + sPG(m.pg)*0.15);}
-function adScore(m){return Math.round(m.opp*0.40 + sPop(m.pop)*0.20 + sLead(m.leads)*0.20 + 50*0.10 + 50*0.10);}
+function opp(m){return Math.round(sDOM(m.dom)*0.25+sMOI(m.moi)*0.25+sCash(m.cash)*0.20+sVel(m.slr)*0.15+sPG(m.pg)*0.15);}
+function adScore(m){return Math.round(m.opp*0.40+sPop(m.pop)*0.20+sLead(m.leads)*0.20+50*0.10+50*0.10);}
+/* ROI score: opportunity adjusted for lead cost. Cheap leads boost, expensive penalize. */
+function sLeadCost(lc){if(lc<=32)return 100;if(lc<=45)return 85;if(lc<=58)return 68;if(lc<=72)return 50;if(lc<=85)return 32;return 15;}
+function roiScore(m){return Math.round(m.opp*0.55+sLeadCost(m.leadCost)*0.30+(10-m.comp)*1.5);}
 function exitStrat(m){
-  if(m.dom<20 && m.moi<2 && m.slr>100) return ["Novation / MLS","#16a34a"];
-  if(m.pg>2 && m.moi<2.5) return ["Hold / Sub-2","#0ea5e9"];
-  if(m.dom>=20 && m.dom<=45 && m.cash>18) return ["Wholesale","#65a30d"];
-  if(m.dom>45 && m.moi>4) return ["Wholetail","#ca8a04"];
-  if(m.dom>55 || m.moi>5) return ["Creative / Sub-2","#ea580c"];
-  return ["Wholesale","#65a30d"];
+  if(m.dom<20&&m.moi<2&&m.slr>100)return ["Novation / MLS","#5a9e35"];
+  if(m.pg>2&&m.moi<2.5)return ["Hold / Sub-2","#3aa0d6"];
+  if(m.dom>=20&&m.dom<=45&&m.cash>18)return ["Wholesale","#9cc23a"];
+  if(m.dom>45&&m.moi>4)return ["Wholetail","#e8b84a"];
+  if(m.dom>55||m.moi>5)return ["Creative / Sub-2","#e07b2e"];
+  return ["Wholesale","#9cc23a"];
 }
-function scoreColor(s){if(s>=75)return"#16a34a";if(s>=60)return"#65a30d";if(s>=45)return"#ca8a04";if(s>=30)return"#ea580c";return"#dc2626";}
-function scoreLabel(s){if(s>=75)return"Excellent";if(s>=60)return"Good";if(s>=45)return"Moderate";if(s>=30)return"Weak";return"Poor";}
-
-/* ---------- BUILD MARKETS ---------- */
+function scoreColor(s){if(s>=75)return"#5a9e35";if(s>=60)return"#9cc23a";if(s>=45)return"#e8b84a";if(s>=30)return"#e07b2e";return"#d14545";}
+/* ---------- BUILD ---------- */
+var AVG_LEADCOST;
 var MARKETS = RAW.map(function(r){
-  var m={city:r[0],state:r[1],pop:r[2],cash:r[3],price:r[4],dom:r[5],moi:r[6],slr:r[7],pg:r[8],leads:r[9]};
-  m.active = ACTIVE_STATES.indexOf(m.state)>=0;
-  m.opp = opp(m);
-  m.ad = adScore(m);
-  var e = exitStrat(m); m.exit=e[0]; m.exitColor=e[1];
-  return m;
+  return {city:r[0],state:r[1],pop:r[2],cash:r[3],price:r[4],dom:r[5],moi:r[6],slr:r[7],pg:r[8],leads:r[9],comp:r[10],leadCost:r[11]};
 });
-
-/* ---------- SCORE BREAKDOWN (for tooltips) ---------- */
-function oppBreakdown(m){
-  return '<b>'+m.city+', '+m.state+' — Opportunity '+m.opp+'</b>'+
-    '<div class="tline"><span class="tk">Days on Market ('+m.dom+'d) ×25%</span><span class="tv">'+Math.round(sDOM(m.dom))+'</span></div>'+
-    '<div class="tline"><span class="tk">Months Inventory ('+m.moi+') ×25%</span><span class="tv">'+Math.round(sMOI(m.moi))+'</span></div>'+
-    '<div class="tline"><span class="tk">Cash Sales ('+m.cash+'%) ×20%</span><span class="tv">'+Math.round(sCash(m.cash))+'</span></div>'+
-    '<div class="tline"><span class="tk">Sale/List ('+m.slr+'%) ×15%</span><span class="tv">'+Math.round(sVel(m.slr))+'</span></div>'+
-    '<div class="tline"><span class="tk">Pop Growth ('+m.pg+'%) ×15%</span><span class="tv">'+Math.round(sPG(m.pg))+'</span></div>';
-}
-function adBreakdown(m){
-  return '<b>'+m.city+', '+m.state+' — Ad Score '+m.ad+'</b>'+
-    '<div class="tline"><span class="tk">Opportunity ('+m.opp+') ×40%</span><span class="tv">'+Math.round(m.opp*0.4)+'</span></div>'+
-    '<div class="tline"><span class="tk">Metro Size ('+(m.pop>=1000000?'1M+':fmtK(m.pop))+') ×20%</span><span class="tv">'+Math.round(sPop(m.pop)*0.2)+'</span></div>'+
-    '<div class="tline"><span class="tk">Our Leads ('+m.leads+') ×20%</span><span class="tv">'+Math.round(sLead(m.leads)*0.2)+'</span></div>'+
-    '<div class="tline"><span class="tk">Seller Motivation ×10%</span><span class="tv">5</span></div>'+
-    '<div class="tline"><span class="tk">Affordability ×10%</span><span class="tv">5</span></div>';
-}
-
+AVG_LEADCOST = MARKETS.reduce(function(a,m){return a+m.leadCost;},0)/MARKETS.length;
+MARKETS.forEach(function(m){
+  m.active=ACTIVE_STATES.indexOf(m.state)>=0;
+  m.opp=opp(m); m.ad=adScore(m); m.roi=roiScore(m);
+  var e=exitStrat(m); m.exit=e[0]; m.exitColor=e[1];
+  m.gem = (m.pop<150000 && m.comp<=3 && m.leadCost<AVG_LEADCOST && m.opp>=55);
+});
+/* ---------- BREAKDOWNS ---------- */
+function oppBreakdown(m){return '<b>'+m.city+', '+m.state+' — Opportunity '+m.opp+'</b>'+
+  '<div class="tline"><span class="tk">Days on Market ('+m.dom+'d) ×25%</span><span class="tv">'+Math.round(sDOM(m.dom))+'</span></div>'+
+  '<div class="tline"><span class="tk">Months Inventory ('+m.moi+') ×25%</span><span class="tv">'+Math.round(sMOI(m.moi))+'</span></div>'+
+  '<div class="tline"><span class="tk">Cash Sales ('+m.cash+'%) ×20%</span><span class="tv">'+Math.round(sCash(m.cash))+'</span></div>'+
+  '<div class="tline"><span class="tk">Sale/List ('+m.slr+'%) ×15%</span><span class="tv">'+Math.round(sVel(m.slr))+'</span></div>'+
+  '<div class="tline"><span class="tk">Pop Growth ('+m.pg+'%) ×15%</span><span class="tv">'+Math.round(sPG(m.pg))+'</span></div>';}
+function adBreakdown(m){return '<b>'+m.city+', '+m.state+' — Ad Score '+m.ad+'</b>'+
+  '<div class="tline"><span class="tk">Opportunity ('+m.opp+') ×40%</span><span class="tv">'+Math.round(m.opp*0.4)+'</span></div>'+
+  '<div class="tline"><span class="tk">Metro Size ×20%</span><span class="tv">'+Math.round(sPop(m.pop)*0.2)+'</span></div>'+
+  '<div class="tline"><span class="tk">Our Leads ('+m.leads+') ×20%</span><span class="tv">'+Math.round(sLead(m.leads)*0.2)+'</span></div>'+
+  '<div class="tline"><span class="tk">Motivation+Afford ×20%</span><span class="tv">10</span></div>';}
+function roiBreakdown(m){return '<b>'+m.city+', '+m.state+' — ROI Score '+m.roi+'</b>'+
+  '<div class="tline"><span class="tk">Opportunity ('+m.opp+') ×55%</span><span class="tv">'+Math.round(m.opp*0.55)+'</span></div>'+
+  '<div class="tline"><span class="tk">Lead Cost ($'+m.leadCost+') ×30%</span><span class="tv">'+Math.round(sLeadCost(m.leadCost)*0.3)+'</span></div>'+
+  '<div class="tline"><span class="tk">Low Competition ('+m.comp+'/10)</span><span class="tv">'+Math.round((10-m.comp)*1.5)+'</span></div>';}
 /* ---------- TOOLTIP ENGINE ---------- */
 var tipEl;
-function showTip(html,x,y){
-  if(!tipEl)tipEl=el('tip');
-  tipEl.innerHTML=html;
-  tipEl.classList.add('show');
-  var w=tipEl.offsetWidth,h=tipEl.offsetHeight;
-  var px=x+14, py=y+14;
-  if(px+w>window.innerWidth-10)px=x-w-14;
-  if(py+h>window.innerHeight-10)py=y-h-14;
-  tipEl.style.left=Math.max(8,px)+'px';
-  tipEl.style.top=Math.max(8,py)+'px';
-}
+function showTip(html,x,y){if(!tipEl)tipEl=el('tip');tipEl.innerHTML=html;tipEl.classList.add('show');var w=tipEl.offsetWidth,h=tipEl.offsetHeight;var px=x+14,py=y+14;if(px+w>window.innerWidth-10)px=x-w-14;if(py+h>window.innerHeight-10)py=y-h-14;tipEl.style.left=Math.max(8,px)+'px';tipEl.style.top=Math.max(8,py)+'px';}
 function hideTip(){if(tipEl)tipEl.classList.remove('show');}
-function bindTips(root){
-  root.querySelectorAll('[data-tip]').forEach(function(node){
-    node.addEventListener('mouseenter',function(e){showTip(node.getAttribute('data-tip'),e.clientX,e.clientY);});
-    node.addEventListener('mousemove',function(e){showTip(node.getAttribute('data-tip'),e.clientX,e.clientY);});
-    node.addEventListener('mouseleave',hideTip);
-  });
-}
-
+function bindTips(root){root.querySelectorAll('[data-tip]').forEach(function(n){n.onmouseenter=function(e){showTip(n.getAttribute('data-tip'),e.clientX,e.clientY);};n.onmousemove=function(e){showTip(n.getAttribute('data-tip'),e.clientX,e.clientY);};n.onmouseleave=hideTip;});}
 /* ---------- HELPERS ---------- */
-function pill(s,m,type){
-  var bd = type==='ad'?adBreakdown(m):oppBreakdown(m);
-  return '<span class="pill" style="background:'+scoreColor(s)+'" data-tip="'+bd.replace(/"/g,'&quot;')+'">'+s+'</span>';
-}
+function pill(s,m,type){var bd=type==='ad'?adBreakdown(m):(type==='roi'?roiBreakdown(m):oppBreakdown(m));return '<span class="pill" style="background:'+scoreColor(s)+'" data-tip="'+bd.replace(/"/g,'&quot;')+'">'+s+'</span>';}
 function fmtK(n){return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'K':n;}
-function money(n){return '$'+n.toLocaleString();}
+function money(n){return '$'+Math.round(n).toLocaleString();}
 function el(id){return document.getElementById(id);}
-
+function compBars(c){var h='<span class="compbar">';for(var i=1;i<=10;i++){h+='<i class="'+(i<=c?'f':'')+'"></i>';}return h+'</span>';}
 /* ---------- OVERVIEW ---------- */
 var ovView='ALL';
-function ovFilter(arr){
-  return arr.filter(function(m){
-    if(ovView==='ACTIVE')return m.active;
-    if(ovView==='EXP')return !m.active;
-    if(ovView==='LEADS')return m.leads>0;
-    return true;
-  });
-}
-function setOverviewView(v,btn){
-  ovView=v;
-  document.querySelectorAll('.viewbtn').forEach(function(b){b.classList.remove('on');});
-  if(btn)btn.classList.add('on');
-  renderOverview();
-}
-function topList(arr,n,valFn){
-  return arr.slice(0,n).map(function(m,i){
-    return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+'<span class="mini">'+fmtK(m.pop)+(m.pg>0?' · +'+m.pg+'%':'')+'</span></span><span class="tval">'+valFn(m)+'</span></div>';
-  }).join('');
-}
+function ovFilter(arr){return arr.filter(function(m){if(ovView==='ACTIVE')return m.active;if(ovView==='EXP')return !m.active;if(ovView==='LEADS')return m.leads>0;return true;});}
+function setOverviewView(v,btn){ovView=v;document.querySelectorAll('.viewbtn').forEach(function(b){b.classList.remove('on');});if(btn)btn.classList.add('on');renderOverview();}
+function topList(arr,n,valFn,extraFn){return arr.slice(0,n).map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">'+(extraFn?extraFn(m):fmtK(m.pop)+(m.pg>0?' · +'+m.pg+'%':''))+'</span></span><span class="tval">'+valFn(m)+'</span></div>';}).join('');}
 function renderOverview(){
-  var base = ovFilter(MARKETS);
-  var activeM = MARKETS.filter(function(m){return m.active;});
-  var expM = MARKETS.filter(function(m){return !m.active;});
-  var topAd = Math.max.apply(null, MARKETS.map(function(m){return m.ad;}));
-  var avgDom = Math.round(MARKETS.reduce(function(a,m){return a+m.dom;},0)/MARKETS.length);
-  el('st-total').textContent = MARKETS.length;
-  el('st-active').textContent = activeM.length;
-  el('st-exp').textContent = expM.length;
-  el('st-ad').textContent = topAd;
-  el('st-dom').textContent = avgDom+'d';
-  var byAd = base.slice().sort(function(a,b){return b.ad-a.ad;});
-  el('panel-ad').innerHTML = topList(byAd,25,function(m){return pill(m.ad,m,'ad');});
-  var expPool = (ovView==='ACTIVE')?base:expM.slice();
-  expPool = ovFilter(expPool).sort(function(a,b){return b.opp-a.opp;});
-  el('panel-exp').innerHTML = topList(expPool,25,function(m){return pill(m.opp,m,'opp');});
-  var hottest = base.filter(function(m){return m.dom<20;}).sort(function(a,b){return a.dom-b.dom;});
-  el('panel-hot').innerHTML = topList(hottest,10,function(m){return '<span class="tval2">'+m.dom+'d</span>';}) || '<div class="trow"><span class="tcity" style="color:#5f6e7e">No markets under 20 days in this view</span></div>';
-  var whole = base.filter(function(m){return m.exit==='Wholesale';}).sort(function(a,b){return b.cash-a.cash;});
-  el('panel-whole').innerHTML = topList(whole,10,function(m){return '<span class="tval2">'+m.cash+'% cash</span>';});
-  // EXIT panel: active-state markets we are in (have leads) with weak opp scores
-  var exitList = MARKETS.filter(function(m){return m.active && m.leads>0 && m.opp<60;}).sort(function(a,b){return a.opp-b.opp;});
-  if(exitList.length){
-    el('panel-exit').innerHTML = exitList.map(function(m){
-      var reason=[];
-      if(m.dom>45)reason.push('slow ('+m.dom+'d)');
-      if(m.moi>4)reason.push('high inventory ('+m.moi+'mo)');
-      if(m.slr<97)reason.push('soft pricing ('+m.slr+'%)');
-      if(m.pg<0)reason.push('shrinking ('+m.pg+'%)');
-      if(!reason.length)reason.push('weak fundamentals');
-      return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · '+reason.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';
-    }).join('');
-  } else {
-    el('panel-exit').innerHTML = '<div class="trow"><span class="tcity" style="color:#4ade80">✓ No active-state markets are flagged for exit — all markets we operate in score 60+.</span></div>';
-  }
+  var base=ovFilter(MARKETS);
+  el('st-total').textContent=MARKETS.length;
+  el('st-active').textContent=MARKETS.filter(function(m){return m.active;}).length;
+  el('st-exp').textContent=MARKETS.filter(function(m){return !m.active;}).length;
+  el('st-gems').textContent=MARKETS.filter(function(m){return m.gem;}).length;
+  el('st-ad').textContent=Math.max.apply(null,MARKETS.map(function(m){return m.ad;}));
+  var gems=ovFilter(MARKETS).filter(function(m){return m.gem;}).sort(function(a,b){return b.roi-a.roi;});
+  el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m.roi,m,'roi');},function(m){return fmtK(m.pop)+' · comp '+m.comp+'/10 · $'+m.leadCost+'/lead · opp '+m.opp;}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
+  el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b.ad-a.ad;}),25,function(m){return pill(m.ad,m,'ad');});
+  var expPool=(ovView==='ACTIVE')?base:MARKETS.filter(function(m){return !m.active;});
+  expPool=ovFilter(expPool).sort(function(a,b){return b.opp-a.opp;});
+  el('panel-exp').innerHTML=topList(expPool,25,function(m){return pill(m.opp,m,'opp');});
+  var hot=base.filter(function(m){return m.dom<20;}).sort(function(a,b){return a.dom-b.dom;});
+  el('panel-hot').innerHTML=topList(hot,10,function(m){return '<span class="tval2">'+m.dom+'d</span>';})||'<div class="trow"><span class="tcity" style="color:#6e6c86">None under 20 days in this view</span></div>';
+  var wh=base.filter(function(m){return m.exit==='Wholesale';}).sort(function(a,b){return b.cash-a.cash;});
+  el('panel-whole').innerHTML=topList(wh,10,function(m){return '<span class="tval2">'+m.cash+'% cash</span>';});
+  var ex=MARKETS.filter(function(m){return m.active&&m.leads>0&&m.opp<60;}).sort(function(a,b){return a.opp-b.opp;});
+  el('panel-exit').innerHTML=ex.length?ex.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('weak fundamentals');return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">✓ No active-state markets flagged for exit — all score 60+.</span></div>';
   bindTips(el('tab-overview'));
 }
-
 /* ---------- TABLE ---------- */
-var tblSort={key:'ad',dir:-1};
+var tblSort={key:'roi',dir:-1};
 function renderTable(){
-  var stateF = el('f-state') ? el('f-state').value : 'ALL';
-  var viewF = el('f-view') ? el('f-view').value : 'ALL';
-  var rows = MARKETS.filter(function(m){
-    if(stateF!=='ALL' && m.state!==stateF) return false;
-    if(viewF==='ACTIVE' && !m.active) return false;
-    if(viewF==='EXP' && m.active) return false;
-    if(viewF==='LEADS' && m.leads<=0) return false;
-    return true;
-  });
-  rows.sort(function(a,b){var k=tblSort.key;var av=a[k],bv=b[k];if(typeof av==='string')return av.localeCompare(bv)*tblSort.dir;return (av-bv)*tblSort.dir;});
-  el('tbl-body').innerHTML = rows.map(function(m){
-    return '<tr>'+
-      '<td class="cty">'+m.city+'<span class="stbadge'+(m.active?' on':'')+'">'+m.state+'</span></td>'+
-      '<td>'+pill(m.ad,m,'ad')+'</td>'+
-      '<td>'+pill(m.opp,m,'opp')+'</td>'+
-      '<td>'+money(m.price)+'</td>'+
-      '<td>'+m.dom+'d</td>'+
-      '<td>'+m.moi+'</td>'+
-      '<td>'+m.cash+'%</td>'+
-      '<td>'+m.slr+'%</td>'+
-      '<td class="'+(m.pg>=0?'pos':'neg')+'">'+(m.pg>0?'+':'')+m.pg+'%</td>'+
-      '<td>'+fmtK(m.pop)+'</td>'+
-      '<td>'+(m.leads>0?'<span class="leadchip">'+m.leads+'</span>':'–')+'</td>'+
-      '<td><span class="exitbadge" style="background:'+m.exitColor+'">'+m.exit+'</span></td>'+
-    '</tr>';
-  }).join('');
-  el('tbl-count').textContent = rows.length+' markets';
+  var sf=el('f-state')?el('f-state').value:'ALL', vf=el('f-view')?el('f-view').value:'ALL';
+  var rows=MARKETS.filter(function(m){if(sf!=='ALL'&&m.state!==sf)return false;if(vf==='ACTIVE'&&!m.active)return false;if(vf==='EXP'&&m.active)return false;if(vf==='LEADS'&&m.leads<=0)return false;if(vf==='GEMS'&&!m.gem)return false;return true;});
+  rows.sort(function(a,b){var k=tblSort.key,av=a[k],bv=b[k];if(typeof av==='string')return av.localeCompare(bv)*tblSort.dir;return (av-bv)*tblSort.dir;});
+  el('tbl-body').innerHTML=rows.map(function(m){return '<tr>'+
+    '<td class="cty">'+m.city+'<span class="stbadge'+(m.active?' on':'')+'">'+m.state+'</span>'+(m.gem?'<span class="gembadge">GEM</span>':'')+'</td>'+
+    '<td>'+pill(m.ad,m,'ad')+'</td><td>'+pill(m.opp,m,'opp')+'</td><td>'+pill(m.roi,m,'roi')+'</td>'+
+    '<td>'+money(m.price)+'</td><td>'+m.dom+'d</td><td>'+m.moi+'</td><td>'+m.cash+'%</td>'+
+    '<td>'+compBars(m.comp)+'</td><td>$'+m.leadCost+'</td>'+
+    '<td class="'+(m.pg>=0?'pos':'neg')+'">'+(m.pg>0?'+':'')+m.pg+'%</td><td>'+fmtK(m.pop)+'</td>'+
+    '<td>'+(m.leads>0?'<span class="leadchip">'+m.leads+'</span>':'–')+'</td>'+
+    '<td><span class="exitbadge" style="background:'+m.exitColor+'">'+m.exit+'</span></td></tr>';}).join('');
+  el('tbl-count').textContent=rows.length+' markets';
   bindTips(el('tbl-body'));
 }
 function sortBy(k){if(tblSort.key===k)tblSort.dir*=-1;else{tblSort.key=k;tblSort.dir=-1;}renderTable();}
-
 /* ---------- MAP ---------- */
-var map, layerGroup;
-function renderMap(filter){
-  if(!map){
-    map = L.map('map',{zoomControl:true}).setView([38.5,-95],4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'',subdomains:'abcd',maxZoom:18}).addTo(map);
-    layerGroup = L.layerGroup().addTo(map);
-  }
+var map,layerGroup;
+function renderMap(f){
+  if(!map){map=L.map('map',{zoomControl:true}).setView([38.5,-95],4);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'',subdomains:'abcd',maxZoom:18}).addTo(map);layerGroup=L.layerGroup().addTo(map);}
   layerGroup.clearLayers();
   MARKETS.forEach(function(m){
-    if(filter==='ACTIVE'&&!m.active)return;
-    if(filter==='EXP'&&m.active)return;
-    if(filter==='LEADS'&&m.leads<=0)return;
-    var c = COORDS[m.city+','+m.state];
-    if(!c)return;
-    var radius = Math.max(5,Math.min(24,Math.sqrt(m.pop/1000)/2));
-    var mk = L.circleMarker([c[0],c[1]],{radius:radius,fillColor:scoreColor(m.ad),color:'#0a0a0a',weight:1,fillOpacity:0.78});
-    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b><br>Ad Score: '+m.ad+' · Opp: '+m.opp+'<br>DOM '+m.dom+'d · MOI '+m.moi+' · Pop '+fmtK(m.pop)+'<br>Exit: '+m.exit,{className:'maptip'});
+    if(f==='ACTIVE'&&!m.active)return;if(f==='EXP'&&m.active)return;if(f==='LEADS'&&m.leads<=0)return;if(f==='GEMS'&&!m.gem)return;
+    var c=COORDS[m.city+','+m.state];if(!c)return;
+    var radius=Math.max(4,Math.min(22,Math.sqrt(m.pop/1000)/2));
+    var mk=L.circleMarker([c[0],c[1]],{radius:radius,fillColor:m.gem?'#e8b84a':scoreColor(m.ad),color:m.gem?'#fff':'#0a0a0a',weight:m.gem?2:1,fillOpacity:0.8});
+    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' ✨ GEM':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead $'+m.leadCost+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
     layerGroup.addLayer(mk);
   });
 }
-function mapFilter(f,btn){
-  document.querySelectorAll('.mapbtn').forEach(function(b){b.classList.remove('on');});
-  if(btn)btn.classList.add('on');
-  renderMap(f);
+function mapFilter(f,btn){document.querySelectorAll('.mapbtn').forEach(function(b){b.classList.remove('on');});if(btn)btn.classList.add('on');renderMap(f);}
+/* ---------- CALCULATOR ---------- */
+function runCalc(){
+  var cpl=parseFloat(el('calc-cpl').value)||0, conv=parseFloat(el('calc-conv').value)||1, profit=parseFloat(el('calc-profit').value)||0;
+  var cpd=cpl*conv;
+  var net=profit-cpd;
+  var roas=cpd>0?(profit/cpd):0;
+  var be=profit/conv;
+  el('cm-cpd').textContent=money(cpd);
+  el('cm-roi').textContent=roas.toFixed(1)+'x';
+  el('cm-margin').textContent=money(net);
+  el('cm-break').textContent=money(be);
+  var v=el('calc-verdict');
+  if(roas>=5){v.style.background='rgba(90,158,53,.15)';v.style.borderColor='#5a9e35';v.style.color='#8fd35e';v.innerHTML='✅ Strong market — every $1 of lead spend returns $'+roas.toFixed(2)+'. Scale aggressively here.';}
+  else if(roas>=2.5){v.style.background='rgba(232,184,74,.12)';v.style.borderColor='#e8b84a';v.style.color='#e8b84a';v.innerHTML='⚠ Workable — $'+roas.toFixed(2)+' returned per $1 spent. Profitable but watch conversion.';}
+  else{v.style.background='rgba(209,69,69,.12)';v.style.borderColor='#d14545';v.style.color='#e88c8c';v.innerHTML='⛔ Marginal — only $'+roas.toFixed(2)+' per $1 spent. Lead cost may be too high here (Miami problem). Consider cheaper markets below.';}
+  var cheap=MARKETS.slice().sort(function(a,b){return a.leadCost-b.leadCost;}).slice(0,12);
+  el('panel-cheap').innerHTML=cheap.map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">opp '+m.opp+' · comp '+m.comp+'/10</span></span><span class="tval" style="color:#8fd35e">$'+m.leadCost+'</span></div>';}).join('');
 }
-
 /* ---------- TABS ---------- */
-function showTab(name,btn){
-  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
-  document.querySelectorAll('.navtab').forEach(function(t){t.classList.remove('on');});
-  el('tab-'+name).style.display='block';
-  if(btn)btn.classList.add('on');
-  if(name==='map'){setTimeout(function(){if(map)map.invalidateSize();renderMap('ALL');},120);}
-}
-
+function showTab(name,btn){document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});document.querySelectorAll('.navtab').forEach(function(t){t.classList.remove('on');});el('tab-'+name).style.display='block';if(btn)btn.classList.add('on');if(name==='map'){setTimeout(function(){if(map)map.invalidateSize();renderMap('ALL');},120);}}
 /* ---------- INIT ---------- */
 function init(){
   tipEl=el('tip');
   renderOverview();
-  var states = ACTIVE_STATES.concat(MARKETS.filter(function(m){return !m.active;}).map(function(m){return m.state;}));
-  var uniq = states.filter(function(v,i){return states.indexOf(v)===i;}).sort();
-  var sel = el('f-state');
-  if(sel){uniq.forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});}
+  var states=ACTIVE_STATES.concat(MARKETS.filter(function(m){return !m.active;}).map(function(m){return m.state;}));
+  var uniq=states.filter(function(v,i){return states.indexOf(v)===i;}).sort();
+  var sel=el('f-state');if(sel){uniq.forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});}
+  var cm=el('calc-market');
+  if(cm){MARKETS.slice().sort(function(a,b){return a.city.localeCompare(b.city);}).forEach(function(m){var o=document.createElement('option');o.value=m.city+','+m.state;o.textContent=m.city+', '+m.state+' ($'+m.leadCost+'/lead)';o.setAttribute('data-lc',m.leadCost);cm.appendChild(o);});
+    cm.onchange=function(){var lc=cm.options[cm.selectedIndex].getAttribute('data-lc');if(lc)el('calc-cpl').value=lc;runCalc();};}
   renderTable();
+  runCalc();
   bindTips(document);
 }
 document.addEventListener('DOMContentLoaded',init);
