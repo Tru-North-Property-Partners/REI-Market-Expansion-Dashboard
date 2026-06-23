@@ -189,6 +189,11 @@ tbody tr:hover{background:rgba(240,191,77,.06)}
 .bk-city{color:#e7e9f0}.bk-meta{color:#7d8398;font-size:11px;white-space:nowrap}
 .bk-state-hd{grid-column:1/-1;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--gold);text-transform:uppercase}
 .bk-search{width:100%;max-width:320px;background:var(--navy3);border:1px solid var(--line2);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;margin-bottom:6px}
+
+.sort-arrow{font-size:0.75em;pointer-events:none;}
+th[data-sort]{white-space:nowrap;}
+.xtag{display:inline-block;padding:2px 7px;border-radius:3px;color:#fff;font-size:0.75em;font-weight:600;white-space:nowrap;}
+.leg-item{transition:opacity 0.2s;user-select:none;}
 </style>
 </head>
 <body>
@@ -231,30 +236,44 @@ tbody tr:hover{background:rgba(240,191,77,.06)}
   <p class="note">Hidden Gems flags mid-sized markets with low competition that still have solid opportunity fundamentals, the inexpensive markets larger investors skip. Ad Score ranks where paid acquisition performs best. Expansion Targets surface high-opportunity markets outside our 7 active states. The Exit panel flags markets we operate in where fundamentals have weakened.</p>
 </div>
 <div class="tab-panel" id="tab-table">
-  <div class="filters"><span><label>State</label><select id="f-state" onchange="renderTable()"><option value="ALL">All States</option></select></span><span><label>View</label><select id="f-view" onchange="renderTable()"><option value="ALL">All Markets</option><option value="ACTIVE">Active States Only</option><option value="EXP">Expansion Only</option><option value="LEADS">Lead-Backed Only</option><option value="GEMS">Hidden Gems Only</option><option value="FAVS">Favorites Only</option></select></span><span><label>Search</label><input id="f-search" type="text" placeholder="City or state" oninput="renderTable()" autocomplete="off" class="f-search"></span><button id="csv-btn" class="csvbtn" onclick="exportCSV()">Export CSV</button><span class="tcount" id="tbl-count"></span></div>
+  <div class="filters">
+  <span><label>State</label><select id="f-state" onchange="renderTable()"><option value="ALL">All States</option><option value="AK">AK</option><option value="AL">AL</option><option value="AR">AR</option><option value="AZ">AZ</option><option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DC">DC</option><option value="DE">DE</option><option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option><option value="IA">IA</option><option value="ID">ID</option><option value="IL">IL</option><option value="IN">IN</option><option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option><option value="MA">MA</option><option value="MD">MD</option><option value="ME">ME</option><option value="MI">MI</option><option value="MN">MN</option><option value="MO">MO</option><option value="MS">MS</option><option value="MT">MT</option><option value="NC">NC</option><option value="ND">ND</option><option value="NE">NE</option><option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option><option value="NV">NV</option><option value="NY">NY</option><option value="OH">OH</option><option value="OK">OK</option><option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option><option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option><option value="UT">UT</option><option value="VA">VA</option><option value="VT">VT</option><option value="WA">WA</option><option value="WI">WI</option><option value="WV">WV</option><option value="WY">WY</option></select></span>
+  <span><label>View</label><select id="f-view" onchange="renderTable()"><option value="ALL">All Markets</option><option value="ACTIVE">Active States Only</option><option value="EXP">Expansion Only</option><option value="LEADS">Lead-Backed Only</option><option value="GEMS">Hidden Gems Only</option><option value="FAVS">Favorites Only</option></select></span>
+  <span><label>Exit Strategy</label><select id="f-exit" onchange="renderTable()"><option value="ALL">All Strategies</option><option value="Wholesale">Wholesale</option><option value="Wholetail">Wholetail</option><option value="Hold / Sub-2">Hold / Sub-2</option><option value="Creative / Sub-2">Creative / Sub-2</option><option value="Novation / MLS">Novation / MLS</option></select></span>
+  <span><label>Classification</label><select id="f-class" onchange="renderTable()"><option value="ALL">All Classes</option><option value="excellent">Excellent (75-100)</option><option value="good">Good (60-74)</option><option value="moderate">Moderate (45-59)</option><option value="weak">Weak (30-44)</option><option value="poor">Poor (0-29)</option><option value="exit">Exit (&lt;50)</option><option value="watch">Watch (50-59)</option></select></span>
+  <span><label>Pop. Growth</label><select id="f-pg" onchange="renderTable()"><option value="ALL">Any</option><option value="POS">Positive Only</option><option value="NEG">Negative Only</option><option value="HIGH">High (&gt;2%)</option></select></span>
+  <span><label>DOM Max</label><select id="f-dom" onchange="renderTable()"><option value="ALL">Any</option><option value="20">Under 20</option><option value="30">Under 30</option><option value="45">Under 45</option><option value="60">Under 60</option><option value="90">Under 90</option></select></span>
+  <span><label>MOI Max</label><select id="f-moi" onchange="renderTable()"><option value="ALL">Any</option><option value="1.5">Under 1.5</option><option value="2">Under 2</option><option value="3">Under 3</option><option value="4">Under 4</option><option value="6">Under 6</option></select></span>
+  <span><label>Min Yield</label><select id="f-yld" onchange="renderTable()"><option value="ALL">Any</option><option value="4">4%+</option><option value="5">5%+</option><option value="6">6%+</option><option value="7">7%+</option><option value="8">8%+</option></select></span>
+  <span><label>Market Heat</label><select id="f-mti" onchange="renderTable()"><option value="ALL">Any</option><option value="seller">Seller Market (50+)</option><option value="buyer">Buyer Market (&lt;50)</option><option value="hot">Hot Market (70+)</option></select></span>
+  <span><label>Search</label><input id="f-search" type="text" placeholder="City or state" oninput="renderTable()" autocomplete="off" class="f-search"></span>
+  <button id="csv-btn" class="csvbtn" onclick="exportCSV()">Export CSV</button>
+  <button class="csvbtn" onclick="clearFilters()" style="background:#555;margin-left:4px">Clear Filters</button>
+  <span class="tcount" id="tbl-count">1000 markets</span>
+</div>
   <div class="cmpbar" id="cmpbar"></div>
-  <div class="tblwrap"><table><thead><tr>
+  <div class="tblwrap"><table id="markets-table">><thead><tr>
     <th class="thmark"></th>
-    <th onclick="sortBy('city')"><span class="hh">Market <span class="qm" data-tip="City and state. Green badge = a state we actively operate in. Gold GEM badge = flagged as a hidden-gem market.">?</span></span></th>
-    <th onclick="sortBy('ad')"><span class="hh">Ad Score <span class="qm" data-tip="ADVERTISING SCORE (0-100): where to spend paid ad dollars. Blends opportunity, metro size, our lead flow, and seller motivation.">?</span></span></th>
-    <th onclick="sortBy('opp')"><span class="hh">Opp Score <span class="qm" data-tip="OPPORTUNITY SCORE (0-100): deal-flow fundamentals - days on market, inventory, cash sales, sale-to-list velocity, and population growth.">?</span></span></th>
-    <th onclick="sortBy('roi')"><span class="hh">ROI Score <span class="qm" data-tip="ROI SCORE (0-100): rewards markets with strong deal fundamentals and low competition, with a penalty for markets too small to work. Lead cost is shown for reference only and is not part of this score yet.">?</span></span></th>
-    <th onclick="sortBy('price')"><span class="hh">Median Price <span class="qm" data-tip="Median home sale price over the trailing 12 months.">?</span></span></th>
-    <th onclick="sortBy('dom')"><span class="hh">DOM <span class="qm" data-tip="DAYS ON MARKET: median days a listing takes to go pending. Sweet spot 15-35.">?</span></span></th>
-    <th onclick="sortBy('moi')"><span class="hh">MOI <span class="qm" data-tip="MONTHS OF INVENTORY: months to sell all listings at current pace. Under ~2.5 = sellers market. Sweet spot 1.5-3.5.">?</span></span></th>
-    <th onclick="sortBy('cash')"><span class="hh">Cash % <span class="qm" data-tip="CASH SALES %: share of cash sales - a proxy for investor demand. Sweet spot 15-35%.">?</span></span></th>
-    <th onclick="sortBy('comp')"><span class="hh">Comp <span class="qm" data-tip="COMPETITION (1-10 bars): how saturated the market is with other investors/wholesalers. Fewer bars = less competition = easier, cheaper to win.">?</span></span></th>
-    <th onclick="sortBy('leadCost')"><span class="hh">Lead $ <span class="qm" data-tip="Lead cost: the average price paid per qualified seller lead in this market, based on our PropertyLeads history where available (shown as - where we don't have data yet). Lower is better. Shown for reference only - it is not factored into the scores.">?</span></span></th>
-    <th onclick="sortBy('zhvi')"><span class="hh">Home Value <span class="qm" data-tip="Zillow Home Value Index (ZHVI): the typical home value for this city, latest monthly reading. Sourced from Zillow Research. Reference only, not scored.">?</span></span></th><th onclick="sortBy('rent')"><span class="hh">Rent <span class="qm" data-tip="Zillow Observed Rent Index (ZORI): typical market rent for this city, latest monthly reading. Sourced from Zillow Research. Reference only, not scored.">?</span></span></th><th onclick="sortBy('yield')"><span class="hh">Gross Yield <span class="qm" data-tip="Gross rental yield: annual rent divided by home value (ZORI x 12 / ZHVI). A quick read on rent economics. Reference only, not scored.">?</span></span></th><th onclick="sortBy('mti')"><span class="hh">Mkt Heat <span class="qm" data-tip="Zillow Market Temperature Index (0-100). Above 50 means seller-favorable market. Composite of engagement and listing performance. Metro-level proxy. Source: Zillow Research, May 2026. Reference only, not scored.">?</span></span></th><th onclick="sortBy('pg')"><span class="hh">Growth <span class="qm" data-tip="POPULATION GROWTH: estimated annual growth. Higher = rising demand and appreciation.">?</span></span></th>
-    <th onclick="sortBy('pop')"><span class="hh">Pop <span class="qm" data-tip="POPULATION: city size. Smaller markets often mean less competition.">?</span></span></th>
-    <th onclick="sortBy('leads')"><span class="hh">Leads <span class="qm" data-tip="OUR LEADS: the number of qualified seller leads we have actually received in this market through PropertyLeads.">?</span></span></th>
-    <th onclick="sortBy('exit')"><span class="hh">Exit <span class="qm" data-tip="RECOMMENDED EXIT STRATEGY for this markets speed and competition.">?</span></span></th>
+    <th onclick="sortBy('city')" data-sort="city"><span class="hh">Market <span class="qm" data-tip="City and state. Green badge = a state we actively operate in. Gold GEM badge = flagged as a hidden-gem market.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('ad')" data-sort="ad"><span class="hh">Ad Score <span class="qm" data-tip="ADVERTISING SCORE (0-100): where to spend paid ad dollars. Blends opportunity, metro size, our lead flow, and seller motivation.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('opp')" data-sort="opp"><span class="hh">Opp Score <span class="qm" data-tip="OPPORTUNITY SCORE (0-100): deal-flow fundamentals - days on market, inventory, cash sales, sale-to-list velocity, and population growth.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('roi')" data-sort="roi"><span class="hh">ROI Score <span class="qm" data-tip="ROI SCORE (0-100): rewards markets with strong deal fundamentals and low competition, with a penalty for markets too small to work. Lead cost is shown for reference only and is not part of this score yet.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('price')" data-sort="price"><span class="hh">Median Price <span class="qm" data-tip="Median home sale price over the trailing 12 months.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('dom')" data-sort="dom"><span class="hh">DOM <span class="qm" data-tip="DAYS ON MARKET: median days a listing takes to go pending. Sweet spot 15-35.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('moi')" data-sort="moi"><span class="hh">MOI <span class="qm" data-tip="MONTHS OF INVENTORY: months to sell all listings at current pace. Under ~2.5 = sellers market. Sweet spot 1.5-3.5.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('cash')" data-sort="cash"><span class="hh">Cash % <span class="qm" data-tip="CASH SALES %: share of cash sales - a proxy for investor demand. Sweet spot 15-35%.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('comp')" data-sort="comp"><span class="hh">Comp <span class="qm" data-tip="COMPETITION (1-10 bars): how saturated the market is with other investors/wholesalers. Fewer bars = less competition = easier, cheaper to win.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('leadCost')" data-sort="leadCost"><span class="hh">Lead $ <span class="qm" data-tip="Lead cost: the average price paid per qualified seller lead in this market, based on our PropertyLeads history where available (shown as - where we don't have data yet). Lower is better. Shown for reference only - it is not factored into the scores.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('zhvi')" data-sort="zhvi"><span class="hh">Home Value <span class="qm" data-tip="Zillow Home Value Index (ZHVI): the typical home value for this city, latest monthly reading. Sourced from Zillow Research. Reference only, not scored.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('rent')" data-sort="rent"><span class="hh">Rent <span class="qm" data-tip="Zillow Observed Rent Index (ZORI): typical market rent for this city, latest monthly reading. Sourced from Zillow Research. Reference only, not scored.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('yield')" data-sort="yield"><span class="hh">Gross Yield <span class="qm" data-tip="Gross rental yield: annual rent divided by home value (ZORI x 12 / ZHVI). A quick read on rent economics. Reference only, not scored.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('mti')" data-sort="mti"><span class="hh">Mkt Heat <span class="qm" data-tip="Zillow Market Temperature Index (0-100). Above 50 means seller-favorable market. Composite of engagement and listing performance. Metro-level proxy. Source: Zillow Research, May 2026. Reference only, not scored.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('pg')" data-sort="pg"><span class="hh">Growth <span class="qm" data-tip="POPULATION GROWTH: estimated annual growth. Higher = rising demand and appreciation.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('pop')" data-sort="pop"><span class="hh">Pop <span class="qm" data-tip="POPULATION: city size. Smaller markets often mean less competition.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('leads')" data-sort="leads"><span class="hh">Leads <span class="qm" data-tip="OUR LEADS: the number of qualified seller leads we have actually received in this market through PropertyLeads.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('exit')" data-sort="exit"><span class="hh">Exit <span class="qm" data-tip="RECOMMENDED EXIT STRATEGY for this markets speed and competition.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
   </tr></thead><tbody id="tbl-body"></tbody></table></div>
 </div>
 <div class="tab-panel" id="tab-map">
   <div class="mapbar"><button class="mapbtn on" onclick="mapFilter('ALL',this)">All Markets</button><button class="mapbtn" onclick="mapFilter('ACTIVE',this)">Active States</button><button class="mapbtn" onclick="mapFilter('EXP',this)">Expansion</button><button class="mapbtn" onclick="mapFilter('GEMS',this)">Hidden Gems</button><button class="mapbtn" onclick="mapFilter('LEADS',this)">Lead-Backed</button></div>
   <div id="map"></div>
-  <div class="legend"><span><i style="background:#5a9e35"></i>Excellent 75-100</span><span><i style="background:#9cc23a"></i>Good 60-74</span><span><i style="background:#e8b84a"></i>Moderate 45-59</span><span><i style="background:#e07b2e"></i>Weak 30-44</span><span><i style="background:#d14545"></i>Poor 0-29</span><span>Circle size = population</span></div>
+  <div class="legend"><span class="leg-item" data-cls="excellent" onclick="toggleLegend('excellent',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#5a9e35"></i>Excellent 75-100</span><span class="leg-item" data-cls="good" onclick="toggleLegend('good',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#9cc23a"></i>Good 60-74</span><span class="leg-item" data-cls="moderate" onclick="toggleLegend('moderate',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e8b84a"></i>Moderate 45-59</span><span class="leg-item" data-cls="weak" onclick="toggleLegend('weak',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e07b2e"></i>Weak 30-44</span><span class="leg-item" data-cls="poor" onclick="toggleLegend('poor',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#d14545"></i>Poor 0-29</span><span>Circle size = population</span></div>
 </div>
 <div class="tab-panel" id="tab-calc">
   <div class="calc-grid">
@@ -1350,11 +1369,16 @@ function isTooSmall(m){if(m.pop!=null)return m.pop<30000;if(m.sold!=null)return 
 function adScore(m){return Math.max(0,Math.round(m.opp*0.40+sizeScore(m)*0.20+sLead(m.leads)*0.20+50*0.10+50*0.10+viability(m)));}
 function roiScore(m){var c=(m.comp==null?5:m.comp);return Math.max(0,Math.round(m.opp*0.78+(10-c)*2.2+viability(m)));}
 function exitStrat(m){
-  if(m.dom<20&&m.moi<2&&m.slr>100)return ["Novation / MLS","#5a9e35"];
-  if(m.pg>2&&m.moi<2.5)return ["Hold / Sub-2","#3aa0d6"];
-  if(m.dom>=20&&m.dom<=45&&m.cash>18)return ["Wholesale","#9cc23a"];
-  if(m.dom>45&&m.moi>4)return ["Wholetail","#e8b84a"];
-  if(m.dom>55||m.moi>5)return ["Creative / Sub-2","#e07b2e"];
+  // Hot seller markets: fast DOM, low inventory, above ask prices = ideal for Novation/MLS listing
+  if(m.dom!=null&&m.moi!=null&&m.slr!=null&&m.dom<30&&m.moi<2.5&&m.slr>=99)return ["Novation / MLS","#5a9e35"];
+  // Strong growth + low inventory = Hold or creative finance
+  if(m.pg!=null&&m.moi!=null&&m.pg>2&&m.moi<2.5)return ["Hold / Sub-2","#3aa0d6"];
+  // Moderate speed, strong cash buyer pool = Wholesale
+  if(m.dom!=null&&m.cash!=null&&m.dom>=20&&m.dom<=55&&m.cash>18)return ["Wholesale","#9cc23a"];
+  // Slow market, high inventory = Wholetail
+  if(m.dom!=null&&m.moi!=null&&m.dom>45&&m.moi>4)return ["Wholetail","#e8b84a"];
+  // Stale/overpriced market = Creative finance or Sub-2
+  if(m.dom!=null&&m.moi!=null&&(m.dom>55||m.moi>5))return ["Creative / Sub-2","#e07b2e"];
   return ["Wholesale","#9cc23a"];
 }
 function lcFmt(v){return (v==null||v==="")?"N/A":("$"+v);}function hvFmt(v){return v==null?"N/A":"$"+Math.round(v).toLocaleString();}function rentFmt(v){return v==null?"N/A":"$"+Math.round(v).toLocaleString()+"/mo";}function yldFmt(v){return v==null?"N/A":v+"%";}
@@ -1425,119 +1449,126 @@ function renderOverview(){
 }
 /* ---------- TABLE ---------- */
 var tblSort={key:'roi',dir:-1};
+var hiddenCls=new Set();
+function clearFilters(){
+  ['f-state','f-view','f-exit','f-class','f-pg','f-dom','f-moi','f-yld','f-mti'].forEach(id=>{var e=el(id);if(e)e.value='ALL';});
+  var fs=el('f-search');if(fs)fs.value='';
+  renderTable();
+}
+function toggleLegend(cls,span){
+  if(hiddenCls.has(cls)){hiddenCls.delete(cls);span.style.opacity='1';span.style.textDecoration='';}
+  else{hiddenCls.add(cls);span.style.opacity='0.35';span.style.textDecoration='line-through';}
+  renderMap();
+}
+function classOf(opp){
+  if(opp>=75)return 'excellent';
+  if(opp>=60)return 'good';
+  if(opp>=45)return 'moderate';
+  if(opp>=30)return 'weak';
+  return 'poor';
+}
 function renderTable(){
-  var sf=el('f-state')?el('f-state').value:'ALL', vf=el('f-view')?el('f-view').value:'ALL';
-  var rows=MARKETS.filter(function(m){if(sf!=='ALL'&&m.state!==sf)return false;if(vf==='ACTIVE'&&!m.active)return false;if(vf==='EXP'&&m.active)return false;if(vf==='LEADS'&&m.leads<=0)return false;if(vf==='GEMS'&&!m.gem)return false;if(vf==='FAVS'&&!isFav(m))return false;var q=el('f-search')?el('f-search').value.trim().toLowerCase():'';if(q&&(m.city+' '+m.state).toLowerCase().indexOf(q)<0)return false;return true;});
-  rows.sort(function(a,b){var k=tblSort.key,av=a[k],bv=b[k];if(typeof av==='string')return av.localeCompare(bv)*tblSort.dir;return (av-bv)*tblSort.dir;});
-  el('tbl-body').innerHTML=rows.map(function(m){return '<tr onclick="showDetail(\''+mkKey(m)+'\')">'+
-    '<td class="markcell" onclick="event.stopPropagation()"><span class="star'+(isFav(m)?' on':'')+'" onclick="toggleFav(\''+mkKey(m)+'\',this)" data-tip="Save to favorites">'+(isFav(m)?'\u2605':'\u2606')+'</span><input type="checkbox" class="cmpchk" '+(isCmp(m)?'checked':'')+' onclick="toggleCmp(\''+mkKey(m)+'\')" data-tip="Add to compare"></td>'+
-    '<td class="cty">'+m.city+'<span class="stbadge'+(m.active?' on':'')+'">'+m.state+'</span>'+(m.gem?'<span class="gembadge">GEM</span>':'')+'</td>'+
-    '<td>'+pill(m.ad,m,'ad')+'</td><td>'+pill(m.opp,m,'opp')+'</td><td>'+pill(m.roi,m,'roi')+'</td>'+
-    '<td>'+money(m.price)+'</td><td>'+(m.dom==null?'N/A':m.dom+'d')+'</td><td>'+(m.moi==null?'N/A':m.moi)+'</td><td>'+(m.cash==null?'N/A':m.cash+'%')+'</td>'+
-    '<td>'+compBars(m.comp)+'</td><td>'+lcFmt(m.leadCost)+'</td>'+'<td>'+hvFmt(m.zhvi)+'</td><td>'+rentFmt(m.rent)+'</td><td>'+yldFmt(m.yield)+'</td>'+'<td>'+(m.mti==null?'N/A':m.mti)+'</td>'+
-    '<td class="'+(m.pg==null?'':(m.pg>=0?'pos':'neg'))+'">'+(m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%'))+'</td><td>'+fmtK(m.pop)+(m.tooSmall?' <span class="flagsm" data-tip="Population is very small, may be hard to source deals, agents or cash buyers here">too small</span>':'')+'</td>'+
-    '<td>'+(m.leads>0?'<span class="leadchip">'+m.leads+'</span>':'N/A')+'</td>'+
-    '<td><span class="exitbadge" style="background:'+m.exitColor+'">'+m.exit+'</span></td></tr>';}).join('');
-  el('tbl-count').textContent=rows.length+' markets';
-  bindTips(el('tbl-body'));
+  var sf=el('f-state')?el('f-state').value:'ALL',
+      vf=el('f-view')?el('f-view').value:'ALL',
+      xf=el('f-exit')?el('f-exit').value:'ALL',
+      cf=el('f-class')?el('f-class').value:'ALL',
+      pgf=el('f-pg')?el('f-pg').value:'ALL',
+      domf=el('f-dom')?el('f-dom').value:'ALL',
+      moif=el('f-moi')?el('f-moi').value:'ALL',
+      yldf=el('f-yld')?el('f-yld').value:'ALL',
+      mtif=el('f-mti')?el('f-mti').value:'ALL';
+  var rows=MARKETS.filter(function(m){
+    if(sf!=='ALL'&&m.state!==sf)return false;
+    if(vf==='ACTIVE'&&!m.active)return false;
+    if(vf==='EXP'&&m.active)return false;
+    if(vf==='LEADS'&&m.leads<=0)return false;
+    if(vf==='GEMS'&&!m.gem)return false;
+    if(vf==='FAVS'&&!isFav(m))return false;
+    // exit strategy filter
+    if(xf!=='ALL'&&m.exit!==xf)return false;
+    // classification filter
+    if(cf!=='ALL'){
+      var c=classOf(m.opp);
+      if(cf==='exit'&&m.opp>=50)return false;
+      if(cf==='watch'&&(m.opp<50||m.opp>=60))return false;
+      if(cf==='excellent'&&c!=='excellent')return false;
+      if(cf==='good'&&c!=='good')return false;
+      if(cf==='moderate'&&c!=='moderate')return false;
+      if(cf==='weak'&&c!=='weak')return false;
+      if(cf==='poor'&&c!=='poor')return false;
+    }
+    // pop growth filter
+    if(pgf==='POS'&&(m.pg==null||m.pg<0))return false;
+    if(pgf==='NEG'&&(m.pg==null||m.pg>=0))return false;
+    if(pgf==='HIGH'&&(m.pg==null||m.pg<=2))return false;
+    // DOM filter
+    if(domf!=='ALL'&&(m.dom==null||m.dom>=parseFloat(domf)))return false;
+    // MOI filter
+    if(moif!=='ALL'&&(m.moi==null||m.moi>=parseFloat(moif)))return false;
+    // Yield filter
+    if(yldf!=='ALL'&&(m.yield==null||m.yield<parseFloat(yldf)))return false;
+    // MTI filter
+    if(mtif==='seller'&&(m.mti==null||m.mti<50))return false;
+    if(mtif==='buyer'&&(m.mti==null||m.mti>=50))return false;
+    if(mtif==='hot'&&(m.mti==null||m.mti<70))return false;
+    // search filter
+    var q=(el('f-search')?el('f-search').value:'').trim().toLowerCase();
+    if(q&&m.city.toLowerCase().indexOf(q)<0&&m.state.toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  var k=tblSort.key,d=tblSort.dir;
+  rows.sort(function(a,b){
+    var av=a[k],bv=b[k];
+    if(av==null&&bv==null)return 0;
+    if(av==null)return 1;
+    if(bv==null)return -1;
+    if(typeof av==='string')return d*(av<bv?-1:av>bv?1:0);
+    return d*(av-bv);
+  });
+  var h='';
+  rows.forEach(function(m){
+    var sc=m.exitColor||'#9cc23a';
+    var cls=classOf(m.opp);
+    h+='<tr onclick="openDetail(''+m.city.replace(/'/g,"\'")+'',''+m.state+'')">';
+    h+='<td class="thmark">'+favBtn(m)+'</td>';
+    h+='<td class="mkname"><span class="dot" style="background:'+sc+'"></span>'+(m.active?'<span class="act-badge">&#9679;</span>':'')+m.city+', '+m.state+(m.gem?'<span class="gem-badge" data-tip="Hidden Gem market">GEM</span>':'')+'</td>';
+    h+='<td class="scnum '+cls+'">'+m.ad+'</td>';
+    h+='<td class="scnum '+cls+'">'+m.opp+'</td>';
+    h+='<td class="scnum '+cls+'">'+m.roi+'</td>';
+    h+='<td>'+priceFmt(m.price)+'</td>';
+    h+='<td>'+m.dom+'</td>';
+    h+='<td>'+m.moi+'</td>';
+    h+='<td>'+(m.cash==null?'N/A':m.cash+'%')+'</td>';
+    h+='<td>'+(m.comp==null?'N/A':m.comp+'/10')+'</td>';
+    h+='<td>'+lcFmt(m.leadCost)+'</td>';
+    h+='<td>'+hvFmt(m.zhvi)+'</td><td>'+rentFmt(m.rent)+'</td><td>'+yldFmt(m.yield)+'</td>';
+    h+='<td>'+(m.mti==null?'N/A':m.mti)+'</td>';
+    h+='<td class="'+(m.pg==null?'':(m.pg>=0?'pos':'neg'))+'">'+(m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%'))+'</td>';
+    h+='<td>'+fmtK(m.pop)+(m.tooSmall?' <span class="flagsm" data-tip="Population is below 30k; smaller seller pool.">&#9651;</span>':'')+'</td>';
+    h+='<td>'+(m.leads>0?m.leads:'<span class="flagsm">0</span>')+'</td>';
+    h+='<td><span class="xtag" style="background:'+sc+'">'+m.exit+'</span></td>';
+    h+='</tr>';
+  });
+  var tbody=document.querySelector('#markets-table tbody');
+  if(tbody)tbody.innerHTML=h;
+  else{var t=document.querySelector('table');if(t)t.querySelector('tbody').innerHTML=h;}
+  var ct=el('tbl-count');if(ct)ct.textContent=rows.length+' market'+(rows.length!==1?'s':'');
+  // Update sort arrows in headers
+  document.querySelectorAll('th[data-sort]').forEach(function(th){
+    var arr=th.querySelector('.sort-arrow');
+    if(arr){
+      if(th.dataset.sort===k){arr.textContent=d===1?' &#9650;':' &#9660;';arr.style.opacity='1';}
+      else{arr.textContent=' &#9651;';arr.style.opacity='0.3';}
+    }
+  });
 }
-function currentRows(){
-  var sf=el('f-state')?el('f-state').value:'ALL', vf=el('f-view')?el('f-view').value:'ALL';
-  var q=el('f-search')?el('f-search').value.trim().toLowerCase():'';
-  return MARKETS.filter(function(m){if(sf!=='ALL'&&m.state!==sf)return false;if(vf==='ACTIVE'&&!m.active)return false;if(vf==='EXP'&&m.active)return false;if(vf==='LEADS'&&m.leads<=0)return false;if(vf==='GEMS'&&!m.gem)return false;if(vf==='FAVS'&&!isFav(m))return false;if(q&&(m.city+' '+m.state).toLowerCase().indexOf(q)<0)return false;return true;}).sort(function(a,b){var k=tblSort.key,av=a[k],bv=b[k];if(typeof av==='string')return av.localeCompare(bv)*tblSort.dir;return (av-bv)*tblSort.dir;});
-}
-var FAVS=[],CMP=[];
-try{FAVS=JSON.parse(localStorage.getItem('tn_favs')||'[]');}catch(e){FAVS=[];}
-function mkKey(m){return (m.city+'|'+m.state).replace(/'/g,'');}
-function saveFavs(){try{localStorage.setItem('tn_favs',JSON.stringify(FAVS));}catch(e){}}
-function isFav(m){return FAVS.indexOf(mkKey(m))>=0;}
-function isCmp(m){return CMP.indexOf(mkKey(m))>=0;}
-function toggleFav(key,elm){var ix=FAVS.indexOf(key);if(ix>=0){FAVS.splice(ix,1);}else{FAVS.push(key);}saveFavs();if(elm){elm.classList.toggle('on');elm.innerHTML=elm.classList.contains('on')?'\u2605':'\u2606';}var f=el('f-view');if(f&&f.value==='FAVS')renderTable();}
-function toggleCmp(key){var ix=CMP.indexOf(key);if(ix>=0){CMP.splice(ix,1);}else{if(CMP.length>=3){CMP.shift();}CMP.push(key);}renderTable();renderCmpBar();}
-function renderCmpBar(){var bar=el('cmpbar');if(!bar)return;if(!CMP.length){bar.classList.remove('show');bar.innerHTML='';return;}bar.classList.add('show');var chips=CMP.map(function(k){return '<span class="cmpchip">'+k.replace('|',', ')+' <b onclick="toggleCmp(\''+k+'\')">&times;</b></span>';}).join('');bar.innerHTML='<span class="cmplbl">Compare ('+CMP.length+'/3):</span>'+chips+'<button class="cmpgo" onclick="showCompare()"'+(CMP.length<2?' disabled':'')+'>Compare side by side</button>';}
-function findByKey(k){var p=k.split('|');return MARKETS.filter(function(m){return mkKey(m)===k;})[0];}
-function showCompare(){
-  if(CMP.length<2)return;
-  var ms=CMP.map(findByKey).filter(Boolean);
-  var rows=[
-    ['Ad Score',function(m){return '<span style="color:'+scoreColor(m.ad)+';font-weight:700">'+m.ad+'</span>';}],
-    ['Opportunity',function(m){return '<span style="color:'+scoreColor(m.opp)+';font-weight:700">'+m.opp+'</span>';}],
-    ['ROI',function(m){return '<span style="color:'+scoreColor(m.roi)+';font-weight:700">'+m.roi+'</span>';}],
-    ['Median Price',function(m){return money(m.price);}],
-    ['Days on Market',function(m){return m.dom==null?'N/A':m.dom+'d';}],
-    ['Months Inventory',function(m){return m.moi==null?'N/A':m.moi;}],
-    ['Sale-to-List',function(m){return m.slr==null?'N/A':m.slr+'%';}],
-    ['Cash Sales %',function(m){return m.cash==null?'N/A':m.cash+'%';}],
-    ['Home Value',function(m){return hvFmt(m.zhvi);}],
-    ['Rent',function(m){return rentFmt(m.rent);}],
-    ['Gross Yield',function(m){return yldFmt(m.yield);}],
-    ['Market Heat',function(m){return m.mti==null?'N/A':m.mti+'/100 (Zillow MTI)';}],
-    ['Population',function(m){return fmtK(m.pop);}],
-    ['Pop. Growth',function(m){return m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%');}],
-    ['Strategy',function(m){return m.exit||'N/A';}]
-  ];
-  var html='<div class="dh"><div class="dcity">Compare Markets</div><div class="dsub">'+ms.length+' markets side by side</div></div>';
-  html+='<div class="cmptbl"><table><thead><tr><th></th>'+ms.map(function(m){return '<th>'+m.city+'<br><span class="cmpst">'+m.state+'</span></th>';}).join('')+'</tr></thead><tbody>';
-  rows.forEach(function(r){html+='<tr><td class="cmpk">'+r[0]+'</td>'+ms.map(function(m){return '<td>'+r[1](m)+'</td>';}).join('')+'</tr>';});
-  html+='</tbody></table></div>';
-  el('drawer-body').innerHTML=html;
-  el('drawer').classList.add('show');el('ovl').classList.add('show');
-}
-function findMarket(key){var p=key.split('|');return MARKETS.filter(function(m){return (m.city+'').replace(/'/g,'')===p[0]&&m.state===p[1];})[0];}
-function showDetail(key){
-  var m=findMarket(key); if(!m)return;
-  var sc=function(v,l){return '<div class="dscore"><div class="dsv" style="color:'+scoreColor(v)+'">'+v+'</div><div class="dsl">'+l+'</div></div>';};
-  var row=function(k,v){return '<div class="drow"><span class="dk">'+k+'</span><span class="dv">'+v+'</span></div>';};
-  var badges='';
-  badges+='<span class="dbadge" style="background:'+(m.active?'rgba(79,155,70,.2);color:#7fce6f':'rgba(240,191,77,.18);color:#f0bf4d')+'">'+(m.active?'Active State':'Expansion')+'</span>';
-  if(m.gem)badges+='<span class="dbadge" style="background:rgba(240,191,77,.2);color:#f0bf4d">Hidden Gem</span>';
-  if(m.tooSmall)badges+='<span class="dbadge" style="background:rgba(224,123,46,.2);color:#e8a05e">Small Market</span>';
-  if(m.dataExp)badges+='<span class="dbadge" style="background:rgba(120,130,160,.2);color:#aab">New, Limited Data</span>';
-  var html='<div class="dh"><div class="dcity">'+m.city+', '+m.state+'</div><div class="dsub">'+(m.metro?String(m.metro).replace(/"/g,'')+' metro':'')+'</div><div class="dbadges">'+badges+'</div></div>';
-  html+='<div class="dscores">'+sc(m.ad,'Ad Score')+sc(m.opp,'Opportunity')+sc(m.roi,'ROI')+'</div>';
-  html+='<div class="dsec"><h4>Housing Market (last 12 mo, Redfin)</h4>'+
-    row('Median Sale Price',money(m.price))+
-    row('Days on Market',m.dom==null?'N/A':m.dom+' days')+
-    row('Months of Inventory',m.moi==null?'N/A':m.moi)+
-    row('Sale-to-List Ratio',m.slr==null?'N/A':m.slr+'%')+
-    row('Cash Sales %',m.cash==null?'N/A':m.cash+'%')+
-    row('Homes Sold (mo)',m.sold==null?'N/A':m.sold)+'</div>';
-  html+='<div class="dsec"><h4>Value &amp; Rent (Zillow)</h4>'+
-    row('Typical Home Value',hvFmt(m.zhvi))+
-    row('Typical Rent',rentFmt(m.rent))+
-    row('Gross Yield',yldFmt(m.yield))+
-    row('Market Heat',m.mti==null?'N/A':m.mti+'/100')+
-    row('Population',fmtK(m.pop))+
-    row('Pop. Growth',m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%'))+'</div>';
-  html+='<div class="dsec"><h4>Lead Data (reference only)</h4>'+
-    row('Competition',m.comp==null?'Not measured':m.comp+'/10')+
-    row('Lead Cost',lcFmt(m.leadCost))+
-    row('Leads in Pipeline',m.leads||0)+'</div>';
-  html+='<div class="dnote">Lead cost and Zillow value/rent are shown for reference and do not affect the scores. Scores use Redfin housing fundamentals'+(m.pop!=null?', population':'')+' and market size.</div>';
-  el('drawer-body').innerHTML=html;
-  el('drawer').classList.add('show'); el('ovl').classList.add('show');
-}
-function closeDetail(){el('drawer').classList.remove('show'); el('ovl').classList.remove('show');}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDetail();});
-function exportCSV(){
-  var rows=currentRows();
-  var cols=['City','State','Active State','Ad Score','Opportunity','ROI','Median Price','Days on Market','Months Inventory','Cash Sales %','Pop Growth %','Home Value','Rent','Gross Yield %','Population','Leads','Lead Cost','Competition'];
-  function esc(v){if(v==null)return '';v=''+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
-  var lines=[cols.join(',')];
-  rows.forEach(function(m){lines.push([m.city,m.state,m.active?'Yes':'No',m.ad,m.opp,m.roi,m.price,m.dom,m.moi,m.cash,m.pg,m.zhvi,m.rent,m.yield,m.pop,m.leads,m.leadCost,m.comp].map(esc).join(','));});
-  var csv=lines.join('\n');
-  var blob=new Blob([csv],{type:'text/csv'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tru-north-markets-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();
-}
-function sortBy(k){if(tblSort.key===k)tblSort.dir*=-1;else{tblSort.key=k;tblSort.dir=-1;}renderTable();}
-/* ---------- MAP ---------- */
-var map,layerGroup;
-function renderMap(f){
+function sortBy(k){if(tblSort.key===k)tblSort.dir*=-1;else{tblSort.key=k;tblSort.dir=-1;}renderTable();}function renderMap(f){
   if(!map){map=L.map('map',{zoomControl:true}).setView([38.5,-95],4);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'',subdomains:'abcd',maxZoom:18}).addTo(map);layerGroup=L.layerGroup().addTo(map);}
   layerGroup.clearLayers();
   MARKETS.forEach(function(m){
     if(f==='ACTIVE'&&!m.active)return;if(f==='EXP'&&m.active)return;if(f==='LEADS'&&m.leads<=0)return;if(f==='GEMS'&&!m.gem)return;
     var c=COORDS[m.city+','+m.state];if(!c)return;
+    if(hiddenCls.has(classOf(m.opp)))return;
     var _sz=(m.pop!=null?m.pop:(m.sold!=null?m.sold*1000:20000));var radius=Math.max(4,Math.min(22,Math.sqrt(_sz/1000)/2));
     var mk=L.circleMarker([c[0],c[1]],{radius:radius,fillColor:m.gem?'#e8b84a':scoreColor(m.ad),color:m.gem?'#fff':'#0a0a0a',weight:m.gem?2:1,fillOpacity:0.8});
     mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' ⚠ TOO SMALL':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
