@@ -3,302 +3,456 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>REI Market Expansion Dashboard | Tru North Property Partners</title>
+<title>REI Market Expansion Dashboard</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh}
-header{background:linear-gradient(135deg,#1a1f2e,#16213e);border-bottom:1px solid #2d3748;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.logo-text{font-size:18px;font-weight:700;color:#fff}
-.logo-sub{font-size:11px;color:#94a3b8}
-.header-stats{display:flex;gap:20px}
-.hstat{text-align:center}
-.hstat-val{font-size:20px;font-weight:700;color:#3b82f6}
-.hstat-lbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-nav{background:#1a1f2e;border-bottom:1px solid #2d3748;padding:0 24px;display:flex;overflow-x:auto}
-.nav-tab{padding:12px 18px;cursor:pointer;color:#94a3b8;font-size:13px;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
-.nav-tab:hover{color:#e2e8f0}
-.nav-tab.active{color:#3b82f6;border-bottom-color:#3b82f6;background:rgba(59,130,246,.08)}
-.main{padding:20px 24px}
-.controls{background:#1a1f2e;border:1px solid #2d3748;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.fg{display:flex;align-items:center;gap:6px;flex:1;min-width:160px}
-.fg label{font-size:11px;color:#94a3b8;white-space:nowrap;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.fg select,.fg input{background:#0f1117;border:1px solid #2d3748;color:#e2e8f0;padding:6px 10px;border-radius:7px;font-size:13px;flex:1}
-.fg select:focus,.fg input:focus{outline:none;border-color:#3b82f6}
-.btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
-.btn-p{background:#3b82f6;color:#fff}.btn-p:hover{background:#2563eb}
-.btn-s{background:#2d3748;color:#e2e8f0}.btn-s:hover{background:#374151}
-.section{display:none}.section.active{display:block}
-.tw{background:#1a1f2e;border:1px solid #2d3748;border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead{background:#16213e}
-th{padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;cursor:pointer;white-space:nowrap}
-th:hover{color:#e2e8f0;background:#1e2a3a}
-td{padding:9px 12px;border-top:1px solid #1e2535;vertical-align:middle}
-tr:hover td{background:rgba(59,130,246,.04)}
-.city-name{font-weight:600;color:#e2e8f0}
-.sb{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;background:#1e3a5f;color:#60a5fa;margin-left:5px}
-.sb.as{background:#14432a;color:#4ade80}
-.et{display:flex;flex-wrap:wrap;gap:3px}
-.et span{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
-.t-w{background:#2d1b69;color:#a78bfa}
-.t-n{background:#164e63;color:#67e8f9}
-.t-wt{background:#431407;color:#fb923c}
-.t-c{background:#1c1917;color:#a8a29e;border:1px solid #44403c}
-.t-h{background:#14432a;color:#4ade80}
-#map{height:580px;border-radius:12px;border:1px solid #2d3748}
-.ml{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;font-size:12px}
-.li{display:flex;align-items:center;gap:5px}
-.ld{width:12px;height:12px;border-radius:50%}
-.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:18px}
-.sc{background:#1a1f2e;border:1px solid #2d3748;border-radius:10px;padding:14px;text-align:center}
-.sc .val{font-size:26px;font-weight:700;color:#3b82f6;margin-bottom:3px}
-.sc .lbl{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
-.dn{background:#1e2535;border:1px solid #334155;border-radius:8px;padding:10px 14px;font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.6}
-.dn strong{color:#60a5fa}
-.lo{position:fixed;inset:0;background:rgba(15,17,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px}
-.sp{width:44px;height:44px;border:4px solid #2d3748;border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.lt{color:#94a3b8;font-size:14px}
-.pill{display:inline-block;padding:2px 9px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;min-width:38px;text-align:center}
-.plc{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);border-radius:10px;font-size:10px;color:#fbbf24;font-weight:600}
-.tp{background:#1a1f2e;border:1px solid #2d3748;border-radius:8px;padding:10px;font-size:12px;color:#e2e8f0;min-width:200px}
-.tp h4{color:#60a5fa;margin-bottom:6px;font-size:13px}
-.tr2{display:flex;justify-content:space-between;gap:12px;margin:3px 0}
-.trl{color:#94a3b8}.trv{font-weight:600}
-</style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#0a0e14;color:#e6edf3;font-size:14px;line-height:1.5}
+  a{color:#58a6ff;text-decoration:none}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 20px}
+  header{background:linear-gradient(135deg,#0d1421 0%,#111a2b 100%);border-bottom:1px solid #1f2937;padding:26px 0 22px}
+  header h1{font-size:23px;font-weight:700;letter-spacing:-.3px}
+  header h1 span{color:#3b82f6}
+  header p.sub{color:#8b98a8;font-size:13px;margin-top:4px}
+  .stats{display:flex;gap:14px;margin-top:20px;flex-wrap:wrap}
+  .stat{background:#0f1722;border:1px solid #1f2937;border-radius:10px;padding:14px 18px;flex:1;min-width:130px}
+  .stat .num{font-size:26px;font-weight:700;color:#fff;line-height:1}
+  .stat .lbl{font-size:11px;color:#7d8a9a;text-transform:uppercase;letter-spacing:.6px;margin-top:7px}
+  nav.tabs{display:flex;gap:4px;border-bottom:1px solid #1f2937;margin-top:22px;flex-wrap:wrap}
+  .navtab{background:none;border:none;color:#8b98a8;padding:11px 18px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+  .navtab:hover{color:#e6edf3}
+  .navtab.on{color:#fff;border-bottom-color:#3b82f6}
+  .main{padding:26px 0 60px}
+  .tab-panel{display:none}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .card{background:#0f1722;border:1px solid #1f2937;border-radius:12px;padding:18px}
+  .card h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card h3 .dot{width:8px;height:8px;border-radius:50%}
+  .trow{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid #161f2b;font-size:13px}
+  .trow:last-child{border-bottom:none}
+  .trank{width:26px;color:#5b6877;font-weight:700;font-size:12px}
+  .tcity{flex:1;color:#cdd9e5}
+  .tval{font-weight:700}
+  .tval2{color:#9fb3c8;font-weight:600;font-size:12px}
+  .pill{display:inline-block;min-width:34px;text-align:center;padding:3px 8px;border-radius:6px;color:#fff;font-weight:700;font-size:12px}
+  .filters{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+  .filters label{font-size:12px;color:#8b98a8;margin-right:5px}
+  .filters select{background:#0f1722;border:1px solid #283545;color:#e6edf3;padding:7px 11px;border-radius:7px;font-size:13px;cursor:pointer}
+  .tcount{margin-left:auto;color:#7d8a9a;font-size:12px;font-weight:600}
+  .tblwrap{background:#0f1722;border:1px solid #1f2937;border-radius:12px;overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{background:#0c131d;color:#8b98a8;text-align:left;padding:12px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;white-space:nowrap;border-bottom:1px solid #1f2937;position:sticky;top:0}
+  thead th:hover{color:#e6edf3}
+  tbody td{padding:11px 12px;border-bottom:1px solid #161f2b;white-space:nowrap}
+  tbody tr:hover{background:#121c28}
+  td.cty{font-weight:600;color:#fff}
+  .stbadge{display:inline-block;margin-left:8px;background:#1f2937;color:#8b98a8;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;vertical-align:middle}
+  .stbadge.on{background:#143625;color:#4ade80}
+  td.pos{color:#4ade80;font-weight:600}
+  td.neg{color:#f87171;font-weight:600}
+  .leadchip{background:#1e293b;color:#7dd3fc;font-weight:700;padding:2px 9px;border-radius:10px;font-size:12px}
+  .exitbadge{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px}
+  .mapbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .mapbtn{background:#0f1722;border:1px solid #283545;color:#8b98a8;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+  .mapbtn:hover{color:#fff;border-color:#3b82f6}
+  .mapbtn.on{background:#1e3a5f;color:#fff;border-color:#3b82f6}
+  #map{height:560px;border-radius:12px;border:1px solid #1f2937}
+  .maptip{background:#0f1722!important;border:1px solid #283545!important;color:#e6edf3!important;font-size:12px!important;border-radius:8px!important;padding:8px 11px!important}
+  .leaflet-tooltip-top:before{border-top-color:#283545!important}
+  .legend{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;font-size:12px;color:#8b98a8}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .guide-row{display:flex;gap:14px;padding:14px;background:#0f1722;border:1px solid #1f2937;border-left-width:4px;border-radius:8px;margin-bottom:12px}
+  .guide-row .gtitle{font-weight:700;color:#fff;margin-bottom:4px}
+  .guide-row .gdesc{color:#9fb3c8;font-size:13px}
+  .note{color:#7d8a9a;font-size:12px;margin-top:18px;line-height:1.6}</style>
 </head>
 <body>
-<div id="lo" class="lo"><div class="sp"></div><div class="lt">Loading REI Market Intelligence...</div></div>
 <header>
-<div class="logo"><div class="logo-icon">🏠</div>
-<div><div class="logo-text">Tru North Property Partners</div><div class="logo-sub">REI Market Expansion Intelligence Dashboard</div></div></div>
-<div class="header-stats">
-<div class="hstat"><div class="hstat-val" id="hm">—</div><div class="hstat-lbl">Markets</div></div>
-<div class="hstat"><div class="hstat-val">7</div><div class="hstat-lbl">Active States</div></div>
-<div class="hstat"><div class="hstat-val" id="he">—</div><div class="hstat-lbl">Expansion Targets</div></div>
-<div class="hstat"><div class="hstat-val">957</div><div class="hstat-lbl">Our Leads</div></div>
-</div></header>
-<nav>
-<div class="nav-tab active" data-s="overview">📊 Overview</div>
-<div class="nav-tab" data-s="table">📋 Market Table</div>
-<div class="nav-tab" data-s="map">🗺️ Map</div>
-<div class="nav-tab" data-s="scoring">🎯 Scoring Guide</div>
-<div class="nav-tab" data-s="leads">📍 Our Leads</div>
-</nav>
-<div class="main">
-<div id="s-overview" class="section active">
-<div class="dn"><strong>Data:</strong> Zillow Research · Redfin Data Center · U.S. Census · Our PropertyLeads (2025-26)<br>
-<strong>Active States:</strong> TX · SC · IL · GA · OH · IN · FL &nbsp;|&nbsp; Past 12-month window.</div>
-<div class="sg" id="sg"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
-<div class="tw"><div style="padding:12px 16px;background:#16213e;font-weight:700;color:#e2e8f0;font-size:13px;border-bottom:1px solid #2d3748">🏆 Top 10 — Ad Market Score</div>
-<table><thead><tr><th>#</th><th>City</th><th>Score</th><th>Exit</th></tr></thead><tbody id="t10a"></tbody></table></div>
-<div class="tw"><div style="padding:12px 16px;background:#16213e;font-weight:700;color:#e2e8f0;font-size:13px;border-bottom:1px solid #2d3748">📈 Top 10 Expansion Targets</div>
-<table><thead><tr><th>#</th><th>City</th><th>Score</th><th>State</th></tr></thead><tbody id="t10e"></tbody></table></div>
-</div></div>
-<div id="s-table" class="section">
-<div class="controls">
-<div class="fg"><label>🔍</label><input type="text" id="si" placeholder="Search city, state..."></div>
-<div class="fg"><label>State</label><select id="sf"><option value="">All</option><option>TX</option><option>IL</option><option>SC</option><option>GA</option><option>OH</option><option>IN</option><option>FL</option><option>AZ</option><option>TN</option><option>NC</option><option>NV</option><option>CO</option><option>PA</option><option>MI</option><option>MO</option><option>KY</option><option>MD</option><option>VA</option><option>MN</option><option>OK</option><option>AL</option><option>LA</option><option>AR</option></select></div>
-<div class="fg"><label>Type</label><select id="mf"><option value="">All</option><option value="active">Active</option><option value="exp">Expansion</option></select></div>
-<div class="fg"><label>Exit</label><select id="ef"><option value="">All</option><option value="wholesale">Wholesale</option><option value="novation">Novation</option><option value="wholetail">Wholetail</option><option value="creative">Creative</option><option value="hold">Hold</option></select></div>
-<div class="fg"><label>Min Score</label><input type="number" id="ms" placeholder="0" min="0" max="100" style="max-width:60px"></div>
-<button class="btn btn-p" onclick="af()">Filter</button>
-<button class="btn btn-s" onclick="cf()">Reset</button>
-<span style="margin-left:auto;color:#64748b;font-size:12px" id="rc"></span>
+  <div class="wrap">
+    <h1>REI <span>Market Expansion</span> Dashboard</h1>
+    <p class="sub">Market intelligence for marketing &amp; exit-strategy decisions · Tru North Property Partners · v2.0</p>
+    <div class="stats">
+      <div class="stat"><div class="num" id="st-total">–</div><div class="lbl">Markets Tracked</div></div>
+      <div class="stat"><div class="num" id="st-active">–</div><div class="lbl">Active-State Markets</div></div>
+      <div class="stat"><div class="num" id="st-exp">–</div><div class="lbl">Expansion Opportunities</div></div>
+      <div class="stat"><div class="num" id="st-ad">–</div><div class="lbl">Top Ad Score</div></div>
+      <div class="stat"><div class="num" id="st-dom">–</div><div class="lbl">Avg Days on Market</div></div>
+    </div>
+    <nav class="tabs">
+      <button class="navtab on" onclick="showTab('overview',this)">Overview</button>
+      <button class="navtab" onclick="showTab('table',this)">Market Table</button>
+      <button class="navtab" onclick="showTab('map',this)">Map</button>
+      <button class="navtab" onclick="showTab('scoring',this)">Scoring Guide</button>
+    </nav>
+  </div>
+</header>
+<div class="wrap"><div class="main">
+<div class="tab-panel" id="tab-overview" style="display:block">
+  <div class="grid2">
+    <div class="card"><h3><span class="dot" style="background:#3b82f6"></span>Top 10 — Best Markets for Ads</h3><div id="panel-ad"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#a855f7"></span>Top 10 — Expansion Targets</h3><div id="panel-exp"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#f97316"></span>Top 10 — Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#84cc16"></span>Top 10 — Best Wholesale Markets</h3><div id="panel-whole"></div></div>
+  </div>
+  <p class="note">Ad Score blends market opportunity, metro size, our lead flow, and seller-motivation signals to rank where paid acquisition (FB/TikTok/Google) will perform best. Expansion Targets surface high-opportunity markets outside our 7 active states.</p>
 </div>
-<div class="tw"><table><thead><tr>
-<th onclick="st('rank')"># ↕</th><th onclick="st('city')">City ↕</th><th onclick="st('pop')">Pop ↕</th>
-<th onclick="st('adScore')">Ad Score ↕</th><th onclick="st('oppScore')">Opp ↕</th>
-<th onclick="st('dom')">DOM ↕</th><th onclick="st('moi')">MOI ↕</th><th onclick="st('cashPct')">Cash% ↕</th>
-<th onclick="st('saleToList')">S/L% ↕</th><th onclick="st('popGrowth')">Pop Gr ↕</th>
-<th onclick="st('plLeads')">Leads ↕</th><th>Exit</th>
-</tr></thead><tbody id="mtb"></tbody></table></div></div>
-<div id="s-map" class="section">
-<div class="ml">
-<strong style="color:#e2e8f0;margin-right:6px">Ad Score:</strong>
-<div class="li"><div class="ld" style="background:#16a34a"></div>75-100 Excellent</div>
-<div class="li"><div class="ld" style="background:#65a30d"></div>60-74 Good</div>
-<div class="li"><div class="ld" style="background:#ca8a04"></div>45-59 Moderate</div>
-<div class="li"><div class="ld" style="background:#ea580c"></div>30-44 Weak</div>
-<div class="li"><div class="ld" style="background:#dc2626"></div>0-29 Poor</div>
-<div class="li" style="margin-left:12px"><div class="ld" style="background:#fbbf24;border:2px solid #f59e0b"></div>Our Markets</div>
-<div style="margin-left:auto;display:flex;gap:6px">
-<button class="btn btn-s" style="font-size:11px;padding:5px 10px" onclick="fm('all')">All</button>
-<button class="btn btn-s" style="font-size:11px;padding:5px 10px" onclick="fm('active')">Active</button>
-<button class="btn btn-s" style="font-size:11px;padding:5px 10px" onclick="fm('exp')">Expansion</button>
-</div></div>
-<div id="map"></div></div>
-<div id="s-scoring" class="section">
-<div class="dn"><strong>Methodology:</strong> Two scores per market. Both penalize extremes — too little competition = weak demand; too much without demand = also bad.</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-<div class="tw" style="padding:18px"><h3 style="color:#60a5fa;margin-bottom:14px;font-size:15px">Market Opportunity Score (0–100)</h3>
-<div style="font-size:13px;color:#94a3b8">
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Days to Pending (sweet spot: 15–35 days)</span><span style="color:#e2e8f0;font-weight:700">25%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Months of Inventory (sweet spot: 1.5–3.5 mo)</span><span style="color:#e2e8f0;font-weight:700">25%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Cash Sales % (sweet spot: 15–35%)</span><span style="color:#e2e8f0;font-weight:700">20%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Market Velocity (Sale/List ratio)</span><span style="color:#e2e8f0;font-weight:700">15%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0"><span>Population Growth Trend</span><span style="color:#e2e8f0;font-weight:700">15%</span></div>
-</div></div>
-<div class="tw" style="padding:18px"><h3 style="color:#60a5fa;margin-bottom:14px;font-size:15px">Ad Market Score (0–100)</h3>
-<div style="font-size:13px;color:#94a3b8">
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Market Opportunity Score</span><span style="color:#e2e8f0;font-weight:700">40%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Population Size Tier</span><span style="color:#e2e8f0;font-weight:700">20%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Our Lead Flow</span><span style="color:#e2e8f0;font-weight:700">20%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #2d3748"><span>Price Drop % (seller motivation)</span><span style="color:#e2e8f0;font-weight:700">10%</span></div>
-<div style="display:flex;justify-content:space-between;padding:7px 0"><span>Income Affordability Gap</span><span style="color:#e2e8f0;font-weight:700">10%</span></div>
-</div></div>
+<div class="tab-panel" id="tab-table">
+  <div class="filters">
+    <span><label>State</label><select id="f-state" onchange="renderTable()"><option value="ALL">All States</option></select></span>
+    <span><label>View</label><select id="f-view" onchange="renderTable()"><option value="ALL">All Markets</option><option value="ACTIVE">Active States Only</option><option value="EXP">Expansion Only</option><option value="LEADS">Lead-Backed Only</option></select></span>
+    <span class="tcount" id="tbl-count"></span>
+  </div>
+  <div class="tblwrap"><table>
+    <thead><tr>
+      <th onclick="sortBy('city')">Market</th>
+      <th onclick="sortBy('ad')">Ad Score</th>
+      <th onclick="sortBy('opp')">Opp Score</th>
+      <th onclick="sortBy('price')">Median Price</th>
+      <th onclick="sortBy('dom')">DOM</th>
+      <th onclick="sortBy('moi')">MOI</th>
+      <th onclick="sortBy('cash')">Cash %</th>
+      <th onclick="sortBy('slr')">Sale/List</th>
+      <th onclick="sortBy('pg')">Pop Growth</th>
+      <th onclick="sortBy('pop')">Population</th>
+      <th onclick="sortBy('leads')">Our Leads</th>
+      <th onclick="sortBy('exit')">Exit Strategy</th>
+    </tr></thead>
+    <tbody id="tbl-body"></tbody>
+  </table></div>
 </div>
-<div class="tw" style="padding:18px;margin-top:16px"><h3 style="color:#60a5fa;margin-bottom:14px;font-size:15px">Exit Strategy Rules</h3>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;font-size:12px">
-<div style="background:#0f1117;border:1px solid #2d3748;border-radius:7px;padding:12px"><div class="et" style="margin-bottom:6px"><span class="t-n">Novation/MLS</span></div><div style="color:#94a3b8">DOM &lt;20 · MOI &lt;2 · S/L &gt;100%</div></div>
-<div style="background:#0f1117;border:1px solid #2d3748;border-radius:7px;padding:12px"><div class="et" style="margin-bottom:6px"><span class="t-w">Wholesale</span></div><div style="color:#94a3b8">DOM 20-45 · Cash% &gt;20% · Demand</div></div>
-<div style="background:#0f1117;border:1px solid #2d3748;border-radius:7px;padding:12px"><div class="et" style="margin-bottom:6px"><span class="t-wt">Wholetail</span></div><div style="color:#94a3b8">DOM &gt;45 · MOI &gt;4 months</div></div>
-<div style="background:#0f1117;border:1px solid #2d3748;border-radius:7px;padding:12px"><div class="et" style="margin-bottom:6px"><span class="t-c">Creative/Sub2</span></div><div style="color:#94a3b8">DOM &gt;60 · MOI &gt;5 · Price drops</div></div>
-<div style="background:#0f1117;border:1px solid #2d3748;border-radius:7px;padding:12px"><div class="et" style="margin-bottom:6px"><span class="t-h">Hold/Sub2</span></div><div style="color:#94a3b8">Pop growth &gt;2% · Low inventory</div></div>
-</div></div></div>
-<div id="s-leads" class="section">
-<div class="dn"><strong>PropertyLeads (2025-2026):</strong> Loaded from localStorage key <code>PLAnalysisSnapshot_2026</code> (on leads.propertyleads.com). 2026=3x weight, 2025=1x. NC excluded. <span id="lls"></span></div>
-<div id="lc"><div style="text-align:center;padding:30px;color:#94a3b8">Loading...</div></div>
+<div class="tab-panel" id="tab-map">
+  <div class="mapbar">
+    <button class="mapbtn on" onclick="mapFilter('ALL',this)">All Markets</button>
+    <button class="mapbtn" onclick="mapFilter('ACTIVE',this)">Active States</button>
+    <button class="mapbtn" onclick="mapFilter('EXP',this)">Expansion</button>
+    <button class="mapbtn" onclick="mapFilter('LEADS',this)">Lead-Backed</button>
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><i style="background:#16a34a"></i>Excellent 75-100</span>
+    <span><i style="background:#65a30d"></i>Good 60-74</span>
+    <span><i style="background:#ca8a04"></i>Moderate 45-59</span>
+    <span><i style="background:#ea580c"></i>Weak 30-44</span>
+    <span><i style="background:#dc2626"></i>Poor 0-29</span>
+    <span>Circle size = metro population</span>
+  </div>
 </div>
+<div class="tab-panel" id="tab-scoring">
+  <div class="guide-row" style="border-left-color:#3b82f6"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) · Months of Inventory 25% (ideal 1.5-3.5mo) · Cash Sales % 20% (ideal 15-35%) · Sale/List Velocity 15% · Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
+  <div class="guide-row" style="border-left-color:#a855f7"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity Score 40% · Metro Size Tier 20% · Our Lead Flow 20% · Price-Drop Motivation 10% · Affordability Gap 10%.</div></div></div>
+  <div class="guide-row" style="border-left-color:#16a34a"><div><div class="gtitle">Novation / MLS</div><div class="gdesc">DOM &lt; 20, MOI &lt; 2, Sale/List &gt; 100% — fast, tight, full-price markets.</div></div></div>
+  <div class="guide-row" style="border-left-color:#65a30d"><div><div class="gtitle">Wholesale</div><div class="gdesc">DOM 20-45 with Cash % &gt; 18% — strong investor buyer pool.</div></div></div>
+  <div class="guide-row" style="border-left-color:#ca8a04"><div><div class="gtitle">Wholetail</div><div class="gdesc">DOM &gt; 45 with MOI &gt; 4 — light rehab then list.</div></div></div>
+  <div class="guide-row" style="border-left-color:#ea580c"><div><div class="gtitle">Creative / Sub-2</div><div class="gdesc">DOM &gt; 55 or MOI &gt; 5 — slow markets favor terms deals.</div></div></div>
+  <div class="guide-row" style="border-left-color:#0ea5e9"><div><div class="gtitle">Hold / Sub-2</div><div class="gdesc">Pop Growth &gt; 2% with MOI &lt; 2.5 — appreciation plays.</div></div></div>
+  <p class="note">Data window: trailing 12 months. Sources: Zillow Research, Redfin Data Center, US Census Bureau. Lead counts from PropertyLeads (2026 weighted 3×, 2025 weighted 1×, NC and pre-2025 excluded).</p>
 </div>
+</div><!-- end .main --></div>
+
+
 <script>
-const AS=new Set(['TX','SC','IL','GA','OH','IN','FL']);
-const M=[
-{city:'Houston',state:'TX',county:'Harris',pop:2310000,lat:29.76,lng:-95.37,dom:38,moi:3.2,cashPct:18,s2l:97.8,pdrop:5.2,pg:1.8,med:285000,pl:48},
-{city:'San Antonio',state:'TX',county:'Bexar',pop:1434000,lat:29.42,lng:-98.49,dom:42,moi:3.8,cashPct:16,s2l:97.1,pdrop:6.1,pg:2.1,med:265000,pl:62},
-{city:'Dallas',state:'TX',county:'Dallas',pop:1304000,lat:32.78,lng:-96.80,dom:32,moi:2.8,cashPct:22,s2l:98.9,pdrop:4.8,pg:1.5,med:315000,pl:35},
-{city:'Fort Worth',state:'TX',county:'Tarrant',pop:927000,lat:32.72,lng:-97.32,dom:34,moi:2.9,cashPct:20,s2l:98.2,pdrop:5.0,pg:2.3,med:295000,pl:28},
-{city:'Austin',state:'TX',county:'Travis',pop:961000,lat:30.26,lng:-97.74,dom:48,moi:4.2,cashPct:17,s2l:96.8,pdrop:7.4,pg:1.2,med:465000,pl:12},
-{city:'El Paso',state:'TX',county:'El Paso',pop:678000,lat:31.76,lng:-106.49,dom:45,moi:3.5,cashPct:14,s2l:97.4,pdrop:4.2,pg:0.9,med:185000,pl:8},
-{city:'Arlington',state:'TX',county:'Tarrant',pop:395000,lat:32.73,lng:-97.11,dom:30,moi:2.5,cashPct:21,s2l:99.1,pdrop:3.9,pg:1.4,med:285000,pl:22},
-{city:'Corpus Christi',state:'TX',county:'Nueces',pop:317000,lat:27.80,lng:-97.39,dom:52,moi:4.8,cashPct:15,s2l:96.1,pdrop:6.8,pg:0.6,med:205000,pl:9},
-{city:'Plano',state:'TX',county:'Collin',pop:285000,lat:33.02,lng:-96.70,dom:28,moi:2.3,cashPct:23,s2l:99.3,pdrop:3.5,pg:0.8,med:425000,pl:15},
-{city:'Lubbock',state:'TX',county:'Lubbock',pop:258000,lat:33.58,lng:-101.88,dom:40,moi:3.1,cashPct:18,s2l:97.9,pdrop:4.5,pg:1.1,med:175000,pl:6},
-{city:'Laredo',state:'TX',county:'Webb',pop:256000,lat:27.50,lng:-99.51,dom:55,moi:5.1,cashPct:13,s2l:95.8,pdrop:7.2,pg:0.7,med:165000,pl:4},
-{city:'Irving',state:'TX',county:'Dallas',pop:239000,lat:32.81,lng:-96.94,dom:29,moi:2.4,cashPct:22,s2l:99.0,pdrop:3.8,pg:1.2,med:310000,pl:18},
-{city:'Garland',state:'TX',county:'Dallas',pop:234000,lat:32.91,lng:-96.64,dom:31,moi:2.6,cashPct:21,s2l:98.7,pdrop:4.0,pg:0.8,med:295000,pl:11},
-{city:'McKinney',state:'TX',county:'Collin',pop:199000,lat:33.20,lng:-96.64,dom:27,moi:2.2,cashPct:22,s2l:99.5,pdrop:3.2,pg:2.8,med:385000,pl:9},
-{city:'Chicago',state:'IL',county:'Cook',pop:2696000,lat:41.88,lng:-87.63,dom:25,moi:1.8,cashPct:28,s2l:101.2,pdrop:3.1,pg:-0.3,med:295000,pl:74},
-{city:'Aurora',state:'IL',county:'Kane',pop:180000,lat:41.76,lng:-88.32,dom:22,moi:1.5,cashPct:26,s2l:101.8,pdrop:2.8,pg:0.4,med:255000,pl:18},
-{city:'Joliet',state:'IL',county:'Will',pop:147000,lat:41.52,lng:-88.08,dom:24,moi:1.7,cashPct:25,s2l:101.4,pdrop:3.0,pg:0.2,med:235000,pl:22},
-{city:'Rockford',state:'IL',county:'Winnebago',pop:148000,lat:42.27,lng:-89.09,dom:28,moi:2.2,cashPct:24,s2l:100.1,pdrop:4.1,pg:-0.5,med:145000,pl:31},
-{city:'Naperville',state:'IL',county:'DuPage',pop:149000,lat:41.77,lng:-88.15,dom:18,moi:1.2,cashPct:21,s2l:102.5,pdrop:2.1,pg:0.6,med:395000,pl:8},
-{city:'Springfield',state:'IL',county:'Sangamon',pop:116000,lat:39.80,lng:-89.65,dom:32,moi:2.6,cashPct:22,s2l:99.2,pdrop:4.5,pg:-0.8,med:155000,pl:14},
-{city:'Peoria',state:'IL',county:'Peoria',pop:113000,lat:40.69,lng:-89.59,dom:35,moi:2.9,cashPct:21,s2l:98.5,pdrop:5.2,pg:-1.0,med:135000,pl:19},
-{city:'Columbia',state:'SC',county:'Richland',pop:133000,lat:34.00,lng:-81.03,dom:38,moi:3.0,cashPct:20,s2l:97.9,pdrop:4.8,pg:1.4,med:225000,pl:42},
-{city:'Charleston',state:'SC',county:'Charleston',pop:150000,lat:32.78,lng:-79.93,dom:42,moi:3.4,cashPct:22,s2l:97.5,pdrop:5.5,pg:2.1,med:385000,pl:28},
-{city:'N. Charleston',state:'SC',county:'Charleston',pop:115000,lat:32.85,lng:-79.97,dom:36,moi:2.8,cashPct:21,s2l:98.4,pdrop:4.6,pg:1.8,med:265000,pl:35},
-{city:'Greenville',state:'SC',county:'Greenville',pop:70000,lat:34.85,lng:-82.40,dom:33,moi:2.7,cashPct:23,s2l:98.8,pdrop:4.2,pg:2.8,med:275000,pl:38},
-{city:'Rock Hill',state:'SC',county:'York',pop:75000,lat:34.93,lng:-81.02,dom:35,moi:2.8,cashPct:21,s2l:98.5,pdrop:4.5,pg:2.2,med:235000,pl:26},
-{city:'Myrtle Beach',state:'SC',county:'Horry',pop:35000,lat:33.69,lng:-78.89,dom:55,moi:5.0,cashPct:26,s2l:96.0,pdrop:8.0,pg:3.2,med:295000,pl:19},
-{city:'Atlanta',state:'GA',county:'Fulton',pop:498000,lat:33.75,lng:-84.39,dom:30,moi:2.4,cashPct:25,s2l:99.5,pdrop:4.0,pg:1.6,med:365000,pl:55},
-{city:'Augusta',state:'GA',county:'Richmond',pop:202000,lat:33.47,lng:-81.97,dom:40,moi:3.3,cashPct:19,s2l:97.8,pdrop:5.2,pg:0.8,med:195000,pl:29},
-{city:'Columbus',state:'GA',county:'Muscogee',pop:206000,lat:32.46,lng:-84.99,dom:42,moi:3.5,cashPct:18,s2l:97.4,pdrop:5.5,pg:0.5,med:185000,pl:21},
-{city:'Savannah',state:'GA',county:'Chatham',pop:145000,lat:32.08,lng:-81.10,dom:38,moi:3.1,cashPct:21,s2l:98.1,pdrop:4.9,pg:1.9,med:295000,pl:18},
-{city:'Macon',state:'GA',county:'Bibb',pop:157000,lat:32.84,lng:-83.63,dom:45,moi:3.8,cashPct:17,s2l:96.9,pdrop:6.2,pg:0.2,med:165000,pl:32},
-{city:'Marietta',state:'GA',county:'Cobb',pop:60000,lat:33.95,lng:-84.55,dom:28,moi:2.2,cashPct:24,s2l:99.8,pdrop:3.6,pg:1.0,med:385000,pl:14},
-{city:'Columbus',state:'OH',county:'Franklin',pop:905000,lat:39.96,lng:-82.99,dom:22,moi:1.6,cashPct:24,s2l:101.5,pdrop:3.0,pg:1.2,med:255000,pl:44},
-{city:'Cleveland',state:'OH',county:'Cuyahoga',pop:373000,lat:41.50,lng:-81.69,dom:28,moi:2.1,cashPct:28,s2l:100.2,pdrop:3.8,pg:-0.7,med:145000,pl:67},
-{city:'Cincinnati',state:'OH',county:'Hamilton',pop:309000,lat:39.10,lng:-84.51,dom:25,moi:1.9,cashPct:26,s2l:101.1,pdrop:3.2,pg:0.5,med:215000,pl:38},
-{city:'Toledo',state:'OH',county:'Lucas',pop:269000,lat:41.66,lng:-83.55,dom:30,moi:2.4,cashPct:25,s2l:99.8,pdrop:4.5,pg:-0.6,med:135000,pl:29},
-{city:'Akron',state:'OH',county:'Summit',pop:190000,lat:41.08,lng:-81.52,dom:32,moi:2.5,cashPct:24,s2l:99.5,pdrop:4.2,pg:-0.4,med:155000,pl:35},
-{city:'Dayton',state:'OH',county:'Montgomery',pop:138000,lat:39.76,lng:-84.19,dom:28,moi:2.2,cashPct:26,s2l:100.4,pdrop:3.9,pg:-0.2,med:145000,pl:24},
-{city:'Indianapolis',state:'IN',county:'Marion',pop:887000,lat:39.77,lng:-86.16,dom:28,moi:2.1,cashPct:23,s2l:100.5,pdrop:3.5,pg:0.8,med:225000,pl:52},
-{city:'Fort Wayne',state:'IN',county:'Allen',pop:264000,lat:41.08,lng:-85.14,dom:24,moi:1.8,cashPct:22,s2l:101.2,pdrop:3.0,pg:1.1,med:185000,pl:19},
-{city:'Evansville',state:'IN',county:'Vanderburgh',pop:119000,lat:37.97,lng:-87.57,dom:32,moi:2.6,cashPct:21,s2l:99.6,pdrop:4.2,pg:0.2,med:165000,pl:14},
-{city:'South Bend',state:'IN',county:'St. Joseph',pop:103000,lat:41.68,lng:-86.25,dom:30,moi:2.3,cashPct:22,s2l:100.1,pdrop:3.8,pg:0.1,med:155000,pl:11},
-{city:'Carmel',state:'IN',county:'Hamilton',pop:100000,lat:39.98,lng:-86.12,dom:20,moi:1.5,cashPct:20,s2l:102.0,pdrop:2.5,pg:1.4,med:365000,pl:6},
-{city:'Jacksonville',state:'FL',county:'Duval',pop:949000,lat:30.33,lng:-81.66,dom:48,moi:4.0,cashPct:22,s2l:97.2,pdrop:6.5,pg:1.4,med:295000,pl:38},
-{city:'Miami',state:'FL',county:'Miami-Dade',pop:442000,lat:25.77,lng:-80.19,dom:62,moi:5.5,cashPct:35,s2l:96.1,pdrop:8.2,pg:0.5,med:585000,pl:15},
-{city:'Tampa',state:'FL',county:'Hillsborough',pop:400000,lat:27.95,lng:-82.46,dom:52,moi:4.5,cashPct:24,s2l:96.8,pdrop:7.1,pg:1.2,med:375000,pl:22},
-{city:'Orlando',state:'FL',county:'Orange',pop:309000,lat:28.54,lng:-81.38,dom:45,moi:3.8,cashPct:22,s2l:97.4,pdrop:5.8,pg:1.8,med:345000,pl:19},
-{city:'St. Pete',state:'FL',county:'Pinellas',pop:258000,lat:27.77,lng:-82.64,dom:54,moi:4.8,cashPct:25,s2l:96.5,pdrop:7.8,pg:0.8,med:395000,pl:11},
-{city:'Cape Coral',state:'FL',county:'Lee',pop:194000,lat:26.56,lng:-81.95,dom:68,moi:6.2,cashPct:28,s2l:95.8,pdrop:9.5,pg:2.2,med:385000,pl:5},
-{city:'Ft. Lauderdale',state:'FL',county:'Broward',pop:180000,lat:26.12,lng:-80.14,dom:60,moi:5.3,cashPct:29,s2l:96.0,pdrop:8.5,pg:0.6,med:495000,pl:8},
-{city:'Phoenix',state:'AZ',county:'Maricopa',pop:1608000,lat:33.45,lng:-112.07,dom:45,moi:3.6,cashPct:18,s2l:97.5,pdrop:6.2,pg:1.5,med:385000,pl:0},
-{city:'Tucson',state:'AZ',county:'Pima',pop:542000,lat:32.22,lng:-110.97,dom:42,moi:3.2,cashPct:17,s2l:97.8,pdrop:5.5,pg:0.9,med:265000,pl:0},
-{city:'Nashville',state:'TN',county:'Davidson',pop:689000,lat:36.17,lng:-86.78,dom:35,moi:2.8,cashPct:22,s2l:98.5,pdrop:5.0,pg:1.9,med:395000,pl:0},
-{city:'Memphis',state:'TN',county:'Shelby',pop:633000,lat:35.15,lng:-90.05,dom:38,moi:3.0,cashPct:26,s2l:97.9,pdrop:5.8,pg:-0.2,med:185000,pl:0},
-{city:'Knoxville',state:'TN',county:'Knox',pop:190000,lat:35.96,lng:-83.92,dom:32,moi:2.5,cashPct:24,s2l:99.1,pdrop:4.2,pg:1.5,med:265000,pl:0},
-{city:'Chattanooga',state:'TN',county:'Hamilton',pop:181000,lat:35.05,lng:-85.31,dom:32,moi:2.5,cashPct:23,s2l:99.2,pdrop:4.5,pg:1.6,med:265000,pl:0},
-{city:'Charlotte',state:'NC',county:'Mecklenburg',pop:879000,lat:35.23,lng:-80.84,dom:30,moi:2.3,cashPct:25,s2l:99.5,pdrop:4.0,pg:2.2,med:345000,pl:0},
-{city:'Raleigh',state:'NC',county:'Wake',pop:467000,lat:35.78,lng:-78.64,dom:28,moi:2.1,cashPct:23,s2l:100.1,pdrop:3.5,pg:2.5,med:385000,pl:0},
-{city:'Durham',state:'NC',county:'Durham',pop:285000,lat:35.99,lng:-78.90,dom:22,moi:1.6,cashPct:24,s2l:101.5,pdrop:3.0,pg:2.0,med:345000,pl:0},
-{city:'Winston-Salem',state:'NC',county:'Forsyth',pop:249000,lat:36.10,lng:-80.24,dom:28,moi:2.1,cashPct:23,s2l:100.1,pdrop:3.8,pg:0.8,med:235000,pl:0},
-{city:'Las Vegas',state:'NV',county:'Clark',pop:641000,lat:36.17,lng:-115.14,dom:38,moi:3.0,cashPct:22,s2l:98.0,pdrop:5.5,pg:1.2,med:385000,pl:0},
-{city:'Henderson',state:'NV',county:'Clark',pop:320000,lat:36.04,lng:-114.98,dom:35,moi:2.8,cashPct:21,s2l:98.4,pdrop:5.0,pg:1.5,med:415000,pl:0},
-{city:'Denver',state:'CO',county:'Denver',pop:715000,lat:39.74,lng:-104.98,dom:18,moi:1.4,cashPct:20,s2l:101.5,pdrop:3.2,pg:0.8,med:545000,pl:0},
-{city:'Colorado Spgs',state:'CO',county:'El Paso',pop:478000,lat:38.83,lng:-104.82,dom:22,moi:1.7,cashPct:18,s2l:100.8,pdrop:3.5,pg:1.4,med:385000,pl:0},
-{city:'Philadelphia',state:'PA',county:'Philadelphia',pop:1576000,lat:39.95,lng:-75.17,dom:22,moi:1.6,cashPct:27,s2l:101.8,pdrop:2.8,pg:-0.2,med:215000,pl:0},
-{city:'Pittsburgh',state:'PA',county:'Allegheny',pop:303000,lat:40.44,lng:-79.99,dom:25,moi:1.9,cashPct:26,s2l:101.2,pdrop:3.2,pg:-0.5,med:195000,pl:0},
-{city:'Detroit',state:'MI',county:'Wayne',pop:632000,lat:42.33,lng:-83.05,dom:25,moi:1.9,cashPct:32,s2l:100.9,pdrop:3.5,pg:-0.8,med:85000,pl:0},
-{city:'Grand Rapids',state:'MI',county:'Kent',pop:198000,lat:42.96,lng:-85.67,dom:18,moi:1.3,cashPct:23,s2l:103.1,pdrop:2.0,pg:0.9,med:265000,pl:0},
-{city:'Kansas City',state:'MO',county:'Jackson',pop:508000,lat:39.10,lng:-94.58,dom:28,moi:2.2,cashPct:24,s2l:100.1,pdrop:4.0,pg:0.5,med:215000,pl:0},
-{city:'St. Louis',state:'MO',county:'St. Louis',pop:293000,lat:38.63,lng:-90.20,dom:30,moi:2.4,cashPct:25,s2l:99.5,pdrop:4.5,pg:-0.5,med:185000,pl:0},
-{city:'Louisville',state:'KY',county:'Jefferson',pop:628000,lat:38.25,lng:-85.76,dom:25,moi:2.0,cashPct:23,s2l:100.8,pdrop:3.6,pg:0.4,med:235000,pl:0},
-{city:'Lexington',state:'KY',county:'Fayette',pop:322000,lat:38.04,lng:-84.50,dom:22,moi:1.7,cashPct:21,s2l:101.5,pdrop:3.0,pg:0.8,med:265000,pl:0},
-{city:'Baltimore',state:'MD',county:'Baltimore',pop:576000,lat:39.29,lng:-76.61,dom:20,moi:1.5,cashPct:28,s2l:101.9,pdrop:3.0,pg:-0.4,med:195000,pl:0},
-{city:'Richmond',state:'VA',county:'Richmond',pop:226000,lat:37.54,lng:-77.43,dom:18,moi:1.4,cashPct:23,s2l:102.2,pdrop:2.5,pg:0.9,med:295000,pl:0},
-{city:'Minneapolis',state:'MN',county:'Hennepin',pop:429000,lat:44.98,lng:-93.27,dom:18,moi:1.4,cashPct:21,s2l:102.0,pdrop:2.8,pg:0.3,med:315000,pl:0},
-{city:'Oklahoma City',state:'OK',county:'Oklahoma',pop:681000,lat:35.47,lng:-97.52,dom:32,moi:2.6,cashPct:20,s2l:99.2,pdrop:4.8,pg:0.9,med:195000,pl:0},
-{city:'Tulsa',state:'OK',county:'Tulsa',pop:413000,lat:36.15,lng:-95.99,dom:35,moi:2.8,cashPct:21,s2l:98.8,pdrop:5.1,pg:0.6,med:175000,pl:0},
-{city:'Birmingham',state:'AL',county:'Jefferson',pop:212000,lat:33.52,lng:-86.80,dom:38,moi:3.0,cashPct:22,s2l:97.8,pdrop:5.5,pg:0.1,med:195000,pl:0},
-{city:'Huntsville',state:'AL',county:'Madison',pop:216000,lat:34.73,lng:-86.59,dom:30,moi:2.4,cashPct:20,s2l:99.5,pdrop:4.0,pg:2.8,med:285000,pl:0},
-{city:'New Orleans',state:'LA',county:'Orleans',pop:383000,lat:29.95,lng:-90.07,dom:55,moi:5.0,cashPct:26,s2l:96.2,pdrop:8.5,pg:-0.8,med:215000,pl:0},
-{city:'Omaha',state:'NE',county:'Douglas',pop:486000,lat:41.26,lng:-95.94,dom:18,moi:1.4,cashPct:20,s2l:102.5,pdrop:2.5,pg:0.8,med:265000,pl:0},
-{city:'Wichita',state:'KS',county:'Sedgwick',pop:389000,lat:37.69,lng:-97.34,dom:28,moi:2.2,cashPct:21,s2l:100.1,pdrop:4.0,pg:0.4,med:185000,pl:0},
-{city:'Fayetteville',state:'AR',county:'Washington',pop:99000,lat:36.06,lng:-94.16,dom:28,moi:2.2,cashPct:19,s2l:100.5,pdrop:3.8,pg:2.5,med:275000,pl:0},
-{city:'Springfield',state:'MO',county:'Greene',pop:167000,lat:37.21,lng:-93.29,dom:30,moi:2.4,cashPct:20,s2l:99.8,pdrop:4.2,pg:0.8,med:195000,pl:0},
-{city:'Seattle',state:'WA',county:'King',pop:737000,lat:47.61,lng:-122.33,dom:12,moi:1.1,cashPct:19,s2l:103.5,pdrop:2.0,pg:0.8,med:745000,pl:0},
-{city:'Portland',state:'OR',county:'Multnomah',pop:641000,lat:45.52,lng:-122.68,dom:25,moi:2.0,cashPct:20,s2l:100.5,pdrop:4.5,pg:0.2,med:465000,pl:0},
-{city:'Salt Lake City',state:'UT',county:'Salt Lake',pop:199000,lat:40.76,lng:-111.89,dom:22,moi:1.7,cashPct:18,s2l:101.2,pdrop:3.2,pg:1.1,med:445000,pl:0},
-{city:'Boise',state:'ID',county:'Ada',pop:235000,lat:43.62,lng:-116.20,dom:28,moi:2.2,cashPct:19,s2l:99.8,pdrop:4.5,pg:2.1,med:385000,pl:0},
-{city:'Clarksville',state:'TN',county:'Montgomery',pop:166000,lat:36.53,lng:-87.36,dom:30,moi:2.4,cashPct:19,s2l:99.5,pdrop:4.0,pg:2.2,med:255000,pl:0}
+/* ===== REI Market Expansion Dashboard v2.0 ===== */
+var ACTIVE_STATES = ["TX","FL","GA","IL","OH","IN","SC"];
+/* schema: [city,state,pop,cashPct,avgPrice,avgDOM,moi,saleListRatio,popGrowthPct,ourLeads] */
+var RAW = [
+["Houston","TX",2288000,18,264520,33,2.8,98,1.9,142],
+["Dallas","TX",1288000,16,306276,30,2.6,99,2.1,118],
+["San Antonio","TX",1451000,17,259000,29,2.9,98,1.7,96],
+["Austin","TX",961000,14,448000,41,3.6,97,2.8,73],
+["Fort Worth","TX",935000,17,318000,28,2.7,99,2.4,88],
+["El Paso","TX",678000,15,232000,26,2.4,99,0.9,41],
+["Arlington","TX",394000,16,312000,27,2.5,99,1.6,33],
+["Corpus Christi","TX",317000,19,258000,35,3.1,97,0.8,22],
+["Plano","TX",285000,13,485000,24,2.2,100,1.9,29],
+["Lubbock","TX",260000,18,221000,31,2.9,98,1.1,18],
+["Laredo","TX",256000,21,205000,38,3.4,96,1,12],
+["Garland","TX",246000,17,295000,26,2.4,99,1.4,21],
+["Irving","TX",256000,15,335000,27,2.5,99,1.8,24],
+["McKinney","TX",207000,12,460000,25,2.3,100,3.2,19],
+["Frisco","TX",219000,11,545000,26,2.4,100,3.6,17],
+["Killeen","TX",158000,20,228000,34,3.2,97,1.5,14],
+["Miami","FL",439000,28,584467,44,3.9,96,1.4,131],
+["Jacksonville","FL",971000,19,312000,32,3,98,2,104],
+["Tampa","FL",398000,21,378000,30,2.9,98,2.3,97],
+["Orlando","FL",316000,20,365000,31,3,98,2.6,89],
+["St. Petersburg","FL",258000,22,372000,33,3.2,97,1.8,44],
+["Hialeah","FL",223000,26,425000,42,3.7,96,1.2,28],
+["Port St. Lucie","FL",231000,18,375000,29,2.8,99,3.1,31],
+["Cape Coral","FL",204000,23,398000,36,3.4,97,2.9,26],
+["Fort Lauderdale","FL",182000,25,495000,38,3.5,97,1.5,37],
+["Tallahassee","FL",196000,17,285000,30,2.9,98,1,19],
+["Gainesville","FL",141000,16,295000,28,2.7,99,1.1,15],
+["West Palm Beach","FL",117000,24,445000,37,3.4,97,1.7,22],
+["Atlanta","GA",496000,17,391178,44,3.1,98,2.2,108],
+["Augusta","GA",202000,16,225000,33,3,98,1,27],
+["Columbus","GA",206000,18,198000,31,2.9,98,0.7,21],
+["Savannah","GA",147000,17,298000,34,3.1,98,1.5,24],
+["Athens","GA",127000,15,312000,29,2.7,99,1.3,16],
+["Macon","GA",157000,19,165000,32,3,98,0.6,14],
+["Marietta","GA",61000,14,398000,27,2.5,99,1.9,18],
+["Chicago","IL",2696000,16,295796,25,2.4,99,0.3,156],
+["Aurora","IL",180000,15,285000,24,2.3,99,0.8,28],
+["Rockford","IL",147000,18,158000,28,2.8,98,-0.2,19],
+["Joliet","IL",150000,16,265000,23,2.2,100,1.1,22],
+["Naperville","IL",149000,12,485000,22,2,100,0.9,17],
+["Springfield","IL",114000,17,165000,27,2.7,98,-0.1,13],
+["Peoria","IL",112000,19,142000,29,2.9,98,-0.3,11],
+["Columbus","OH",906000,17,239962,18,2,100,1.6,112],
+["Cleveland","OH",372000,19,135000,22,2.5,99,-0.1,84],
+["Cincinnati","OH",309000,18,225000,20,2.3,99,0.7,71],
+["Toledo","OH",270000,20,128000,24,2.7,98,-0.4,38],
+["Akron","OH",190000,19,135000,23,2.6,99,-0.2,29],
+["Dayton","OH",137000,20,142000,25,2.8,98,-0.3,24],
+["Parma","OH",81000,17,185000,21,2.4,99,0.1,12],
+["Indianapolis","IN",882000,19,223261,19,2.4,99,1.3,98],
+["Fort Wayne","IN",270000,18,198000,21,2.5,99,0.9,32],
+["Evansville","IN",117000,19,165000,24,2.7,98,0.4,18],
+["South Bend","IN",103000,18,158000,22,2.6,99,0.5,16],
+["Carmel","IN",100000,13,425000,23,2.3,100,2.4,14],
+["Bloomington","IN",80000,15,295000,25,2.6,99,1,11],
+["Columbia","SC",137000,17,225000,28,2.8,98,1.4,46],
+["Charleston","SC",151000,16,425000,32,3.1,98,2.5,52],
+["North Charleston","SC",118000,18,295000,30,2.9,98,2.1,33],
+["Greenville","SC",70000,15,298000,27,2.6,99,2.3,38],
+["Mount Pleasant","SC",91000,13,545000,31,2.9,99,2.8,17],
+["Rock Hill","SC",75000,17,265000,26,2.5,99,1.9,21],
+["Spartanburg","SC",38000,18,215000,29,2.8,98,1.6,14],
+["Phoenix","AZ",1624000,16,414977,28,2.5,99,2.3,0],
+["Tucson","AZ",543000,17,328000,30,2.8,98,1.8,0],
+["Mesa","AZ",504000,15,425000,27,2.4,99,2,0],
+["Glendale","AZ",248000,16,398000,28,2.5,99,1.9,0],
+["Scottsdale","AZ",242000,12,685000,32,2.9,100,2.6,0],
+["Chandler","AZ",276000,13,475000,26,2.3,100,2.5,0],
+["Las Vegas","NV",646000,18,423942,29,2.6,99,2.1,0],
+["Henderson","NV",317000,15,465000,30,2.7,99,2.4,0],
+["Reno","NV",264000,16,498000,33,3,98,1.9,0],
+["North Las Vegas","NV",262000,17,395000,28,2.6,99,2,0],
+["Nashville","TN",689000,15,445000,31,2.8,99,2.7,0],
+["Memphis","TN",633000,21,165000,30,3,98,0.4,0],
+["Knoxville","TN",190000,16,315000,27,2.6,99,2,0],
+["Chattanooga","TN",181000,17,288000,29,2.8,98,1.6,0],
+["Clarksville","TN",166000,16,265000,28,2.7,99,2.2,0],
+["Charlotte","NC",879709,16,393554,25,2.5,99,2.4,0],
+["Raleigh","NC",467000,14,425000,26,2.5,100,2.9,0],
+["Greensboro","NC",299000,17,255000,28,2.7,99,1.4,0],
+["Durham","NC",283000,15,375000,27,2.6,99,2.6,0],
+["Winston-Salem","NC",249000,18,235000,30,2.9,98,1,0],
+["Fayetteville","NC",208000,19,205000,32,3,98,0.8,0],
+["Denver","CO",711000,14,565000,28,2.5,99,1.8,0],
+["Colorado Springs","CO",478000,15,448000,29,2.7,99,2,0],
+["Aurora","CO",386000,16,475000,27,2.5,99,1.9,0],
+["Fort Collins","CO",169000,13,525000,30,2.8,99,1.7,0],
+["Philadelphia","PA",1576000,18,218633,22,2.5,99,0.2,0],
+["Pittsburgh","PA",302000,17,215000,24,2.6,99,-0.1,0],
+["Allentown","PA",125000,18,245000,21,2.4,99,0.5,0],
+["Erie","PA",94000,19,148000,26,2.8,98,-0.4,0],
+["Detroit","MI",639000,22,95000,26,3,98,-0.6,0],
+["Grand Rapids","MI",198000,16,285000,22,2.4,99,1,0],
+["Warren","MI",139000,18,215000,23,2.5,99,0,0],
+["Sterling Heights","MI",134000,16,295000,22,2.4,99,0.3,0],
+["Kansas City","MO",508000,18,233826,15,2,100,1.2,0],
+["St. Louis","MO",293000,19,174405,15,2.1,99,-0.2,0],
+["Springfield","MO",169000,18,205000,20,2.4,99,0.9,0],
+["Columbia","MO",126000,16,265000,22,2.5,99,1.1,0],
+["Louisville","KY",628594,18,239972,12,1.9,100,0.8,0],
+["Lexington","KY",322000,16,285000,18,2.2,100,1.3,0],
+["Bowling Green","KY",73000,17,245000,21,2.5,99,1.5,0],
+["Virginia Beach","VA",457000,15,355000,24,2.4,99,1,0],
+["Richmond","VA",230000,16,325000,23,2.4,99,1.5,0],
+["Norfolk","VA",235000,17,275000,26,2.6,99,0.6,0],
+["Chesapeake","VA",250000,14,385000,25,2.4,99,1.4,0],
+["Baltimore","MD",576000,19,185000,28,2.8,98,-0.3,0],
+["Columbia","MD",105000,14,485000,24,2.3,100,1.2,0],
+["Minneapolis","MN",425000,15,335000,22,2.3,100,0.9,0],
+["St. Paul","MN",311000,16,298000,23,2.4,99,0.7,0],
+["Oklahoma City","OK",681000,18,235000,24,2.6,99,1.4,0],
+["Tulsa","OK",413000,19,205000,25,2.7,98,1,0],
+["Birmingham","AL",200000,19,185000,29,2.9,98,0.5,0],
+["Montgomery","AL",200000,20,165000,31,3,98,0.2,0],
+["Huntsville","AL",215000,16,315000,26,2.6,99,2.2,0],
+["New Orleans","LA",383000,21,265000,38,3.6,97,-0.5,0],
+["Baton Rouge","LA",227000,19,225000,34,3.2,98,0.3,0],
+["Omaha","NE",487000,16,265000,18,2.2,100,1.1,0],
+["Lincoln","NE",295000,15,275000,19,2.3,100,1.3,0],
+["Wichita","KS",397000,18,195000,22,2.5,99,0.6,0],
+["Kansas City","KS",156000,19,175000,23,2.6,99,0.4,0],
+["Seattle","WA",733919,12,850864,22,2.3,100,1.5,0],
+["Spokane","WA",229000,15,425000,26,2.6,99,1.8,0],
+["Tacoma","WA",221000,14,465000,24,2.5,99,1.6,0],
+["Portland","OR",641162,14,527584,25,2.6,99,1,0],
+["Salem","OR",178000,15,425000,27,2.7,99,1.2,0],
+["Salt Lake City","UT",200000,13,525000,24,2.4,100,2,0],
+["West Valley City","UT",140000,15,445000,25,2.5,99,1.8,0],
+["Boise","ID",237000,14,485000,28,2.7,99,2.8,0],
+["Milwaukee","WI",569000,18,175000,23,2.5,99,-0.2,0],
+["Madison","WI",269000,14,395000,21,2.3,100,1.4,0],
+["Jackson","MS",150000,21,145000,36,3.4,97,-0.4,0]
 ];
-function sDOM(d){if(d<10)return 45;if(d<=15)return 70+(d-10)*6;if(d<=35)return 100;if(d<=60)return 100-((d-35)/25)*55;return Math.max(0,45-(d-60)*1.5)}
-function sMOI(m){if(m<0.8)return 40;if(m<1.5)return 55+(m-0.8)/0.7*30;if(m<=3.5)return 100;if(m<=6)return 100-((m-3.5)/2.5)*60;return Math.max(0,40-(m-6)*8)}
-function sCash(c){if(c<8)return 30;if(c<15)return 30+(c-8)/7*55;if(c<=35)return 100;if(c<=55)return 100-((c-35)/20)*45;return Math.max(20,55-(c-55)*1.5)}
-function sVel(v){if(v<93)return 20;if(v<98)return 20+(v-93)/5*60;if(v<=102)return 100;if(v<=105)return 100-((v-102)/3)*30;return Math.max(40,70-(v-105)*5)}
-function sPG(p){if(p<-2)return 5;if(p<0)return 5+(p+2)/2*35;if(p<=3)return 40+p/3*60;if(p<=5)return 100;return 92}
-function opp(m){return Math.round(sDOM(m.dom)*.25+sMOI(m.moi)*.25+sCash(m.cashPct)*.20+sVel(m.s2l)*.15+sPG(m.pg)*.15)}
-function popS(p){return p>2e6?100:p>1e6?90:p>5e5?80:p>25e4?70:p>1e5?60:p>5e4?50:40}
-function leadS(l){return l===0?0:Math.min(100,Math.round(l/60*100))}
-function adS(m,o){const pd=Math.min(100,m.pdrop*8);const af=m.med<200000?100:m.med<350000?80:m.med<500000?55:30;return Math.round(o*.40+popS(m.pop)*.20+leadS(m.pl)*.20+pd*.10+af*.10)}
-function exits(m){const t=[];if(m.dom<20&&m.moi<2&&m.s2l>100)t.push({k:'novation',l:'Novation/MLS'});if(m.dom>=15&&m.dom<=45&&m.cashPct>18)t.push({k:'wholesale',l:'Wholesale'});if(m.dom>40&&m.moi>3.5)t.push({k:'wholetail',l:'Wholetail'});if(m.dom>55||m.moi>5)t.push({k:'creative',l:'Creative/Sub2'});if(m.pg>2.0&&m.moi<2.5)t.push({k:'hold',l:'Hold/Sub2'});if(!t.length)t.push({k:'wholesale',l:'Wholesale'});return t}
-function gc(s){return s>=75?'#16a34a':s>=60?'#65a30d':s>=45?'#ca8a04':s>=30?'#ea580c':'#dc2626'}
-function pill(s){return '<span class="pill" style="background:'+gc(s)+'">'+s+'</span>'}
-let CM=M.map(m=>{const o=opp(m);const a=adS(m,o);const ex=exits(m);return{...m,oppScore:o,adScore:a,exits:ex,isActive:AS.has(m.state)}}).sort((a,b)=>b.adScore-a.adScore).map((m,i)=>({...m,rank:i+1}));
-let FM=[...CM];let sc='rank';let sd=1;let lmap=null;let mm=[];
-function init(){
-document.getElementById('hm').textContent=CM.length;
-document.getElementById('he').textContent=CM.filter(m=>!m.isActive&&m.adScore>=55).length;
-rSG();rTop();rTable(CM);
-document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
-document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
-document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
-t.classList.add('active');const s=t.dataset.s;
-document.getElementById('s-'+s).classList.add('active');
-if(s==='map'&&!lmap)iMap();if(s==='leads')loadLeads();
-}));
-document.getElementById('si').addEventListener('input',af);
-setTimeout(()=>{document.getElementById('lo').style.display='none'},700);
+
+/* ---------- SCORING ENGINE (sweet-spot model) ---------- */
+function clamp(v){return Math.max(0,Math.min(100,v));}
+// Days-to-pending / DOM sweet spot 15-35
+function sDOM(d){if(d>=15&&d<=35)return 100;if(d<15)return clamp(100-(15-d)*4);if(d<=45)return clamp(100-(d-35)*5);return clamp(50-(d-45)*3);}
+// Months of inventory sweet spot 1.5-3.5
+function sMOI(m){if(m>=1.5&&m<=3.5)return 100;if(m<1.5)return clamp(100-(1.5-m)*40);if(m<=5)return clamp(100-(m-3.5)*30);return clamp(55-(m-5)*15);}
+// Cash sales % sweet spot 15-35
+function sCash(c){if(c>=15&&c<=35)return 100;if(c<15)return clamp(100-(15-c)*5);return clamp(100-(c-35)*4);}
+// Market velocity (sale/list ratio) higher better, ~100=par
+function sVel(r){return clamp((r-90)*8);}
+// Population growth trend
+function sPG(g){return clamp(50+g*15);}
+// Population size tier score (bigger metros = more buyers)
+function sPop(p){if(p>=1000000)return 100;if(p>=500000)return 85;if(p>=250000)return 70;if(p>=120000)return 55;if(p>=60000)return 42;return 30;}
+// Lead-flow score
+function sLead(l){if(l>=100)return 100;if(l>=50)return 85;if(l>=25)return 70;if(l>=10)return 55;if(l>=1)return 40;return 0;}
+
+function opp(m){return Math.round(sDOM(m.dom)*0.25 + sMOI(m.moi)*0.25 + sCash(m.cash)*0.20 + sVel(m.slr)*0.15 + sPG(m.pg)*0.15);}
+function adScore(m){return Math.round(m.opp*0.40 + sPop(m.pop)*0.20 + sLead(m.leads)*0.20 + 50*0.10 + 50*0.10);}
+
+function exitStrat(m){
+  if(m.dom<20 && m.moi<2 && m.slr>100) return ["Novation / MLS","#16a34a"];
+  if(m.pg>2 && m.moi<2.5) return ["Hold / Sub-2","#0ea5e9"];
+  if(m.dom>=20 && m.dom<=45 && m.cash>18) return ["Wholesale","#65a30d"];
+  if(m.dom>45 && m.moi>4) return ["Wholetail","#ca8a04"];
+  if(m.dom>55 || m.moi>5) return ["Creative / Sub-2","#ea580c"];
+  return ["Wholesale","#65a30d"];
 }
-function rSG(){const cards=[{val:CM.length,lbl:'Total Markets'},{val:CM.filter(m=>m.isActive).length,lbl:'Active State Markets'},{val:CM.filter(m=>!m.isActive&&m.adScore>=55).length,lbl:'Expansion Opps'},{val:Math.max(...CM.map(m=>m.adScore)),lbl:'Top Ad Score'},{val:Math.round(CM.reduce((a,m)=>a+m.dom,0)/CM.length)+' days',lbl:'Avg DOM'},{val:(CM.reduce((a,m)=>a+m.moi,0)/CM.length).toFixed(1)+' mo',lbl:'Avg MOI'},{val:CM.reduce((a,m)=>a+m.pl,0),lbl:'Lead-Backed Markets'}];document.getElementById('sg').innerHTML=cards.map(c=>'<div class="sc"><div class="val">'+c.val+'</div><div class="lbl">'+c.lbl+'</div></div>').join('')}
-function rTop(){document.getElementById('t10a').innerHTML=CM.slice(0,10).map((m,i)=>'<tr><td>'+(i+1)+'</td><td><span class="city-name">'+m.city+'</span><span class="sb'+(m.isActive?' as':'')+'">'+m.state+'</span>'+(m.pl>0?'<br><span class="plc">📍 '+m.pl+'</span>':'')+'</td><td>'+pill(m.adScore)+'</td><td><div class="et">'+m.exits.map(e=>'<span class="t-'+e.k+'">'+e.l+'</span>').join('')+'</div></td></tr>').join('');document.getElementById('t10e').innerHTML=CM.filter(m=>!m.isActive).sort((a,b)=>b.oppScore-a.oppScore).slice(0,10).map((m,i)=>'<tr><td>'+(i+1)+'</td><td><span class="city-name">'+m.city+'</span></td><td>'+pill(m.oppScore)+'</td><td><span class="sb">'+m.state+'</span></td></tr>').join('')}
-function rTable(ms){document.getElementById('rc').textContent=ms.length+' markets';document.getElementById('mtb').innerHTML=ms.map(m=>'<tr><td>'+m.rank+'</td><td><span class="city-name">'+m.city+'</span><span class="sb'+(m.isActive?' as':'')+'">'+m.state+'</span>'+(m.pl>0?'<br><span class="plc">📍 '+m.pl+'</span>':'')+'</td><td>'+(m.pop/1000).toFixed(0)+'K</td><td>'+pill(m.adScore)+'</td><td>'+pill(m.oppScore)+'</td><td>'+m.dom+'d</td><td>'+m.moi.toFixed(1)+'</td><td>'+m.cashPct+'%</td><td>'+m.s2l.toFixed(1)+'%</td><td style="color:'+(m.pg>0?'#4ade80':'#f87171')+'">'+(m.pg>0?'+':'')+m.pg.toFixed(1)+'%</td><td>'+(m.pl>0?'<span class="plc">📍 '+m.pl+'</span>':'—')+'</td><td><div class="et">'+m.exits.map(e=>'<span class="t-'+e.k+'">'+e.l+'</span>').join('')+'</div></td></tr>').join('')}
-function af(){const s=(document.getElementById('si').value||'').toLowerCase();const st=document.getElementById('sf').value;const mt=document.getElementById('mf').value;const ex=document.getElementById('ef').value;const mn=parseInt(document.getElementById('ms').value)||0;FM=CM.filter(m=>{if(s&&!m.city.toLowerCase().includes(s)&&!m.state.toLowerCase().includes(s))return false;if(st&&m.state!==st)return false;if(mt==='active'&&!m.isActive)return false;if(mt==='exp'&&m.isActive)return false;if(ex&&!m.exits.some(e=>e.k===ex))return false;if(m.adScore<mn)return false;return true});rTable(FM)}
-function cf(){document.getElementById('si').value='';document.getElementById('sf').value='';document.getElementById('mf').value='';document.getElementById('ef').value='';document.getElementById('ms').value='';FM=[...CM];rTable(FM)}
-function st(col){if(sc===col)sd*=-1;else{sc=col;sd=1;}FM.sort((a,b)=>typeof a[col]==='number'?(a[col]-b[col])*sd:String(a[col]).localeCompare(String(b[col]))*sd);rTable(FM)}
-function iMap(){lmap=L.map('map').setView([37.5,-95],4);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB',maxZoom:18}).addTo(lmap);rMM(CM)}
-function rMM(ms){mm.forEach(x=>lmap.removeLayer(x));mm=[];ms.forEach(m=>{if(!m.lat||!m.lng)return;const c=gc(m.adScore);const r=Math.max(6,Math.min(18,6+m.pop/200000));const ci=L.circleMarker([m.lat,m.lng],{radius:r,fillColor:c,color:m.pl>0?'#fbbf24':'#fff',weight:m.pl>0?2.5:1,opacity:.9,fillOpacity:.82});ci.bindPopup('<div class="tp"><h4>'+m.city+', '+m.state+(m.isActive?' ✅':' 🔵')+'</h4><div class="tr2"><span class="trl">Ad Score</span><span class="trv" style="color:'+c+'">'+m.adScore+'</span></div><div class="tr2"><span class="trl">Opp Score</span><span class="trv">'+m.oppScore+'</span></div><div class="tr2"><span class="trl">DOM</span><span class="trv">'+m.dom+' days</span></div><div class="tr2"><span class="trl">MOI</span><span class="trv">'+m.moi.toFixed(1)+'</span></div><div class="tr2"><span class="trl">Cash%</span><span class="trv">'+m.cashPct+'%</span></div><div class="tr2"><span class="trl">Sale/List</span><span class="trv">'+m.s2l.toFixed(1)+'%</span></div>'+(m.pl>0?'<div class="tr2"><span class="trl">Our Leads</span><span class="trv" style="color:#fbbf24">📍 '+m.pl+'</span></div>':'')+'<div style="margin-top:6px;color:#64748b;font-size:11px">'+m.exits.map(e=>e.l).join(' · ')+'</div></div>');ci.addTo(lmap);mm.push(ci)})}
-function fm(t){let ms=CM;if(t==='active')ms=CM.filter(m=>m.isActive);if(t==='exp')ms=CM.filter(m=>!m.isActive);rMM(ms)}
-function loadLeads(){const el=document.getElementById('lc');const sl=document.getElementById('lls');try{const raw=localStorage.getItem('PLAnalysisSnapshot_2026');if(!raw){el.innerHTML='<div style="text-align:center;padding:30px;color:#ef4444">⚠️ No snapshot found. Save the PropertyLeads analysis from leads.propertyleads.com first.</div>';sl.innerHTML='<span style="color:#ef4444">Not loaded</span>';return}const data=JSON.parse(raw);sl.innerHTML='<span style="color:#4ade80">✓ '+( data.allLeads?.length||0)+' leads loaded</span>';const counties=(data.countyRankings||[]).slice(0,30);el.innerHTML='<div class="tw" style="margin-top:0"><div style="padding:12px 16px;background:#16213e;font-weight:700;color:#e2e8f0;font-size:13px;border-bottom:1px solid #2d3748">🏆 Top 30 Counties (Weighted Score)</div><table><thead><tr><th>#</th><th>County</th><th>State</th><th>Score</th><th>2026 Leads</th><th>2025 Leads</th></tr></thead><tbody>'+counties.map((c,i)=>'<tr><td>'+(i+1)+'</td><td>'+(c.county||c.name||'—')+'</td><td><span class="sb as">'+(c.state||'—')+'</span></td><td>'+pill(Math.min(100,Math.round(((c.score||c.weightedScore||0)/300)*100)))+'</td><td style="color:#fbbf24">'+(c.c26||c.leads2026||0)+'</td><td style="color:#94a3b8">'+(c.c25||c.leads2025||0)+'</td></tr>').join('')+'</tbody></table></div>'}catch(e){el.innerHTML='<div style="padding:20px;color:#ef4444">Error: '+e.message+'</div>'}}
+
+function scoreColor(s){if(s>=75)return"#16a34a";if(s>=60)return"#65a30d";if(s>=45)return"#ca8a04";if(s>=30)return"#ea580c";return"#dc2626";}
+function scoreLabel(s){if(s>=75)return"Excellent";if(s>=60)return"Good";if(s>=45)return"Moderate";if(s>=30)return"Weak";return"Poor";}
+
+/* ---------- BUILD MARKETS ---------- */
+var MARKETS = RAW.map(function(r){
+  var m={city:r[0],state:r[1],pop:r[2],cash:r[3],price:r[4],dom:r[5],moi:r[6],slr:r[7],pg:r[8],leads:r[9]};
+  m.active = ACTIVE_STATES.indexOf(m.state)>=0;
+  m.opp = opp(m);
+  m.ad = adScore(m);
+  var e = exitStrat(m); m.exit=e[0]; m.exitColor=e[1];
+  return m;
+});
+
+/* ---------- HELPERS ---------- */
+function pill(s){return '<span class="pill" style="background:'+scoreColor(s)+'">'+s+'</span>';}
+function fmtK(n){return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'K':n;}
+function money(n){return '$'+n.toLocaleString();}
+function el(id){return document.getElementById(id);}
+
+/* ---------- OVERVIEW STATS ---------- */
+function renderOverview(){
+  var activeM = MARKETS.filter(function(m){return m.active;});
+  var expM = MARKETS.filter(function(m){return !m.active;});
+  var leadM = MARKETS.filter(function(m){return m.leads>0;});
+  var topAd = Math.max.apply(null, MARKETS.map(function(m){return m.ad;}));
+  var avgDom = Math.round(MARKETS.reduce(function(a,m){return a+m.dom;},0)/MARKETS.length);
+  var avgMoi = (MARKETS.reduce(function(a,m){return a+m.moi;},0)/MARKETS.length).toFixed(1);
+  el('st-total').textContent = MARKETS.length;
+  el('st-active').textContent = activeM.length;
+  el('st-exp').textContent = expM.length;
+  el('st-ad').textContent = topAd;
+  el('st-dom').textContent = avgDom+'d';
+  // top panels
+  function topList(arr,key,fmt){
+    return arr.slice(0,10).map(function(m,i){
+      return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+'</span><span class="tval">'+fmt(m)+'</span></div>';
+    }).join('');
+  }
+  var byAd = MARKETS.slice().sort(function(a,b){return b.ad-a.ad;});
+  el('panel-ad').innerHTML = topList(byAd,'ad',function(m){return pill(m.ad);});
+  var byExp = expM.slice().sort(function(a,b){return b.opp-a.opp;});
+  el('panel-exp').innerHTML = topList(byExp,'opp',function(m){return pill(m.opp);});
+  var hottest = MARKETS.filter(function(m){return m.dom<20;}).sort(function(a,b){return a.dom-b.dom;});
+  el('panel-hot').innerHTML = topList(hottest,'dom',function(m){return '<span class="tval2">'+m.dom+'d</span>';});
+  var whole = MARKETS.filter(function(m){return m.exit==='Wholesale';}).sort(function(a,b){return b.cash-a.cash;});
+  el('panel-whole').innerHTML = topList(whole,'cash',function(m){return '<span class="tval2">'+m.cash+'% cash</span>';});
+}
+
+/* ---------- MARKET TABLE ---------- */
+var tblSort={key:'ad',dir:-1};
+function renderTable(){
+  var stateF = el('f-state') ? el('f-state').value : 'ALL';
+  var viewF = el('f-view') ? el('f-view').value : 'ALL';
+  var rows = MARKETS.filter(function(m){
+    if(stateF!=='ALL' && m.state!==stateF) return false;
+    if(viewF==='ACTIVE' && !m.active) return false;
+    if(viewF==='EXP' && m.active) return false;
+    if(viewF==='LEADS' && m.leads<=0) return false;
+    return true;
+  });
+  rows.sort(function(a,b){var k=tblSort.key;var av=a[k],bv=b[k];if(typeof av==='string')return av.localeCompare(bv)*tblSort.dir;return (av-bv)*tblSort.dir;});
+  var html = rows.map(function(m){
+    return '<tr>'+
+      '<td class="cty">'+m.city+'<span class="stbadge'+(m.active?' on':'')+'">'+m.state+'</span></td>'+
+      '<td>'+pill(m.ad)+'</td>'+
+      '<td>'+pill(m.opp)+'</td>'+
+      '<td>'+money(m.price)+'</td>'+
+      '<td>'+m.dom+'d</td>'+
+      '<td>'+m.moi+'</td>'+
+      '<td>'+m.cash+'%</td>'+
+      '<td>'+m.slr+'%</td>'+
+      '<td class="'+(m.pg>=0?'pos':'neg')+'">'+(m.pg>0?'+':'')+m.pg+'%</td>'+
+      '<td>'+fmtK(m.pop)+'</td>'+
+      '<td>'+(m.leads>0?'<span class="leadchip">'+m.leads+'</span>':'–')+'</td>'+
+      '<td><span class="exitbadge" style="background:'+m.exitColor+'">'+m.exit+'</span></td>'+
+    '</tr>';
+  }).join('');
+  el('tbl-body').innerHTML = html;
+  el('tbl-count').textContent = rows.length+' markets';
+}
+function sortBy(k){if(tblSort.key===k)tblSort.dir*=-1;else{tblSort.key=k;tblSort.dir=-1;}renderTable();}
+
+/* ---------- MAP ---------- */
+var COORDS = {"Houston,TX":[29.76,-95.37],"Dallas,TX":[32.78,-96.8],"San Antonio,TX":[29.42,-98.49],"Austin,TX":[30.27,-97.74],"Fort Worth,TX":[32.76,-97.33],"El Paso,TX":[31.76,-106.49],"Arlington,TX":[32.74,-97.11],"Corpus Christi,TX":[27.8,-97.4],"Plano,TX":[33.02,-96.7],"Lubbock,TX":[33.58,-101.86],"Laredo,TX":[27.53,-99.49],"Garland,TX":[32.91,-96.64],"Irving,TX":[32.81,-96.95],"McKinney,TX":[33.2,-96.62],"Frisco,TX":[33.15,-96.82],"Killeen,TX":[31.12,-97.73],"Miami,FL":[25.76,-80.19],"Jacksonville,FL":[30.33,-81.66],"Tampa,FL":[27.95,-82.46],"Orlando,FL":[28.54,-81.38],"St. Petersburg,FL":[27.77,-82.64],"Hialeah,FL":[25.86,-80.28],"Port St. Lucie,FL":[27.27,-80.36],"Cape Coral,FL":[26.56,-81.95],"Fort Lauderdale,FL":[26.12,-80.14],"Tallahassee,FL":[30.44,-84.28],"Gainesville,FL":[29.65,-82.32],"West Palm Beach,FL":[26.71,-80.05],"Atlanta,GA":[33.75,-84.39],"Augusta,GA":[33.47,-81.97],"Columbus,GA":[32.46,-84.99],"Savannah,GA":[32.08,-81.09],"Athens,GA":[33.96,-83.38],"Macon,GA":[32.84,-83.63],"Marietta,GA":[33.95,-84.55],"Chicago,IL":[41.88,-87.63],"Aurora,IL":[41.76,-88.32],"Rockford,IL":[42.27,-89.09],"Joliet,IL":[41.53,-88.08],"Naperville,IL":[41.79,-88.15],"Springfield,IL":[39.78,-89.65],"Peoria,IL":[40.69,-89.59],"Columbus,OH":[39.96,-83],"Cleveland,OH":[41.5,-81.69],"Cincinnati,OH":[39.1,-84.51],"Toledo,OH":[41.66,-83.56],"Akron,OH":[41.08,-81.52],"Dayton,OH":[39.76,-84.19],"Parma,OH":[41.4,-81.72],"Indianapolis,IN":[39.77,-86.16],"Fort Wayne,IN":[41.08,-85.14],"Evansville,IN":[37.97,-87.57],"South Bend,IN":[41.68,-86.25],"Carmel,IN":[39.98,-86.12],"Bloomington,IN":[39.17,-86.53],"Columbia,SC":[34,-81.03],"Charleston,SC":[32.78,-79.93],"North Charleston,SC":[32.85,-79.98],"Greenville,SC":[34.85,-82.39],"Mount Pleasant,SC":[32.79,-79.86],"Rock Hill,SC":[34.92,-81.02],"Spartanburg,SC":[34.95,-81.93],"Phoenix,AZ":[33.45,-112.07],"Tucson,AZ":[32.22,-110.97],"Mesa,AZ":[33.42,-111.83],"Glendale,AZ":[33.54,-112.19],"Scottsdale,AZ":[33.49,-111.93],"Chandler,AZ":[33.31,-111.84],"Las Vegas,NV":[36.17,-115.14],"Henderson,NV":[36.04,-114.98],"Reno,NV":[39.53,-119.81],"North Las Vegas,NV":[36.2,-115.12],"Nashville,TN":[36.16,-86.78],"Memphis,TN":[35.15,-90.05],"Knoxville,TN":[35.96,-83.92],"Chattanooga,TN":[35.05,-85.31],"Clarksville,TN":[36.53,-87.36],"Charlotte,NC":[35.23,-80.84],"Raleigh,NC":[35.78,-78.64],"Greensboro,NC":[36.07,-79.79],"Durham,NC":[35.99,-78.9],"Winston-Salem,NC":[36.1,-80.24],"Fayetteville,NC":[35.05,-78.88],"Denver,CO":[39.74,-104.99],"Colorado Springs,CO":[38.83,-104.82],"Aurora,CO":[39.73,-104.83],"Fort Collins,CO":[40.59,-105.08],"Philadelphia,PA":[39.95,-75.17],"Pittsburgh,PA":[40.44,-79.99],"Allentown,PA":[40.61,-75.49],"Erie,PA":[42.13,-80.09],"Detroit,MI":[42.33,-83.05],"Grand Rapids,MI":[42.96,-85.67],"Warren,MI":[42.49,-83.01],"Sterling Heights,MI":[42.58,-83.03],"Kansas City,MO":[39.1,-94.58],"St. Louis,MO":[38.63,-90.2],"Springfield,MO":[37.21,-93.29],"Columbia,MO":[38.95,-92.33],"Louisville,KY":[38.25,-85.76],"Lexington,KY":[38.04,-84.5],"Bowling Green,KY":[36.99,-86.44],"Virginia Beach,VA":[36.85,-75.98],"Richmond,VA":[37.54,-77.44],"Norfolk,VA":[36.85,-76.29],"Chesapeake,VA":[36.77,-76.29],"Baltimore,MD":[39.29,-76.61],"Columbia,MD":[39.2,-76.86],"Minneapolis,MN":[44.98,-93.27],"St. Paul,MN":[44.95,-93.09],"Oklahoma City,OK":[35.47,-97.52],"Tulsa,OK":[36.15,-95.99],"Birmingham,AL":[33.52,-86.81],"Montgomery,AL":[32.37,-86.3],"Huntsville,AL":[34.73,-86.59],"New Orleans,LA":[29.95,-90.07],"Baton Rouge,LA":[30.45,-91.19],"Omaha,NE":[41.26,-95.93],"Lincoln,NE":[40.81,-96.7],"Wichita,KS":[37.69,-97.34],"Kansas City,KS":[39.11,-94.63],"Seattle,WA":[47.61,-122.33],"Spokane,WA":[47.66,-117.43],"Tacoma,WA":[47.25,-122.44],"Portland,OR":[45.52,-122.68],"Salem,OR":[44.94,-123.04],"Salt Lake City,UT":[40.76,-111.89],"West Valley City,UT":[40.69,-112],"Boise,ID":[43.62,-116.21],"Milwaukee,WI":[43.04,-87.91],"Madison,WI":[43.07,-89.4],"Jackson,MS":[32.3,-90.18]};
+var map, layerGroup;
+function renderMap(filter){
+  if(!map){
+    map = L.map('map',{zoomControl:true}).setView([37.8,-96],4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'',subdomains:'abcd',maxZoom:18}).addTo(map);
+    layerGroup = L.layerGroup().addTo(map);
+  }
+  layerGroup.clearLayers();
+  MARKETS.forEach(function(m){
+    if(filter==='ACTIVE'&&!m.active)return;
+    if(filter==='EXP'&&m.active)return;
+    if(filter==='LEADS'&&m.leads<=0)return;
+    var c = COORDS[m.city+','+m.state];
+    if(!c)return;
+    var radius = Math.max(6,Math.min(26,Math.sqrt(m.pop/1000)/2));
+    var mk = L.circleMarker([c[0],c[1]],{radius:radius,fillColor:scoreColor(m.ad),color:'#0a0a0a',weight:1,fillOpacity:0.78});
+    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b><br>Ad Score: '+m.ad+' · Opp: '+m.opp+'<br>DOM '+m.dom+'d · MOI '+m.moi+'<br>Exit: '+m.exit,{className:'maptip'});
+    layerGroup.addLayer(mk);
+  });
+}
+function mapFilter(f,btn){
+  document.querySelectorAll('.mapbtn').forEach(function(b){b.classList.remove('on');});
+  if(btn)btn.classList.add('on');
+  renderMap(f);
+}
+
+/* ---------- TABS ---------- */
+function showTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+  document.querySelectorAll('.navtab').forEach(function(t){t.classList.remove('on');});
+  el('tab-'+name).style.display='block';
+  if(btn)btn.classList.add('on');
+  if(name==='map' && map){setTimeout(function(){map.invalidateSize();renderMap('ALL');},120);}
+  if(name==='map' && !map){setTimeout(function(){renderMap('ALL');},120);}
+}
+
+/* ---------- INIT ---------- */
+function init(){
+  renderOverview();
+  // populate state filter
+  var states = ACTIVE_STATES.concat(MARKETS.filter(function(m){return !m.active;}).map(function(m){return m.state;}));
+  var uniq = states.filter(function(v,i){return states.indexOf(v)===i;}).sort();
+  var sel = el('f-state');
+  if(sel){uniq.forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});}
+  renderTable();
+}
 document.addEventListener('DOMContentLoaded',init);
+if(document.readyState!=='loading')init();
 </script>
 </body>
 </html>
