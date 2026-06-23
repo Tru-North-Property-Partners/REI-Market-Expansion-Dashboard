@@ -1529,7 +1529,7 @@ function renderTable(){
   rows.forEach(function(m){
     var sc=m.exitColor||'#9cc23a';
     var cls=classOf(m.opp);
-    h+='<tr onclick="openDetail(''+m.city.replace(/'/g,"\'")+'',''+m.state+'')">';
+    h+='<tr onclick="openDetail(\''+m.city.replace(/'/g,"\\\'")+'\'',\''+m.state+'\')">';
     h+='<td class="thmark">'+favBtn(m)+'</td>';
     h+='<td class="mkname"><span class="dot" style="background:'+sc+'"></span>'+(m.active?'<span class="act-badge">&#9679;</span>':'')+m.city+', '+m.state+(m.gem?'<span class="gem-badge" data-tip="Hidden Gem market">GEM</span>':'')+'</td>';
     h+='<td class="scnum '+cls+'">'+m.ad+'</td>';
