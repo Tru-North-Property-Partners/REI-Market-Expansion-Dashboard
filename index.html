@@ -203,7 +203,14 @@ th[data-sort]{white-space:nowrap;}
 .pop-key{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;}
 .pop-key-title{font-weight:600;color:var(--ink);margin-right:4px;}
 .pop-dot{display:inline-block;border-radius:50%;background:rgba(148,163,184,0.5);border:1.5px solid rgba(148,163,184,0.8);vertical-align:middle;margin:0 3px;}
-.refresh-status{font-size:12px;color:#5b6b7a;margin:6px 0 14px;padding:6px 12px;background:#eef3f7;border:1px solid #d6e0e8;border-radius:6px;display:inline-block}.refresh-status.live{background:#eaf6ea;border-color:#bfe3bf;color:#2f6b34}.refresh-status.stale{background:#fbf3e6;border-color:#ecd8a8;color:#7a5a18}</style>
+.refresh-status{font-size:12px;color:#5b6b7a;margin:6px 0 14px;padding:6px 12px;background:#eef3f7;border:1px solid #d6e0e8;border-radius:6px;display:inline-block}.refresh-status.live{background:#eaf6ea;border-color:#bfe3bf;color:#2f6b34}.refresh-status.stale{background:#fbf3e6;border-color:#ecd8a8;color:#7a5a18}
+#markets-table.hide-empty th:nth-child(7),#markets-table.hide-empty td:nth-child(7),
+#markets-table.hide-empty th:nth-child(8),#markets-table.hide-empty td:nth-child(8),
+#markets-table.hide-empty th:nth-child(10),#markets-table.hide-empty td:nth-child(10),
+#markets-table.hide-empty th:nth-child(17),#markets-table.hide-empty td:nth-child(17){display:none;}
+.coltoggle{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted2);cursor:pointer;user-select:none;}
+.coltoggle input{width:15px;height:15px;cursor:pointer;accent-color:#2f6f4f;}
+</style>
 </head>
 <body>
 <div class="tip" id="tip"></div>
@@ -260,7 +267,7 @@ th[data-sort]{white-space:nowrap;}
   <button id="csv-btn" class="csvbtn" onclick="exportCSV()">Export CSV</button>
   <button class="csvbtn" onclick="clearFilters()" style="background:#555;margin-left:4px">Clear Filters</button>
   <span class="tcount" id="tbl-count">1000 markets</span>
-</div>
+<span class="colspan"><label class="coltoggle"><input type="checkbox" id="f-hideempty" checked onchange="toggleEmptyCols()"> Hide empty columns</label></span></div>
   <div class="cmpbar" id="cmpbar"></div>
   <div class="tblwrap"><table id="markets-table">><thead><tr>
     <th class="thmark"></th>
@@ -2142,6 +2149,7 @@ function _headerDate(csv){var line=csv.slice(0,csv.indexOf("\n")),cols=line.spli
 function _fmtMonth(d){var mo=["January","February","March","April","May","June","July","August","September","October","November","December"];return mo[d.getMonth()]+" "+d.getFullYear();}
 function refreshMarketData(){try{var nowKey=new Date().getFullYear()+"-"+(new Date().getMonth()+1);var last=null;try{last=localStorage.getItem("truNorthDataRefresh");}catch(e){}if(last===nowKey){_markRefreshBadge(false);return;}var base="https://files.zillowstatic.com/research/public_csvs/";var pCity=base+"new_pending/City_new_pending_uc_sfrcondo_sm_month.csv";var iCity=base+"invt_fs/City_invt_fs_uc_sfrcondo_sm_month.csv";Promise.all([fetch(pCity,{cache:"no-store"}).then(function(r){return r.ok?r.text():null;}),fetch(iCity,{cache:"no-store"}).then(function(r){return r.ok?r.text():null;})]).then(function(res){var pc=res[0],ic=res[1];if(!pc||!ic){_markRefreshBadge(false);return;}var pctMap=_buildPctMap(ic,pc);var updated=0;MARKETS.forEach(function(m){var key=(m.city+"|"+m.state).toLowerCase();var np=pctMap[key];if(np!=null&&isFinite(np)){m.pend=np;m.comp=Math.max(1,Math.min(10,Math.round(np/5)));if(typeof offerMult==="function")m.offerMult=offerMult(m);if(typeof exitTags==="function")m.exitTags=exitTags(m);updated++;}});var hd=_headerDate(pc);if(hd){var el=document.getElementById("refreshDate");if(el)el.textContent=_fmtMonth(hd);}try{localStorage.setItem("truNorthDataRefresh",nowKey);}catch(e){}try{if(typeof renderOverview==="function")renderOverview();if(typeof renderTable==="function")renderTable();if(typeof renderCmpBar==="function")renderCmpBar();if(typeof bindTips==="function")bindTips(document);}catch(e){}_markRefreshBadge(true,updated);}).catch(function(){_markRefreshBadge(false);});}catch(e){_markRefreshBadge(false);}}
 function _markRefreshBadge(live,n){var el=document.getElementById("refreshStatus");if(!el)return;if(live){el.className="refresh-status live";el.setAttribute("data-tip","Live-refreshed from Zillow public research files this month ("+(n||0)+" markets updated with the latest pending and inventory figures). Re-checks automatically once per calendar month.");}else{el.className="refresh-status";}}
+function toggleEmptyCols(){var t=document.getElementById('markets-table');var c=document.getElementById('f-hideempty');if(!t||!c)return;if(c.checked){t.classList.add('hide-empty');}else{t.classList.remove('hide-empty');}}
 function init(){
   tipEl=el('tip');
   renderOverview();
@@ -2155,7 +2163,7 @@ function init(){
   runCalc();
   renderCmpBar();
   bindTips(document);
-try{refreshMarketData();}catch(e){}
+try{refreshMarketData();}catch(e){}try{toggleEmptyCols();}catch(e){}
 }
 document.addEventListener('DOMContentLoaded',init);
 if(document.readyState!=='loading')init();
