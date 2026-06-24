@@ -239,7 +239,7 @@ th[data-sort]{white-space:nowrap;}
     <div class="card"><h3><span class="dot" style="background:#9cc23a"></span>Top 25: Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e07b2e"></span>Top 10: Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
     <div class="card"><h3><span class="dot" style="background:#3aa0d6"></span>Top 10: Best Wholesale Markets</h3><div id="panel-whole"></div></div>
-    <div class="card"><h3><span class="dot" style="background:#d14545"></span>⚠ Exit / Reduce Exposure</h3><div class="csub">Active-state markets scoring under 50. Worth reducing spend or exiting.</div><div id="panel-exit"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#d14545"></span>â  Exit / Reduce Exposure</h3><div class="csub">Active-state markets scoring under 50. Worth reducing spend or exiting.</div><div id="panel-exit"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e8b84a"></span>Watch / Monitor</h3><div class="csub">Active-state markets scoring 50 to 59. Borderline, keep an eye on them.</div><div id="panel-watch"></div></div>
   </div>
   <p class="note">Hidden Gems flags mid-sized markets with low competition that still have solid opportunity fundamentals, the inexpensive markets larger investors skip. Ad Score ranks where paid acquisition performs best. Expansion Targets surface high-opportunity markets outside our 7 active states. The Exit panel flags markets we operate in where fundamentals have weakened.</p>
@@ -336,17 +336,17 @@ th[data-sort]{white-space:nowrap;}
     <h3>Lead Backlog: markets we have cost data for but are not tracking yet</h3>
     <p style="color:#9aa0b5;font-size:13px;line-height:1.6;max-width:760px">These are markets where at least one real PropertyLeads lead has come through, but that are not yet in the main dataset above. They are the running list of places to pull full housing data on next and decide whether to add. Grouped by state, sorted alphabetically.</p>
     <div class="backlog-wrap">
-      <input class="bk-search" id="bk-search" type="text" placeholder="Filter by city or state…" oninput="renderBacklog()">
+      <input class="bk-search" id="bk-search" type="text" placeholder="Filter by city or stateâ¦" oninput="renderBacklog()">
       <div style="color:#7d8398;font-size:12px;margin:4px 0 8px"><span id="bk-count"></span></div>
       <div class="backlog-grid" id="backlog-grid"></div>
     </div>
   </div>
 </div>
 <div class="tab-panel" id="tab-scoring">
-  <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) · Months of Inventory 25% (ideal 1.5-3.5mo) · Cash Sales % 20% (ideal 15-35%) · Sale/List Velocity 15% · Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
-  <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity 40% · Metro Size 20% · Our Lead Flow 20% · Price-Drop Motivation 10% · Lead Acquisition Cost 10% (cheaper county lead pricing scores higher; assumes ~1 in 15 leads to contract and ~40% contract-to-close fallout, so each closing needs roughly 25x the per-lead cost).</div></div></div>
+  <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Market Opportunity Score (0-100)</div><div class="gdesc">Sweet-spot model: Days-to-Pending 25% (ideal 15-35d) Â· Months of Inventory 25% (ideal 1.5-3.5mo) Â· Cash Sales % 20% (ideal 15-35%) Â· Sale/List Velocity 15% Â· Population Growth 15%. Too-hot and too-cold markets are both penalized.</div></div></div>
+  <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Ad Market Score (0-100)</div><div class="gdesc">Where to spend ad dollars: Opportunity 40% Â· Metro Size 20% Â· Our Lead Flow 20% Â· Price-Drop Motivation 10% Â· Lead Acquisition Cost 10% (cheaper county lead pricing scores higher; assumes ~1 in 15 leads to contract and ~40% contract-to-close fallout, so each closing needs roughly 25x the per-lead cost).</div></div></div>
   <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">ROI Score (0-100)</div><div class="gdesc">Rewards strong deal fundamentals in markets where competition is low. It is built mainly from the Opportunity score, with a bonus for low competition, and a penalty for markets too small to reliably source deals, agents or cash buyers. Lead cost is deliberately left out for now - our cost figures are still being verified, so they are shown for reference only and do not move the score.</div></div></div>
-  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">Hidden Gem Flag</div><div class="gdesc">A market is flagged a Hidden Gem when it is mid-sized (roughly 30k to 150k), low competition (≤3 of 10), and still scores 55+ on opportunity, while being big enough to actually find sellers, agents and cash buyers. Lead acquisition cost is also gated: under $200 per lead a market qualifies on its merits, from $200 to $300 it must be very strong (opportunity 85+), and above $300 it must be elite (opportunity 93+), so an expensive market only stays a gem if it is genuinely exceptional. Often overlooked by larger buyers.</div></div></div>
+  <div class="guide-row" style="border-left-color:#e8b84a"><div><div class="gtitle">Hidden Gem Flag</div><div class="gdesc">A market is flagged a Hidden Gem when it is mid-sized (roughly 30k to 150k), low competition (â¤3 of 10), and still scores 55+ on opportunity, while being big enough to actually find sellers, agents and cash buyers. Lead acquisition cost is also gated: under $200 per lead a market qualifies on its merits, from $200 to $300 it must be very strong (opportunity 85+), and above $300 it must be elite (opportunity 93+), so an expensive market only stays a gem if it is genuinely exceptional. Often overlooked by larger buyers.</div></div></div>
   <div class="guide-row" style="border-left-color:#5a9e35"><div><div class="gtitle">Novation / MLS</div><div class="gdesc">DOM &lt; 20, MOI &lt; 2, Sale/List &gt; 100% - fast, tight, full-price markets.</div></div></div>
   <div class="guide-row" style="border-left-color:#9cc23a"><div><div class="gtitle">Wholesale</div><div class="gdesc">DOM 20-45 with Cash % &gt; 18% - strong investor buyer pool.</div></div></div>
   <div class="guide-row" style="border-left-color:#e07b2e"><div><div class="gtitle">Wholetail / Creative / Hold</div><div class="gdesc">Slower or higher-inventory markets favor wholetail, sub-2 / creative terms, or buy-and-hold appreciation plays.</div></div></div>
@@ -359,6 +359,7 @@ th[data-sort]{white-space:nowrap;}
 /* ===== REI Market Expansion Dashboard v3.0 ===== */
 var ACTIVE_STATES = ["TX","FL","GA","IL","OH","IN","SC"];
 /* schema: [city,state,pop,cashPct,price,dom,moi,saleListRatio,popGrowth,ourLeads,competition,leadCost,sold,zhvi,rent,mti] */
+var PEND=[17.8,20.6,12,9.1,26.6,23,20.6,20.6,22.1,22.1,17.2,12,9.1,17.8,16.8,16.8,15.9,23.3,42.7,21.2,null,9.7,21.3,11.8,12.8,12.2,21.6,19.1,11,null,13.1,15.2,15.2,15,16.3,21.1,13.1,20.8,25.3,20.6,14.3,12.9,11.1,15.8,20.3,17.8,22.3,21.8,15.8,16.8,28.9,25.1,20.4,16.6,15.9,18.4,17.1,38.3,50.6,42,42,52.2,53.9,44.1,39.4,38.8,54.9,42.6,34.1,41.4,42.6,47.4,38.3,41.7,39.7,27.8,34.7,39.8,40,30.8,37.2,46.9,46.9,32.5,null,5.5,29.2,32.4,22.4,35.7,27.4,2.7,21.2,2.7,2.1,8.3,21.2,14.8,22.4,22,21.1,21.7,23,23,23,23,23,23,23,18.9,18.9,22.2,18.9,null,19.7,18.6,19.4,19.4,19.4,33.5,33.5,26.6,18.9,25.7,25.9,24.4,29.8,23.2,30.4,18.9,18.8,30.3,40.8,40.8,37.2,37.2,27.5,25.9,23,25.1,9.5,30,29.3,28.3,30.3,26.1,24.3,3.4,10.1,7.4,31.5,17,32.7,27.4,28.1,null,null,13.2,23.8,29.7,29.7,23.9,23.9,16,24.4,44.5,29.2,33.8,34.4,36.5,27,32.5,33,34.8,42.7,16.8,31.7,41.9,25.5,23.2,20.6,22.2,21.4,23.6,16.7,23.6,27.9,29.2,23.6,24.2,23.3,8.1,1.7,1.4,1.4,18.4,17.9,12.1,28.4,17.3,26.1,21.7,17.3,13.5,21.2,19.5,19.4,16.4,35,49.7,57.9,43,49.2,42,7,null,30.8,32.4,37.4,29.9,42.6,39.3,33.7,32.1,33.4,35.2,28.8,12.7,15.9,9.9,5.9,26.1,52.5,37.7,40.6,34.1,41.6,23.2,32.8,50.4,45.8,44.1,31.5,28,29.3,32.9,20.9,21.6,30.7,23.3,30.8,null,39.5,30.9,37.4,20.6,14.7,32.9,48,28.7,35.8,null,30.8,22.8,41.4,31.9,28.4,24.7,35.3,3.7,12.1,13.4,18.5,11.8,5.4,18.4,18.4,9.7,9.7,13.2,15.6,21.1,16.7,17.4,21.8,15.8,15.8,14.5,48.1,39,31.1,27.8,23.4,34.5,2.3,25.6,18.9,18.9,23.3,26.6,33.5,24.7,11.9,22.3,28.1,27.9,29.9,11.9,18.8,23,39.4,17.8,34.9,23.1,17.4,18.7,23.6,42.7,13.1,12.7,26.6,18.9,19.4,16.8,55.3,57.9,32.1,23,16.5,32.7,37.4,32.8,19.4,16.6,48.4,30,16.7,23,32.1,14.8,15.2,22.3,13.1,22.3,18.7,17.2,16.4,16.4,32.7,32.7,12.7,19.4,38.1,11,36.5,31.3,2.1,21.6,21.5,29.5,23.8,20.3,27,30.3,36.5,7.1,22.2,28.9,20.3,40.8,20.6,28.1,12.7,12.7,46.9,21.6,12.7,11.4,14.3,28.1,15.2,9.1,29.9,18.9,23,37.1,32,16.4,27,21.6,15,28.1,23,1.4,28.9,46.9,28.3,29.2,null,22.3,21.6,27,19.1,37.7,23.9,29.5,null,32.8,30,44,23.2,20.6,39.3,16.3,16.4,48.4,22.1,27.9,55.1,19.4,19.1,20.6,62.5,17.5,18.7,15,29.4,13.1,17.2,50.2,16.3,15.8,32.1,16.4,20.6,15.8,27.9,29.9,45.8,15.2,12.7,18.1,9.1,9.5,22.2,21.6,17.4,32.1,21.6,40.7,29.9,23.6,35.3,21.6,21.6,12.7,50.6,32.7,null,16.5,19.8,11.1,20.6,20.6,14.3,22.1,16.3,11.4,28.1,32.1,40.2,43,11.7,null,29.4,33.5,7.7,25.2,22.3,34.9,34.1,27.6,19.8,29.5,22,22,21.8,16.4,28.9,20.7,13.1,27.9,7.5,34.9,18.6,26.1,16.8,21.6,26.6,23.2,17.4,32.2,23.9,20.6,10.1,19,29.9,1.7,12.7,38.3,25.2,22.2,null,12.7,23,30,12.7,31.3,17.8,21.6,34.4,26,50.1,27.9,19.8,28.5,29.7,57.9,12.7,21.6,37.7,20.7,19.8,13.7,32.9,38.3,29.5,16.8,22.1,23.6,25.4,26.6,33.2,14.6,22.2,29.7,40.8,11.7,21.6,13.2,22.3,20.6,39.4,3,16.3,21.6,16.4,10.6,20.1,19.8,38.1,38.3,30.8,25.1,37.2,12.7,32.2,28,29.9,34.1,28.1,10.4,18.7,18.1,26.1,26.6,30.4,32.5,22.7,29.5,41.9,19.8,50.2,12,29.2,38.3,22.1,21.6,33.6,17.2,41.9,30,29.7,22.3,38.3,33.2,38.3,25,46,35.8,48.4,21.6,41.7,17.8,32.1,16.3,23,52.5,11,48.1,39.3,37.2,33.5,9.1,20.9,41.2,57.9,22.2,40.8,32.2,39.3,22.3,25.9,25.7,16.4,25.7,38.3,20.6,20.1,12.7,13.4,19.8,40.8,21.4,17.4,36.5,11,26.1,42.9,null,17.4,null,12.6,29.5,42,48.4,26.1,55.1,30,30.8,null,25.1,42.6,30.8,35.3,32.1,29.5,32.8,21.6,32.1,48.3,46.1,42,44,32.4,25.6,27.7,34.9,30,15.4,38.3,23.8,22.2,1.4,23.3,8.5,29.6,10.6,30,28.6,null,8.1,27.9,29.5,25.2,23.6,23.7,20.6,37.2,9.1,11,11.7,12.7,42.9,46,19.8,44.7,14.9,46.7,34.1,33.5,12.6,33.5,null,null,20.6,29.5,32.8,28.9,null,11,22.3,33.4,null,null,null,null,32.1,21.1,12.7,49.2,23,32.8,34.9,12.7,42,null,54.1,14.9,34.9,35.3,12,17.4,44,56.8,15.9,29.7,32.7,null,16,32.2,37.4,35.9,20.6,36.5,35.3,21.6,20.9,32.1,43,18.4,29.4,null,42,22.9,null,16.3,10.6,32.7,41.6,49.1,50.1,33.7,20.6,42.6,12.7,26.1,40.6,10.7,1.4,16.3,null,26.6,9.5,43,26.1,10.4,32.2,31.3,25.9,null,32.8,null,38.3,5.5,9.7,null,34.9,37.2,null,29.5,31.4,31.3,38.1,25.1,39.3,58.3,29.4,17.5,43,11,27.9,20.7,48.4,43,40.8,null,21.1,null,null,15.4,null,20.6,34.1,14.8,36.6,21.6,7.8,32.9,18.7,39.9,null,23.1,11,null,28.5,29.4,16.3,17.4,null,16.8,21.6,40.8,41.9,37.9,null,27.9,44.4,33.5,28,38.3,29.5,48.1,16.8,11.9,27.9,null,41.5,19.8,11.7,43.4,null,33.3,20.6,40.7,32,32.2,44.4,null,8.5,43,24.7,48.4,null,49.9,29.5,28.1,43.4,null,22.3,22.3,17.8,27.9,19.1,47.8,39.3,17.4,null,40,38.3,25.1,24.5,44,null,29.4,27.9,null,19,18.9,32.4,null,41.9,52,16.4,null,null,42.6,39.3,11.7,44,32,16.4,48.3,57.9,null,21.1,40.8,44,null,27.8,25.6,38.3,37.7,32.8,null,48.3,24.7,44.4,28.1,31.1,22.5,42.6,34.1,26.6,32.8,20.5,48.3,27.9,30.3,27.9,11.4,21.5,12.3,32,17.8,44,46.7,18.7,13.2,54.9,31.7,10,null,26.1,null,42,30.7,null,null,null,7.4,9.7,33.1,44.3,33.2,23.1,29.5,16,36.3,37.2,null,null,34.1,15.2,28.4,39,25.1,28.1,39.5,38.6,41.2,39.3,null,18.9,37.2,33.2,23.4,12,35.9,null,null,19.8,38.3,47.4,27.9,12.7,50.1,40.6,null,28.7,null,28.1,31.3,null,40.3,16.7,40.6,16.4,null,50.5,31.1,34.9,32.9,40.6,31.1,27.6,58.3,44,43,40.7,51.8,33.4,33.4,33.4,29.4,41.9,40.8,40.6,38.6,38.6,18.8,31.9,37.2,37.2,44,30.4,37.7,29.2,36.5,null,34.4,50.1,33.4,32.1,32.1,32.1,32.1,35.3,12.6,5.9,12,10.7,5.5,14.6,50.6,44.7,38.3,39.4,54.9,38.8,46.9,46.9,32.8,5.5,32.4,39.7,39,48.1,40,39.5,37.7,37.7,26.1,26.1,40.8,28.8,50.4,54.1,45.8,31.5,48.7,null,30.8,41,30.3,53.7,36.3,2.7,22.4,21.2,8.3,21.8,22.3,28.9,17.1,15.8,21.8,20.7,21.4,23.2,16.7,24.4,25.7,30.4,22,30.3,18.9,25.7,16.8,31.7,41.9,19.4,16.5,16.4,16.5,21.7,26.1,null,1.7,1.7,17.9,29.2,23.3,23.6,29.2,24.2,57.9,57.9,49.7,43,49.2,7,33.6,32.4,39.9,38.4,30.8,null,1.4,30.9,29.8,14.7,20.6,23,23,23,19.7,17.5,18.9,18.9,18.6,28.9,28.9,32.7,32.7,28.9,null,null,27,null,null,20.9,23.3,28.1,30.7,33.2,23.7,27.9,27.9,27.9,27.9,31.3,33.2,27.9,28,39.4,22.3,22.3,22.3,29.5,22.3,22.3,22.3,22.3,null,33.1,19.8,29.2,34.9,32.8,32.8,29.4,29.4,32.2,21.6,21.6,26.6,19.8,28.1,21.6,30.8,28.5,29.4,22.3,22.3,39.4,31.3,26.6,19.4,30,30,28.3,30,9.5,10.1,7.7,13,42.4];
 var RAW = [
 ["Houston","TX",2288000,18,349791,46,5,97,3.7,142,9,150,1830,264952,1566,49],
 ["Dallas","TX",1288000,16,498702,40,4.8,97,2.1,118,9,275,917,312024,1648,55],
@@ -1592,46 +1593,37 @@ function leadCostScore(m){if(m.leadCost==null)return 50;var s=100*(625-m.leadCos
 function acqCost(m){return m.leadCost==null?null:Math.round(m.leadCost*15/0.60);}
 function adScore(m){return Math.max(0,Math.round(m.opp*0.40+sizeScore(m)*0.20+sLead(m.leads)*0.20+leadCostScore(m)*0.10+50*0.10+viability(m)));}
 function roiScore(m){var c=(m.comp==null?5:m.comp);return Math.max(0,Math.round(m.opp*0.78+(10-c)*2.2+viability(m)));}
-function exitStrat(m){
-  // Hot seller markets: fast DOM, low inventory, above ask prices = ideal for Novation/MLS listing
-  if(m.dom!=null&&m.moi!=null&&m.slr!=null&&m.dom<30&&m.moi<2.5&&m.slr>=99)return ["Novation / MLS","#5a9e35"];
-  // Strong growth + low inventory = Hold or creative finance
-  if(m.pg!=null&&m.moi!=null&&m.pg>2&&m.moi<2.5)return ["Hold / Sub-2","#3aa0d6"];
-  // Moderate speed, strong cash buyer pool = Wholesale
-  if(m.dom!=null&&m.cash!=null&&m.dom>=20&&m.dom<=55&&m.cash>18)return ["Wholesale","#9cc23a"];
-  // Slow market, high inventory = Wholetail
-  if(m.dom!=null&&m.moi!=null&&m.dom>45&&m.moi>4)return ["Wholetail","#e8b84a"];
-  // Stale/overpriced market = Creative finance or Sub-2
-  if(m.dom!=null&&m.moi!=null&&(m.dom>55||m.moi>5))return ["Creative / Sub-2","#e07b2e"];
-  return ["Wholesale","#9cc23a"];
-}
+function offerMult(m){var p=m.pend;if(p==null)return null;if(p<10)return 0.60;if(p<20)return 0.65;if(p<=30)return 0.70;if(p<=40)return 0.75;return 0.80;}
+function exitStrat(m){var dom=m.dom,moi=m.moi,slr=m.slr,cash=m.cash;if(dom==null)return['Wholesale','#9cc23a'];if(dom<30)return['Wholesale','#9cc23a'];if(dom<=90){if(moi!=null&&moi<=4&&slr!=null&&slr>=97)return['Novation / MLS','#5a9e35'];if(moi!=null&&moi<=5)return['Wholetail','#e8b84a'];return['Wholesale','#9cc23a'];}return['Creative / Seller Finance','#c77dff'];}
+function exitTags(m){var t=[],dom=m.dom,moi=m.moi,slr=m.slr,cash=m.cash,pg=m.pg;if(cash==null||cash>=12||dom==null||dom<55)t.push(['Wholesale','#9cc23a']);if(moi!=null&&moi<=4&&slr!=null&&slr>=97)t.push(['Novation / MLS','#5a9e35']);if(moi!=null&&moi<=5&&(slr==null||slr>=95))t.push(['Wholetail','#e8b84a']);if(pg!=null&&pg>0)t.push(['Sub-To','#6fb3d8']);if((dom!=null&&dom>=60)||(moi!=null&&moi>4.5))t.push(['Creative / Seller Finance','#c77dff']);if(t.length===0)t.push(['Wholesale','#9cc23a']);return t;}
+
 function lcFmt(v){return (v==null||v==="")?"N/A":("$"+v);}function hvFmt(v){return v==null?"N/A":"$"+Math.round(v).toLocaleString();}function rentFmt(v){return v==null?"N/A":"$"+Math.round(v).toLocaleString()+"/mo";}function yldFmt(v){return v==null?"N/A":v+"%";}
 function scoreColor(s){if(s>=75)return"#5a9e35";if(s>=60)return"#9cc23a";if(s>=45)return"#e8b84a";if(s>=30)return"#e07b2e";return"#d14545";}
 /* ---------- BUILD ---------- */
 var AVG_LEADCOST;
-var MARKETS = RAW.map(function(r){
-  return {city:r[0],state:r[1],pop:r[2],cash:r[3],price:r[4],dom:r[5],moi:r[6],slr:r[7],pg:r[8],leads:r[9],comp:r[10],leadCost:r[11],sold:(r[12]==null?null:r[12]),zhvi:(r[13]==null?null:r[13]),rent:(r[14]==null?null:r[14]),mti:(r[15]==null?null:r[15])};
+var MARKETS = RAW.map(function(r,i){
+  return {city:r[0],state:r[1],pop:r[2],cash:r[3],price:r[4],dom:r[5],moi:r[6],slr:r[7],pg:r[8],leads:r[9],comp:(PEND[i]!=null?Math.max(1,Math.min(10,Math.round(PEND[i]/5))):r[10]),pend:(PEND[i]!=null?PEND[i]:null),leadCost:r[11],sold:(r[12]==null?null:r[12]),zhvi:(r[13]==null?null:r[13]),rent:(r[14]==null?null:r[14]),mti:(r[15]==null?null:r[15])};
 });
 var _lcKnown = MARKETS.filter(function(m){return m.leadCost!=null;}); AVG_LEADCOST = _lcKnown.length ? _lcKnown.reduce(function(a,m){return a+m.leadCost;},0)/_lcKnown.length : 0;
 MARKETS.forEach(function(m){
   m.active=ACTIVE_STATES.indexOf(m.state)>=0;
   m.opp=opp(m); m.tooSmall=isTooSmall(m); m.acqCost=acqCost(m); m.lcScore=leadCostScore(m); m.ad=adScore(m); m.roi=roiScore(m);
-  var e=exitStrat(m); m.exit=e[0]; m.exitColor=e[1];
+  var e=exitStrat(m); m.exit=e[0]; m.exitColor=e[1];m.exitTags=exitTags(m);m.offerMult=offerMult(m);
   m.dataExp = (m.leads===0 && m.comp==null);m.gem = (!m.dataExp && m.pop>=30000 && m.pop<150000 && m.comp<=3 && m.opp>=55 && !isTooSmall(m) && (m.leadCost==null || m.leadCost<=200 || (m.leadCost<=300 && m.opp>=85) || (m.leadCost>300 && m.opp>=93)));m.yield = (m.rent!=null && m.zhvi!=null && m.zhvi>0) ? Math.round((m.rent*12/m.zhvi)*1000)/10 : null;
 });
 /* ---------- BREAKDOWNS ---------- */
 function oppBreakdown(m){return '<b>'+m.city+', '+m.state+' - Opportunity '+m.opp+'</b>'+
-  '<div class="tline"><span class="tk">Days on Market ('+m.dom+'d) ×25%</span><span class="tv">'+Math.round(sDOM(m.dom))+'</span></div>'+
-  '<div class="tline"><span class="tk">Months Inventory ('+m.moi+') ×25%</span><span class="tv">'+Math.round(sMOI(m.moi))+'</span></div>'+
-  '<div class="tline"><span class="tk">Cash Sales ('+m.cash+'%) ×20%</span><span class="tv">'+Math.round(sCash(m.cash))+'</span></div>'+
-  '<div class="tline"><span class="tk">Sale/List ('+m.slr+'%) ×15%</span><span class="tv">'+Math.round(sVel(m.slr))+'</span></div>'+
-  '<div class="tline"><span class="tk">Pop Growth ('+m.pg+'%) ×15%</span><span class="tv">'+Math.round(sPG(m.pg))+'</span></div>';}
+  '<div class="tline"><span class="tk">Days on Market ('+m.dom+'d) Ã25%</span><span class="tv">'+Math.round(sDOM(m.dom))+'</span></div>'+
+  '<div class="tline"><span class="tk">Months Inventory ('+m.moi+') Ã25%</span><span class="tv">'+Math.round(sMOI(m.moi))+'</span></div>'+
+  '<div class="tline"><span class="tk">Cash Sales ('+m.cash+'%) Ã20%</span><span class="tv">'+Math.round(sCash(m.cash))+'</span></div>'+
+  '<div class="tline"><span class="tk">Sale/List ('+m.slr+'%) Ã15%</span><span class="tv">'+Math.round(sVel(m.slr))+'</span></div>'+
+  '<div class="tline"><span class="tk">Pop Growth ('+m.pg+'%) Ã15%</span><span class="tv">'+Math.round(sPG(m.pg))+'</span></div>';}
 function adBreakdown(m){return '<b>'+m.city+', '+m.state+' - Ad Score '+m.ad+'</b>'+
-  '<div class="tline"><span class="tk">Opportunity ('+m.opp+') ×40%</span><span class="tv">'+Math.round(m.opp*0.4)+'</span></div>'+
-  '<div class="tline"><span class="tk">Metro Size ×20%</span><span class="tv">'+Math.round(sPop(m.pop)*0.2)+'</span></div>'+
-  '<div class="tline"><span class="tk">Our Leads ('+m.leads+') ×20%</span><span class="tv">'+Math.round(sLead(m.leads)*0.2)+'</span></div>'+
-  '<div class="tline"><span class="tk">Motivation+Afford ×20%</span><span class="tv">10</span></div>';}
-function roiBreakdown(m){return '<b>'+m.city+', '+m.state+' - ROI Score '+m.roi+'</b>'+'<div class="tline"><span class="tk">Opportunity ('+m.opp+') \u00d7 0.78</span><span class="tv">'+Math.round(m.opp*0.78)+'</span></div>'+'<div class="tline"><span class="tk">Low Competition ('+(10-m.comp)+'/10) \u00d7 2.2</span><span class="tv">'+Math.round((10-m.comp)*2.2)+'</span></div>'+(m.tooSmall?'<div class="tline"><span class="tk">Too-small penalty</span><span class="tv">'+viability(m)+'</span></div>':'')+'<div class="tnote">Lead cost is shown for reference only and is not part of this score while pricing is still being verified.</div>';}
+  '<div class="tline"><span class="tk">Opportunity ('+m.opp+') Ã40%</span><span class="tv">'+Math.round(m.opp*0.4)+'</span></div>'+
+  '<div class="tline"><span class="tk">Metro Size Ã20%</span><span class="tv">'+Math.round(sPop(m.pop)*0.2)+'</span></div>'+
+  '<div class="tline"><span class="tk">Our Leads ('+m.leads+') Ã20%</span><span class="tv">'+Math.round(sLead(m.leads)*0.2)+'</span></div>'+
+  '<div class="tline"><span class="tk">Motivation+Afford Ã20%</span><span class="tv">10</span></div>';}
+function roiBreakdown(m){return '<b>'+m.city+', '+m.state+' - ROI Score '+m.roi+'</b>'+'<div class="tline"><span class="tk">Opportunity ('+m.opp+') \u00d7 0.78</span><span class="tv">'+Math.round(m.opp*0.78)+'</span></div>'+'<div class="tline"><span class="tk">Low Buyer Competition ('+(10-m.comp)+'/10) \u00d7 2.2</span><span class="tv">'+Math.round((10-m.comp)*2.2)+'</span></div>'+(m.tooSmall?'<div class="tline"><span class="tk">Too-small penalty</span><span class="tv">'+viability(m)+'</span></div>':'')+'<div class="tnote">Lead cost is shown for reference only and is not part of this score while pricing is still being verified.</div>';}
 /* ---------- TOOLTIP ENGINE ---------- */
 var tipEl;
 function showTip(html,x,y){if(!tipEl)tipEl=el('tip');tipEl.innerHTML=html;tipEl.classList.add('show');var w=tipEl.offsetWidth,h=tipEl.offsetHeight;var px=x+14,py=y+14;if(px+w>window.innerWidth-10)px=x-w-14;if(py+h>window.innerHeight-10)py=y-h-14;tipEl.style.left=Math.max(8,px)+'px';tipEl.style.top=Math.max(8,py)+'px';}
@@ -1642,12 +1634,12 @@ function pill(s,m,type){var bd=type==='ad'?adBreakdown(m):(type==='roi'?roiBreak
 function fmtK(n){if(n==null)return 'N/A';return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'K':n;}
 function money(n){if(n==null)return 'N/A';return '$'+Math.round(n).toLocaleString();}
 function el(id){return document.getElementById(id);}
-function compBars(c){if(c==null)return '<span class="flagsm" data-tip="Competition not yet measured for this market">N/A</span>';var h='<span class="compbar">';for(var i=1;i<=10;i++){h+='<i class="'+(i<=c?'f':'')+'"></i>';}return h+'</span>';}
+function compBars(c){if(c==null)return '<span class="flagsm" data-tip="Buyer competition not yet measured for this market">N/A</span>';var h='<span class="compbar">';for(var i=1;i<=10;i++){h+='<i class="'+(i<=c?'f':'')+'"></i>';}return h+'</span>';}
 /* ---------- OVERVIEW ---------- */
 var ovView='ALL';
 function ovFilter(arr){return arr.filter(function(m){if(ovView==='ACTIVE')return m.active;if(ovView==='EXP')return !m.active;if(ovView==='LEADS')return m.leads>0;return true;});}
 function setOverviewView(v,btn){ovView=v;document.querySelectorAll('.viewbtn').forEach(function(b){b.classList.remove('on');});if(btn)btn.classList.add('on');renderOverview();}
-function topList(arr,n,valFn,extraFn){return arr.slice(0,n).map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">'+(extraFn?extraFn(m):fmtK(m.pop)+(m.pg>0?' · +'+m.pg+'%':''))+'</span></span><span class="tval">'+valFn(m)+'</span></div>';}).join('');}
+function topList(arr,n,valFn,extraFn){return arr.slice(0,n).map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">'+(extraFn?extraFn(m):fmtK(m.pop)+(m.pg>0?' Â· +'+m.pg+'%':''))+'</span></span><span class="tval">'+valFn(m)+'</span></div>';}).join('');}
 function renderOverview(){
   var base=ovFilter(MARKETS);
   el('st-total').textContent=MARKETS.length;
@@ -1656,7 +1648,7 @@ function renderOverview(){
   el('st-gems').textContent=MARKETS.filter(function(m){return m.gem;}).length;
   el('st-ad').textContent=Math.max.apply(null,MARKETS.map(function(m){return m.ad;}));
   var gems=ovFilter(MARKETS).filter(function(m){return m.gem;}).sort(function(a,b){return b.ad-a.ad;});
-  el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m.ad,m,'ad');},function(m){return fmtK(m.pop)+' · comp '+m.comp+'/10 · '+lcFmt(m.leadCost)+'/lead · opp '+m.opp;}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
+  el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m.ad,m,'ad');},function(m){return fmtK(m.pop)+' Â· comp '+m.comp+'/10 Â· '+lcFmt(m.leadCost)+'/lead Â· opp '+m.opp;}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
   el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b.ad-a.ad;}),25,function(m){return pill(m.ad,m,'ad');});
   var expPool=(ovView==='ACTIVE')?base:MARKETS.filter(function(m){return !m.active;});
   expPool=ovFilter(expPool).sort(function(a,b){return b.ad-a.ad;});
@@ -1667,7 +1659,7 @@ function renderOverview(){
   el('panel-whole').innerHTML=topList(wh,10,function(m){return '<span class="tval2">'+m.cash+'% cash</span>';});
   var ex=MARKETS.filter(function(m){return m.active&&m.leads>0&&m.opp<50;}).sort(function(a,b){return a.opp-b.opp;});
   var watch=MARKETS.filter(function(m){return m.active&&m.leads>0&&m.opp>=50&&m.opp<60;}).sort(function(a,b){return a.opp-b.opp;});
-  el('panel-exit').innerHTML=ex.length?ex.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('weak fundamentals');return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets below 50. None require exit right now.</span></div>';
+  el('panel-exit').innerHTML=ex.length?ex.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('weak fundamentals');return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads Â· '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets below 50. None require exit right now.</span></div>';
   el('panel-watch').innerHTML= watch.length?watch.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('mixed signals');return '<div class="trow"><span class="tcity watchwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads, '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets in the 50-59 watch band.</span></div>';
   bindTips(el('tab-overview'));
 }
@@ -1766,7 +1758,7 @@ function showDetail(key){
   if(m.dataExp)badges+='<span class="dbadge" style="background:rgba(120,130,160,.2);color:#aab">New, Limited Data</span>';
   var html='<div class="dh"><div class="dcity">'+m.city+', '+m.state+'</div><div class="dsub">'+(m.metro?String(m.metro).replace(/"/g,'')+' metro':'')+'</div><div class="dbadges">'+badges+'</div></div>';
   html+='<div class="dscores">'+sc(m.ad,'Ad Score')+sc(m.opp,'Opportunity')+sc(m.roi,'ROI')+'</div>';
-  html+='<div class="dsec"><h4>Housing Market (last 12 mo, Redfin)</h4>'+
+  html+='<div class="dsec"><h4>Exit Strategy Fit</h4><div style="margin:4px 0 8px">'+(m.exitTags?m.exitTags.map(function(t){return '<span class="exitbadge" style="background:'+t[1]+';margin:2px 4px 2px 0;display:inline-block">'+t[0]+'</span>';}).join(''):'')+'</div>'+row('Primary Fit',m.exit||'N/A')+row('Buyer Competition (pending)',m.pend==null?'Not measured':m.pend+'% pending')+row('Offer Multiplier',m.offerMult==null?'Not measured':('x'+m.offerMult.toFixed(2)))+(m.price&&m.offerMult?row('Wholesale MAO (est.)',money(Math.round(m.price*m.offerMult-m.price*0.15-15000))):'')+(m.price?row('Novation MAO (est.)',money(Math.round(m.price*0.93-10000-25000))):'')+'<div class="muted" style="font-size:11px;margin-top:4px">Estimates use median price as ARV/As-Is proxy with standard rehab and fee assumptions. Actual offers are deal-specific. Wholesale multiplier is set by pending percentage (0.60 to 0.80).</div></div><div class="dsec"><h4>Housing Market (last 12 mo, Redfin)</h4>'+
     row('Median Sale Price',money(m.price))+
     row('Days on Market',m.dom==null?'N/A':m.dom+' days')+
     row('Months of Inventory',m.moi==null?'N/A':m.moi)+
@@ -1781,7 +1773,7 @@ function showDetail(key){
     row('Population',fmtK(m.pop))+
     row('Pop. Growth',m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%'))+'</div>';
   html+='<div class="dsec"><h4>Lead Data (reference only)</h4>'+
-    row('Competition',m.comp==null?'Not measured':m.comp+'/10')+
+    row('Buyer Competition (pending)',m.pend==null?'Not measured':m.pend+'% pending')+row('Offer Multiplier',m.offerMult==null?'Not measured':('x'+m.offerMult.toFixed(2)))+
     row('Lead Cost',lcFmt(m.leadCost))+
     row('Est. Cost / Closing',m.acqCost==null?'Not available':'$'+m.acqCost.toLocaleString())+
     row('Leads in Pipeline',m.leads||0)+'</div>';
@@ -1817,7 +1809,7 @@ function renderMap(f){
     if(m.gem){if(hiddenGems)return;}else{if(hiddenCls.has(classOf(m.opp)))return;}
     var _sz=(m.pop!=null?m.pop:(m.sold!=null?m.sold*1000:20000));var radius=Math.max(4,Math.min(22,Math.sqrt(_sz/1000)/2));
     var mk=L.circleMarker([c[0],c[1]],{radius:radius,fillColor:m.gem?'#e8b84a':scoreColor(m.opp),color:m.gem?'#fff':'#0a0a0a',weight:m.gem?2:1,fillOpacity:0.8});
-    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' ⚠ TOO SMALL':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
+    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' â  TOO SMALL':'')+'<br>Ad '+m.ad+' Â· Opp '+m.opp+' Â· ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' Â· Comp '+m.comp+'/10<br>DOM '+m.dom+'d Â· Exit: '+m.exit,{className:'maptip'});
     layerGroup.addLayer(mk);
   });
   // Update map summary stats bar
@@ -1895,7 +1887,7 @@ function runCalc(){
   else if(roas>=2.5){v.style.background='rgba(232,184,74,.12)';v.style.borderColor='#e8b84a';v.style.color='#e8b84a';v.innerHTML='Workable: $'+roas.toFixed(2)+' returned per $1 spent. Profitable but watch conversion.';}
   else{v.style.background='rgba(209,69,69,.12)';v.style.borderColor='#d14545';v.style.color='#e88c8c';v.innerHTML='Marginal: $'+roas.toFixed(2)+' per $1 spent. Thin margins here. Compare against lower-cost markets before committing budget.';}
   var cheap=MARKETS.filter(function(m){return m.leadCost!=null;}).sort(function(a,b){return a.leadCost-b.leadCost;}).slice(0,12);
-  renderBacklog();try{runPPC();}catch(e){}el('panel-cheap').innerHTML=cheap.map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">opp '+m.opp+' · comp '+m.comp+'/10</span></span><span class="tval" style="color:#8fd35e">$'+m.leadCost+'</span></div>';}).join('');
+  renderBacklog();try{runPPC();}catch(e){}el('panel-cheap').innerHTML=cheap.map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">opp '+m.opp+' Â· comp '+m.comp+'/10</span></span><span class="tval" style="color:#8fd35e">$'+m.leadCost+'</span></div>';}).join('');
 }
 /* ---------- TABS ---------- */
 function showTab(name,btn){document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});document.querySelectorAll('.navtab').forEach(function(t){t.classList.remove('on');});el('tab-'+name).style.display='block';if(btn)btn.classList.add('on');if(name==='map'){setTimeout(function(){if(map)map.invalidateSize();renderMap('ALL');},120);}}
