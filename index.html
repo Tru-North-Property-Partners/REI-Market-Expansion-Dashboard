@@ -283,7 +283,7 @@ th[data-sort]{white-space:nowrap;}
   <div class="mapbar"><button class="mapbtn on" onclick="mapFilter('ALL',this)">All Markets</button><button class="mapbtn" onclick="mapFilter('ACTIVE',this)">Active States</button><button class="mapbtn" onclick="mapFilter('EXP',this)">Expansion</button><button class="mapbtn" onclick="mapFilter('GEMS',this)">Hidden Gems</button><button class="mapbtn" onclick="mapFilter('LEADS',this)">Lead-Backed</button></div>
   <div id="map"></div>
   <div class="map-summary"><div class="map-summary-title">Map Overview</div><div class="map-summary-stats" id="map-stats-bar"></div><div class="map-summary-note">Each circle represents one tracked market. Circle size reflects relative population. Color indicates market opportunity score (0-100). Click legend items to show/hide markets by classification. Use the filter buttons above to view specific market types.</div></div>
-  <div class="legend"><span class="leg-item" data-cls="excellent" onclick="toggleLegend('excellent',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#5a9e35"></i>Excellent 75-100</span><span class="leg-item" data-cls="good" onclick="toggleLegend('good',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#9cc23a"></i>Good 60-74</span><span class="leg-item" data-cls="moderate" onclick="toggleLegend('moderate',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e8b84a"></i>Moderate 45-59</span><span class="leg-item" data-cls="weak" onclick="toggleLegend('weak',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e07b2e"></i>Weak 30-44</span><span class="leg-item" data-cls="poor" onclick="toggleLegend('poor',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#d14545"></i>Poor 0-29</span><div class="pop-key"><span class="pop-key-title">Circle Size = Population:</span><span class="pop-dot" style="width:6px;height:6px"></span><50k<span class="pop-dot" style="width:9px;height:9px"></span>50k-150k<span class="pop-dot" style="width:13px;height:13px"></span>150k-500k<span class="pop-dot" style="width:18px;height:18px"></span>500k-1M<span class="pop-dot" style="width:24px;height:24px"></span>1M+</div></div>
+  <div class="legend"><span class="leg-item" data-cls="excellent" onclick="toggleLegend('excellent',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#5a9e35"></i>Excellent 75-100</span><span class="leg-item" data-cls="good" onclick="toggleLegend('good',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#9cc23a"></i>Good 60-74</span><span class="leg-item" data-cls="moderate" onclick="toggleLegend('moderate',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e8b84a"></i>Moderate 45-59</span><span class="leg-item" data-cls="weak" onclick="toggleLegend('weak',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#e07b2e"></i>Weak 30-44</span><span class="leg-item" data-cls="poor" onclick="toggleLegend('poor',this)" style="cursor:pointer" title="Click to hide/show"><i style="background:#d14545"></i>Poor 0-29</span><span class="leg-item" id="gem-toggle" onclick="toggleGems(this)" style="cursor:pointer" title="Click to hide/show Hidden Gem markets"><i style="background:#e8b84a;border:2px solid #fff"></i>Gem (gold ring)</span><div class="pop-key"><span class="pop-key-title">Circle Size = Population:</span><span class="pop-dot" style="width:6px;height:6px"></span><50k<span class="pop-dot" style="width:9px;height:9px"></span>50k-150k<span class="pop-dot" style="width:13px;height:13px"></span>150k-500k<span class="pop-dot" style="width:18px;height:18px"></span>500k-1M<span class="pop-dot" style="width:24px;height:24px"></span>1M+</div></div>
 </div>
 <div class="tab-panel" id="tab-calc">
   <div class="calc-grid">
@@ -1666,7 +1666,8 @@ function renderOverview(){
   bindTips(el('tab-overview'));
 }
 /* ---------- TABLE ---------- */
-var hiddenCls=new Set();
+var hiddenCls=new Set();var hiddenGems=false;
+function toggleGems(span){hiddenGems=!hiddenGems;span.style.opacity=hiddenGems?'0.35':'1';span.style.textDecoration=hiddenGems?'line-through':'';renderMap();}
 function classOf(opp){if(opp>=75)return 'excellent';if(opp>=60)return 'good';if(opp>=45)return 'moderate';if(opp>=30)return 'weak';return 'poor';}
 function clearFilters(){['f-state','f-view','f-exit','f-class','f-pg','f-dom','f-moi','f-yld','f-mti'].forEach(function(id){var e=el(id);if(e)e.value='ALL';});var fs=el('f-search');if(fs)fs.value='';renderTable();}
 function toggleLegend(cls,span){if(hiddenCls.has(cls)){hiddenCls.delete(cls);span.style.opacity='1';span.style.textDecoration='';}else{hiddenCls.add(cls);span.style.opacity='0.35';span.style.textDecoration='line-through';}renderMap();}
@@ -1806,7 +1807,7 @@ function renderMap(f){
   MARKETS.forEach(function(m){
     if(f==='ACTIVE'&&!m.active)return;if(f==='EXP'&&m.active)return;if(f==='LEADS'&&m.leads<=0)return;if(f==='GEMS'&&!m.gem)return;
     var c=COORDS[m.city+','+m.state];if(!c)return;
-    if(hiddenCls.has(classOf(m.opp)))return;
+    if(m.gem){if(hiddenGems)return;}else{if(hiddenCls.has(classOf(m.opp)))return;}
     var _sz=(m.pop!=null?m.pop:(m.sold!=null?m.sold*1000:20000));var radius=Math.max(4,Math.min(22,Math.sqrt(_sz/1000)/2));
     var mk=L.circleMarker([c[0],c[1]],{radius:radius,fillColor:m.gem?'#e8b84a':scoreColor(m.opp),color:m.gem?'#fff':'#0a0a0a',weight:m.gem?2:1,fillOpacity:0.8});
     mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' ⚠ TOO SMALL':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
@@ -1816,10 +1817,10 @@ function renderMap(f){
   (function(){
     var vis=MARKETS.filter(function(m){var c=COORDS[m.city+','+m.state];return !!c;});
     var cats={excellent:0,good:0,moderate:0,weak:0,poor:0};
-    vis.forEach(function(m){var cl=classOf(m.opp);if(cats[cl]!==undefined)cats[cl]++;});
+    vis.forEach(function(m){if(m.gem)return;var cl=classOf(m.opp);if(cats[cl]!==undefined)cats[cl]++;});
     var sb=document.getElementById('map-stats-bar');
     if(!sb)return;
-    var shown=vis.filter(function(m){return !hiddenCls.has(classOf(m.opp));}).length;
+    var shown=vis.filter(function(m){return m.gem?!hiddenGems:!hiddenCls.has(classOf(m.opp));}).length;
     sb.innerHTML='<span><b>'+shown+'</b> Markets Shown</span>'
       +'<span><b style="color:#5a9e35">'+cats.excellent+'</b> Excellent</span>'
       +'<span><b style="color:#9cc23a">'+cats.good+'</b> Good</span>'
