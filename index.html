@@ -94,7 +94,7 @@ tbody tr:hover{background:rgba(240,191,77,.06)}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .viewbar{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;align-items:center}
   .viewbar .vlbl{font-size:12px;color:var(--muted);margin-right:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  .viewbtn{background:var(--navy-card);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+  .scorebtn{background:var(--navy-card);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}.scorebtn:hover{color:#fff;border-color:var(--gold-dim)}.scorebtn.on{background:var(--gold);color:var(--navy);border-color:var(--gold)}.viewbtn{background:var(--navy-card);border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
   .viewbtn:hover{color:#fff;border-color:var(--gold-dim)}
   .viewbtn.on{background:var(--gold);color:var(--navy);border-color:var(--gold)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -114,7 +114,7 @@ tbody tr:hover{background:rgba(240,191,77,.06)}
   .tcity .mini{color:var(--muted2);font-size:11px;margin-left:6px}
   .tval{font-weight:700}
   .tval2{color:var(--muted);font-weight:600;font-size:12px}
-  .pill{display:inline-block;min-width:36px;text-align:center;padding:3px 9px;border-radius:7px;color:#1a1a2e;font-weight:700;font-size:12px;cursor:default}
+  .namuted{color:#9aa3b2;font-size:11px}.pill{display:inline-block;min-width:36px;text-align:center;padding:3px 9px;border-radius:7px;color:#1a1a2e;font-weight:700;font-size:12px;cursor:default}
   .filters{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
   .f-search{background:var(--navy3);border:1px solid var(--line2);color:var(--ink);padding:7px 11px;border-radius:8px;font-size:13px;width:160px;outline:none}
   .f-search:focus{border-color:var(--gold-dim)}
@@ -204,10 +204,7 @@ th[data-sort]{white-space:nowrap;}
 .pop-key-title{font-weight:600;color:var(--ink);margin-right:4px;}
 .pop-dot{display:inline-block;border-radius:50%;background:rgba(148,163,184,0.5);border:1.5px solid rgba(148,163,184,0.8);vertical-align:middle;margin:0 3px;}
 .refresh-status{font-size:12px;color:#5b6b7a;margin:6px 0 14px;padding:6px 12px;background:#eef3f7;border:1px solid #d6e0e8;border-radius:6px;display:inline-block}.refresh-status.live{background:#eaf6ea;border-color:#bfe3bf;color:#2f6b34}.refresh-status.stale{background:#fbf3e6;border-color:#ecd8a8;color:#7a5a18}
-#markets-table.hide-empty th:nth-child(8),#markets-table.hide-empty td:nth-child(8),
-#markets-table.hide-empty th:nth-child(9),#markets-table.hide-empty td:nth-child(9),
-#markets-table.hide-empty th:nth-child(11),#markets-table.hide-empty td:nth-child(11),
-#markets-table.hide-empty th:nth-child(18),#markets-table.hide-empty td:nth-child(18){display:none;}
+#markets-table.hide-empty th:nth-child(10),#markets-table.hide-empty td:nth-child(10),#markets-table.hide-empty th:nth-child(11),#markets-table.hide-empty td:nth-child(11),#markets-table.hide-empty th:nth-child(13),#markets-table.hide-empty td:nth-child(13),#markets-table.hide-empty th:nth-child(20),#markets-table.hide-empty td:nth-child(20){display:none}
 .coltoggle{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted2);cursor:pointer;user-select:none;}
 .coltoggle input{width:15px;height:15px;cursor:pointer;accent-color:#2f6f4f;}
 </style>
@@ -240,9 +237,9 @@ th[data-sort]{white-space:nowrap;}
 </header>
 <div class="wrap"><div class="main">
 <div class="tab-panel" id="tab-overview" style="display:block">
-  <div class="viewbar"><span class="vlbl">Show:</span><button class="viewbtn on" onclick="setOverviewView('ALL',this)">All Markets</button><button class="viewbtn" onclick="setOverviewView('ACTIVE',this)">Active States</button><button class="viewbtn" onclick="setOverviewView('EXP',this)">Expansion</button><button class="viewbtn" onclick="setOverviewView('LEADS',this)">Lead-Backed</button></div>
+  <div class="viewbar"><span class="vlbl">Show:</span><button class="viewbtn on" onclick="setOverviewView('ALL',this)">All Markets</button><button class="viewbtn" onclick="setOverviewView('ACTIVE',this)">Active States</button><button class="viewbtn" onclick="setOverviewView('EXP',this)">Expansion</button><button class="viewbtn" onclick="setOverviewView('LEADS',this)">Lead-Backed</button><span class="vlbl" style="margin-left:18px">Rank by</span><button class="scorebtn on" onclick="setOverviewScore('ad',this)" data-tip="Rank every category by Ad Score: opportunity blended with metro size, our lead volume, motivation and lead cost. Best for prioritizing where to spend marketing dollars.">Ad Score</button><button class="scorebtn" onclick="setOverviewScore('opp',this)" data-tip="Rank every category by Opportunity Score: pure deal fundamentals (days on market, inventory, cash share, sale-to-list, price growth) with no size or cost weighting. Best for judging raw market quality.">Opportunity Score</button></div>
   <div class="grid2">
-    <div class="card gem full"><h3><span class="dot" style="background:#e8b84a"></span>Hidden Gems: cheap, low-competition markets that are still big enough to work, ranked by acquisition score <span class="sub">smaller markets larger buyers tend to skip</span></h3><div class="scrollpanel" id="panel-gems"></div></div>
+    <div class="card gem full"><h3><span class="dot" style="background:#e8b84a"></span>Hidden Gems: cheap, low-competition markets that are still big enough to work, ranked by your selected score <span class="sub">smaller markets larger buyers tend to skip</span></h3><div class="scrollpanel" id="panel-gems"></div></div>
     <div class="card"><h3><span class="dot" style="background:#5a9e35"></span>Top 25: Best Markets for Ads</h3><div class="scrollpanel" id="panel-ad"></div></div>
     <div class="card"><h3><span class="dot" style="background:#9cc23a"></span>Top 25: Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e07b2e"></span>Top 10: Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
@@ -274,7 +271,7 @@ th[data-sort]{white-space:nowrap;}
     <th onclick="sortBy('city')" data-sort="city"><span class="hh">Market <span class="qm" data-tip="City and state. Green badge = a state we actively operate in. Gold GEM badge = flagged as a hidden-gem market.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
     <th onclick="sortBy('ad')" data-sort="ad"><span class="hh">Ad Score <span class="qm" data-tip="ADVERTISING SCORE (0-100): where to spend paid ad dollars. Blends opportunity, metro size, our lead flow, and seller motivation.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
     <th onclick="sortBy('opp')" data-sort="opp"><span class="hh">Opp Score <span class="qm" data-tip="OPPORTUNITY SCORE (0-100): deal-flow fundamentals - days on market, inventory, cash sales, sale-to-list velocity, and population growth.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
-    <th onclick="sortBy('roi')" data-sort="roi"><span class="hh">ROI Score <span class="qm" data-tip="ROI SCORE (0-100): rewards markets with strong deal fundamentals and low competition, with a penalty for markets too small to work. Lead cost is shown for reference only and is not part of this score yet.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
+    <th onclick="sortBy('roi')" data-sort="roi"><span class="hh">ROI Score <span class="qm" data-tip="ROI SCORE (0-100): rewards markets with strong deal fundamentals and low competition, with a penalty for markets too small to work. Lead cost is shown for reference only and is not part of this score yet.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('distress')" data-sort="distress"><span class="hh">Distress</span><span class="qm" data-tip="DISTRESS SCORE (0-100): higher means more seller-side leverage and motivation. Built from days on market (35%), months of inventory (30%), sale-to-list softness (20%) and price declines (15%). Use it to spot where sellers are most likely to deal.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th><th onclick="sortBy('exitspeed')" data-sort="exitspeed"><span class="hh">Exit Speed</span><span class="qm" data-tip="EXIT SPEED SCORE (0-100): higher means easier and faster resale. Built from days on market (40%), months of inventory (30%), sale-to-list strength (20%) and price appreciation (10%). High distress paired with high exit speed is the ideal combination.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
     <th onclick="sortBy('price')" data-sort="price"><span class="hh">Median Price <span class="qm" data-tip="Median home sale price over the trailing 12 months.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
     <th onclick="sortBy('dom')" data-sort="dom"><span class="hh">DOM <span class="qm" data-tip="DAYS ON MARKET: median days a listing takes to go pending. Sweet spot 15-35.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
     <th onclick="sortBy('moi')" data-sort="moi"><span class="hh">MOI <span class="qm" data-tip="MONTHS OF INVENTORY: months to sell all listings at current pace. Under ~2.5 = sellers market. Sweet spot 1.5-3.5.">?</span><span class="sort-arrow" style="opacity:0.3"> &#9651;</span></th>
@@ -1837,7 +1834,7 @@ function sPG(g){return clamp(50+g*15);}
 function sPop(p){if(p==null)return null;if(p>=1000000)return 100;if(p>=500000)return 85;if(p>=250000)return 70;if(p>=120000)return 55;if(p>=60000)return 42;if(p>=30000)return 30;if(p>=15000)return 15;return 0;}function sSold(x){if(x==null)return 0;if(x>=400)return 100;if(x>=200)return 85;if(x>=100)return 70;if(x>=50)return 55;if(x>=25)return 42;if(x>=12)return 30;if(x>=6)return 15;return 5;}function sizeScore(m){var p=sPop(m.pop);return p!=null?p:sSold(m.sold);}
 function sLead(l){if(l>=100)return 100;if(l>=50)return 85;if(l>=25)return 70;if(l>=10)return 55;if(l>=1)return 40;return 0;}
 function opp(m){var parts=[];if(m.dom!=null)parts.push([sDOM(m.dom),0.25]);if(m.moi!=null)parts.push([sMOI(m.moi),0.25]);if(m.cash!=null)parts.push([sCash(m.cash),0.20]);if(m.slr!=null)parts.push([sVel(m.slr),0.15]);if(m.pg!=null)parts.push([sPG(m.pg),0.15]);if(!parts.length)return 0;var tw=parts.reduce(function(a,p){return a+p[1];},0);var sc=parts.reduce(function(a,p){return a+p[0]*p[1];},0)/tw;return Math.round(sc);}
-function viability(m){var pen=0;if(m.pop!=null){if(m.pop<15000)pen-=25;else if(m.pop<30000)pen-=15;else if(m.pop<60000)pen-=7;}else if(m.sold!=null){if(m.sold<5)pen-=25;else if(m.sold<8)pen-=15;else if(m.sold<15)pen-=7;}if(m.leads<3)pen-=4;return pen;}
+function dDOM(d){return clamp((d-20)*1.05);}function dMOI(m){return clamp((m-2)*16.6);}function dVel(r){return clamp((100-r)*10);}function dPG(g){return clamp((3-g)*9.1);}function distress(m){var parts=[];if(m.dom!=null)parts.push([dDOM(m.dom),0.35]);if(m.moi!=null)parts.push([dMOI(m.moi),0.30]);if(m.slr!=null)parts.push([dVel(m.slr),0.20]);if(m.pg!=null)parts.push([dPG(m.pg),0.15]);if(!parts.length)return null;var tw=parts.reduce(function(a,p){return a+p[1];},0);var sc=parts.reduce(function(a,p){return a+p[0]*p[1];},0)/tw;return Math.round(sc);}function xDOM(d){return clamp(100-(d-20)*1.05);}function xMOI(m){return clamp(100-(m-2)*16.6);}function xVel(r){return clamp(100-(100-r)*10);}function xPG(g){return clamp(50+g*10);}function exitSpeed(m){var parts=[];if(m.dom!=null)parts.push([xDOM(m.dom),0.40]);if(m.moi!=null)parts.push([xMOI(m.moi),0.30]);if(m.slr!=null)parts.push([xVel(m.slr),0.20]);if(m.pg!=null)parts.push([xPG(m.pg),0.10]);if(!parts.length)return null;var tw=parts.reduce(function(a,p){return a+p[1];},0);var sc=parts.reduce(function(a,p){return a+p[0]*p[1];},0)/tw;return Math.round(sc);}function distressBreakdown(m){return '<b>'+m.city+', '+m.state+' × Distress Score '+m.distress+'</b>'+'<div class="tline"><span class="tk">Days on Market ('+(m.dom==null?'N/A':m.dom+'d')+') 35%</span><span class="tv">'+(m.dom==null?'--':Math.round(dDOM(m.dom)))+'</span></div>'+'<div class="tline"><span class="tk">Months Inventory ('+(m.moi==null?'N/A':m.moi)+') 30%</span><span class="tv">'+(m.moi==null?'--':Math.round(dMOI(m.moi)))+'</span></div>'+'<div class="tline"><span class="tk">Sale to List ('+(m.slr==null?'N/A':m.slr+'%')+') 20%</span><span class="tv">'+(m.slr==null?'--':Math.round(dVel(m.slr)))+'</span></div>'+'<div class="tline"><span class="tk">Price Growth ('+(m.pg==null?'N/A':m.pg+'%')+') 15%</span><span class="tv">'+(m.pg==null?'--':Math.round(dPG(m.pg)))+'</span></div>';}function exitSpeedBreakdown(m){return '<b>'+m.city+', '+m.state+' × Exit Speed '+m.exitspeed+'</b>'+'<div class="tline"><span class="tk">Days on Market ('+(m.dom==null?'N/A':m.dom+'d')+') 40%</span><span class="tv">'+(m.dom==null?'--':Math.round(xDOM(m.dom)))+'</span></div>'+'<div class="tline"><span class="tk">Months Inventory ('+(m.moi==null?'N/A':m.moi)+') 30%</span><span class="tv">'+(m.moi==null?'--':Math.round(xMOI(m.moi)))+'</span></div>'+'<div class="tline"><span class="tk">Sale to List ('+(m.slr==null?'N/A':m.slr+'%')+') 20%</span><span class="tv">'+(m.slr==null?'--':Math.round(xVel(m.slr)))+'</span></div>'+'<div class="tline"><span class="tk">Price Growth ('+(m.pg==null?'N/A':m.pg+'%')+') 10%</span><span class="tv">'+(m.pg==null?'--':Math.round(xPG(m.pg)))+'</span></div>';}function viability(m){var pen=0;if(m.pop!=null){if(m.pop<15000)pen-=25;else if(m.pop<30000)pen-=15;else if(m.pop<60000)pen-=7;}else if(m.sold!=null){if(m.sold<5)pen-=25;else if(m.sold<8)pen-=15;else if(m.sold<15)pen-=7;}if(m.leads<3)pen-=4;return pen;}
 function isTooSmall(m){if(m.pop!=null)return m.pop<30000;if(m.sold!=null)return m.sold<8;return false;}
 function leadCostScore(m){if(m.leadCost==null)return 50;var s=100*(625-m.leadCost)/500;return Math.max(0,Math.min(100,Math.round(s)));}
 function acqCost(m){return m.leadCost==null?null:Math.round(m.leadCost*15/0.60);}
@@ -1857,7 +1854,7 @@ var MARKETS = RAW.map(function(r,i){
 var _lcKnown = MARKETS.filter(function(m){return m.leadCost!=null;}); AVG_LEADCOST = _lcKnown.length ? _lcKnown.reduce(function(a,m){return a+m.leadCost;},0)/_lcKnown.length : 0;
 MARKETS.forEach(function(m){
   m.active=ACTIVE_STATES.indexOf(m.state)>=0;
-  m.opp=opp(m); m.tooSmall=isTooSmall(m); m.acqCost=acqCost(m); m.lcScore=leadCostScore(m); m.ad=adScore(m); m.roi=roiScore(m);
+  m.opp=opp(m);m.distress=distress(m);m.exitspeed=exitSpeed(m); m.tooSmall=isTooSmall(m); m.acqCost=acqCost(m); m.lcScore=leadCostScore(m); m.ad=adScore(m); m.roi=roiScore(m);
   var e=exitStrat(m); m.exit=e[0]; m.exitColor=e[1];m.exitTags=exitTags(m);m.offerMult=offerMult(m);
   m.dataExp = (m.leads===0 && m.comp==null);m.gem = (!m.dataExp && m.pop>=30000 && m.pop<150000 && m.comp<=3 && m.opp>=55 && !isTooSmall(m) && (m.leadCost==null || m.leadCost<=200 || (m.leadCost<=300 && m.opp>=85) || (m.leadCost>300 && m.opp>=93)));m.yield = (m.rent!=null && m.zhvi!=null && m.zhvi>0) ? Math.round((m.rent*12/m.zhvi)*1000)/10 : null;
 });
@@ -1880,37 +1877,37 @@ function showTip(html,x,y){if(!tipEl)tipEl=el('tip');tipEl.innerHTML=html;tipEl.
 function hideTip(){if(tipEl)tipEl.classList.remove('show');}
 function bindTips(root){root.querySelectorAll('[data-tip]').forEach(function(n){n.onmouseenter=function(e){showTip(n.getAttribute('data-tip'),e.clientX,e.clientY);};n.onmousemove=function(e){showTip(n.getAttribute('data-tip'),e.clientX,e.clientY);};n.onmouseleave=hideTip;});}
 /* ---------- HELPERS ---------- */
-function pill(s,m,type){var bd=type==='ad'?adBreakdown(m):(type==='roi'?roiBreakdown(m):oppBreakdown(m));return '<span class="pill" style="background:'+scoreColor(s)+'" data-tip="'+bd.replace(/"/g,'&quot;')+'">'+s+'</span>';}
+function pill(s,m,type){var bd=type==='ad'?adBreakdown(m):(type==='roi'?roiBreakdown(m):type=='distress'?distressBreakdown(m):type=='exitspeed'?exitSpeedBreakdown(m):oppBreakdown(m));return '<span class="pill" style="background:'+scoreColor(s)+'" data-tip="'+bd.replace(/"/g,'&quot;')+'">'+s+'</span>';}
 function fmtK(n){if(n==null)return 'N/A';return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'K':n;}
 function money(n){if(n==null)return 'N/A';return '$'+Math.round(n).toLocaleString();}
 function el(id){return document.getElementById(id);}
 function compBars(c){if(c==null)return '<span class="flagsm" data-tip="Buyer competition not yet measured for this market">N/A</span>';var h='<span class="compbar">';for(var i=1;i<=10;i++){h+='<i class="'+(i<=c?'f':'')+'"></i>';}return h+'</span>';}
 /* ---------- OVERVIEW ---------- */
-var ovView='ALL';
+var ovView='ALL';var ovScore='ad';
 function ovFilter(arr){return arr.filter(function(m){if(ovView==='ACTIVE')return m.active;if(ovView==='EXP')return !m.active;if(ovView==='LEADS')return m.leads>0;return true;});}
 function setOverviewView(v,btn){ovView=v;document.querySelectorAll('.viewbtn').forEach(function(b){b.classList.remove('on');});if(btn)btn.classList.add('on');renderOverview();}
-function topList(arr,n,valFn,extraFn){return arr.slice(0,n).map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">'+(extraFn?extraFn(m):fmtK(m.pop)+(m.pg>0?' · +'+m.pg+'%':''))+'</span></span><span class="tval">'+valFn(m)+'</span></div>';}).join('');}
-function renderOverview(){
+function setOverviewScore(v,btn){ovScore=v;document.querySelectorAll('.scorebtn').forEach(function(b){b.classList.remove('on');});if(btn)btn.classList.add('on');renderOverview();}function topList(arr,n,valFn,extraFn){return arr.slice(0,n).map(function(m,i){return '<div class="trow"><span class="trank">'+(i+1)+'</span><span class="tcity">'+m.city+', '+m.state+(m.gem?'<span class="gembadge">GEM</span>':'')+'<span class="mini">'+(extraFn?extraFn(m):fmtK(m.pop)+(m.pg>0?' · +'+m.pg+'%':''))+'</span></span><span class="tval">'+valFn(m)+'</span></div>';}).join('');}
+function renderOverview(){var SK=(ovScore=='opp'?'opp':'ad');
   var base=ovFilter(MARKETS);
   el('st-total').textContent=MARKETS.length;
   el('st-active').textContent=MARKETS.filter(function(m){return m.active;}).length;
   el('st-exp').textContent=MARKETS.filter(function(m){return !m.active;}).length;
   el('st-gems').textContent=MARKETS.filter(function(m){return m.gem;}).length;
   el('st-ad').textContent=Math.max.apply(null,MARKETS.map(function(m){return m.ad;}));
-  var gems=ovFilter(MARKETS).filter(function(m){return m.gem;}).sort(function(a,b){return b.ad-a.ad;});
-  el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m.ad,m,'ad');},function(m){return fmtK(m.pop)+' · comp '+m.comp+'/10 · '+lcFmt(m.leadCost)+'/lead · opp '+m.opp;}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
-  el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b.ad-a.ad;}),25,function(m){return pill(m.ad,m,'ad');});
+  var gems=ovFilter(MARKETS).filter(function(m){return m.gem;}).sort(function(a,b){return b[SK]-a[SK];});
+  el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m[SK],m,SK);},function(m){return fmtK(m.pop)+' · comp '+m.comp+'/10 · '+lcFmt(m.leadCost)+'/lead · D '+(m.distress==null?'N/A':m.distress)+' · X '+(m.exitspeed==null?'N/A':m.exitspeed);}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
+  el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b[SK]-a[SK];}),25,function(m){return pill(m[SK],m,SK);});
   var expPool=(ovView==='ACTIVE')?base:MARKETS.filter(function(m){return !m.active;});
-  expPool=ovFilter(expPool).sort(function(a,b){return b.ad-a.ad;});
-  el('panel-exp').innerHTML=topList(expPool,25,function(m){return pill(m.ad,m,'ad');});
+  expPool=ovFilter(expPool).sort(function(a,b){return b[SK]-a[SK];});
+  el('panel-exp').innerHTML=topList(expPool,25,function(m){return pill(m[SK],m,SK);});
   var hot=base.filter(function(m){return m.dom<20;}).sort(function(a,b){return a.dom-b.dom;});
   el('panel-hot').innerHTML=topList(hot,10,function(m){return '<span class="tval2">'+m.dom+'d</span>';})||'<div class="trow"><span class="tcity" style="color:#6e6c86">None under 20 days in this view</span></div>';
   var wh=base.filter(function(m){return m.exit==='Wholesale';}).sort(function(a,b){return b.cash-a.cash;});
   el('panel-whole').innerHTML=topList(wh,10,function(m){return '<span class="tval2">'+m.cash+'% cash</span>';});
   var ex=MARKETS.filter(function(m){return m.active&&m.leads>0&&m.opp<50;}).sort(function(a,b){return a.opp-b.opp;});
   var watch=MARKETS.filter(function(m){return m.active&&m.leads>0&&m.opp>=50&&m.opp<60;}).sort(function(a,b){return a.opp-b.opp;});
-  el('panel-exit').innerHTML=ex.length?ex.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('weak fundamentals');return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets below 50. None require exit right now.</span></div>';
-  el('panel-watch').innerHTML= watch.length?watch.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('mixed signals');return '<div class="trow"><span class="tcity watchwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads, '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets in the 50-59 watch band.</span></div>';
+  el('panel-exit').innerHTML=ex.length?ex.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('weak fundamentals');return '<div class="trow"><span class="tcity exitwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · D '+(m.distress==null?'N/A':m.distress)+' · X '+(m.exitspeed==null?'N/A':m.exitspeed)+' · '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets below 50. None require exit right now.</span></div>';
+  el('panel-watch').innerHTML= watch.length?watch.map(function(m){var r=[];if(m.dom>45)r.push('slow ('+m.dom+'d)');if(m.moi>4)r.push('high inv ('+m.moi+'mo)');if(m.slr<97)r.push('soft pricing');if(m.pg<0)r.push('shrinking ('+m.pg+'%)');if(!r.length)r.push('mixed signals');return '<div class="trow"><span class="tcity watchwarn">'+m.city+', '+m.state+'<span class="mini">'+m.leads+' leads · D '+(m.distress==null?'N/A':m.distress)+' · X '+(m.exitspeed==null?'N/A':m.exitspeed)+', '+r.join(', ')+'</span></span><span class="tval">'+pill(m.opp,m,'opp')+'</span></div>';}).join(''):'<div class="trow"><span class="tcity" style="color:#8fd35e">No active-state markets in the 50-59 watch band.</span></div>';
   bindTips(el('tab-overview'));
 }
 /* ---------- TABLE ---------- */
@@ -1945,7 +1942,7 @@ function renderTable(){
   el('tbl-body').innerHTML=rows.map(function(m){return '<tr onclick="showDetail(\''+mkKey(m)+'\')">'+
     '<td class="markcell" onclick="event.stopPropagation()"><span class="star'+(isFav(m)?' on':'')+'" onclick="toggleFav(\''+mkKey(m)+'\',this)" data-tip="Save to favorites">'+(isFav(m)?'\u2605':'\u2606')+'</span><input type="checkbox" class="cmpchk" '+(isCmp(m)?'checked':'')+' onclick="toggleCmp(\''+mkKey(m)+'\')" data-tip="Add to compare"></td>'+
     '<td class="cty">'+m.city+'<span class="stbadge'+(m.active?' on':'')+'">'+m.state+'</span>'+(m.gem?'<span class="gembadge">GEM</span>':'')+'</td>'+
-    '<td>'+pill(m.ad,m,'ad')+'</td><td>'+pill(m.opp,m,'opp')+'</td><td>'+pill(m.roi,m,'roi')+'</td>'+
+    '<td>'+pill(m.ad,m,'ad')+'</td><td>'+pill(m.opp,m,'opp')+'</td><td>'+pill(m.roi,m,'roi')+'</td><td>'+(m.distress==null?'<span class="namuted">N/A</span>':pill(m.distress,m,'distress'))+'</td><td>'+(m.exitspeed==null?'<span class="namuted">N/A</span>':pill(m.exitspeed,m,'exitspeed'))+'</td>'+
     '<td>'+money(m.price)+'</td><td>'+(m.dom==null?'N/A':m.dom+'d')+'</td><td>'+(m.moi==null?'N/A':m.moi)+'</td><td>'+(m.cash==null?'N/A':m.cash+'%')+'</td>'+
     '<td>'+compBars(m.comp)+'</td><td>'+lcFmt(m.leadCost)+'</td>'+'<td>'+hvFmt(m.zhvi)+'</td><td>'+rentFmt(m.rent)+'</td><td>'+yldFmt(m.yield)+'</td>'+'<td>'+(m.mti==null?'N/A':m.mti)+'</td>'+
     '<td class="'+(m.pg==null?'':(m.pg>=0?'pos':'neg'))+'">'+(m.pg==null?'N/A':((m.pg>0?'+':'')+m.pg+'%'))+'</td><td>'+fmtK(m.pop)+(m.tooSmall?' <span class="flagsm" data-tip="Population is very small, may be hard to source deals, agents or cash buyers here">too small</span>':'')+'</td>'+
@@ -2035,10 +2032,10 @@ function closeDetail(){el('drawer').classList.remove('show'); el('ovl').classLis
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDetail();});
 function exportCSV(){
   var rows=currentRows();
-  var cols=['City','State','Active State','Ad Score','Opportunity','ROI','Median Price','Days on Market','Months Inventory','Cash Sales %','Pop Growth %','Home Value','Rent','Gross Yield %','Population','Leads','Lead Cost','Competition'];
+  var cols=['City','State','Active State','Ad Score','Opportunity','ROI','Distress','Exit Speed','Median Price','Days on Market','Months Inventory','Cash Sales %','Pop Growth %','Home Value','Rent','Gross Yield %','Population','Leads','Lead Cost','Competition'];
   function esc(v){if(v==null)return '';v=''+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
   var lines=[cols.join(',')];
-  rows.forEach(function(m){lines.push([m.city,m.state,m.active?'Yes':'No',m.ad,m.opp,m.roi,m.price,m.dom,m.moi,m.cash,m.pg,m.zhvi,m.rent,m.yield,m.pop,m.leads,m.leadCost,m.comp].map(esc).join(','));});
+  rows.forEach(function(m){lines.push([m.city,m.state,m.active?'Yes':'No',m.ad,m.opp,m.roi,m.distress,m.exitspeed,m.price,m.dom,m.moi,m.cash,m.pg,m.zhvi,m.rent,m.yield,m.pop,m.leads,m.leadCost,m.comp].map(esc).join(','));});
   var csv=lines.join('\n');
   var blob=new Blob([csv],{type:'text/csv'});
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tru-north-markets-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();
