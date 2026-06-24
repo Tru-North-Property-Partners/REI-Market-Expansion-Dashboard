@@ -1581,6 +1581,7 @@ function exportCSV(){
   });
 }
 function sortBy(k){if(tblSort.key===k)tblSort.dir*=-1;else{tblSort.key=k;tblSort.dir=-1;}renderTable();}
+var map,layerGroup;
 function renderMap(f){
   if(!map){map=L.map('map',{zoomControl:true}).setView([38.5,-95],4);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'',subdomains:'abcd',maxZoom:18}).addTo(map);layerGroup=L.layerGroup().addTo(map);}
   layerGroup.clearLayers();
