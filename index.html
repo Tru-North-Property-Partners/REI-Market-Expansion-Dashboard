@@ -247,7 +247,7 @@ th[data-sort]{white-space:nowrap;}
     <div class="card"><h3><span class="dot" style="background:#9cc23a"></span>Top 25: Expansion Targets</h3><div class="scrollpanel" id="panel-exp"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e07b2e"></span>Top 10: Hottest Markets (DOM &lt; 20)</h3><div id="panel-hot"></div></div>
     <div class="card"><h3><span class="dot" style="background:#3aa0d6"></span>Top 10: Best Wholesale Markets</h3><div id="panel-whole"></div></div>
-    <div class="card"><h3><span class="dot" style="background:#d14545"></span>â  Exit / Reduce Exposure</h3><div class="csub">Active-state markets scoring under 50. Worth reducing spend or exiting.</div><div id="panel-exit"></div></div>
+    <div class="card"><h3><span class="dot" style="background:#d14545"></span>Exit / Reduce Exposure</h3><div class="csub">Active-state markets scoring under 50. Worth reducing spend or exiting.</div><div id="panel-exit"></div></div>
     <div class="card"><h3><span class="dot" style="background:#e8b84a"></span>Watch / Monitor</h3><div class="csub">Active-state markets scoring 50 to 59. Borderline, keep an eye on them.</div><div id="panel-watch"></div></div>
   </div>
   <p class="note">Hidden Gems flags mid-sized markets with low competition that still have solid opportunity fundamentals, the inexpensive markets larger investors skip. Ad Score ranks where paid acquisition performs best. Expansion Targets surface high-opportunity markets outside our 7 active states. The Exit panel flags markets we operate in where fundamentals have weakened.</p>
@@ -2059,7 +2059,7 @@ function renderMap(f){
     if(m.gem){if(hiddenGems)return;}else{if(hiddenCls.has(classOf(m.opp)))return;}
     var _sz=(m.pop!=null?m.pop:(m.sold!=null?m.sold*1000:20000));var radius=Math.max(4,Math.min(22,Math.sqrt(_sz/1000)/2));
     var mk=L.circleMarker([c[0],c[1]],{radius:radius,fillColor:m.gem?'#e8b84a':scoreColor(m.opp),color:m.gem?'#fff':'#0a0a0a',weight:m.gem?2:1,fillOpacity:0.8});
-    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' â  TOO SMALL':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
+    mk.bindTooltip('<b>'+m.city+', '+m.state+'</b>'+(m.gem?' GEM':'')+(m.tooSmall?' TOO SMALL':'')+'<br>Ad '+m.ad+' · Opp '+m.opp+' · ROI '+m.roi+'<br>Lead '+lcFmt(m.leadCost)+' · Comp '+m.comp+'/10<br>DOM '+m.dom+'d · Exit: '+m.exit,{className:'maptip'});
     layerGroup.addLayer(mk);
   });
   // Update map summary stats bar
