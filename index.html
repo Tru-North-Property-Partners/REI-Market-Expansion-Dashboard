@@ -1896,7 +1896,7 @@ function renderOverview(){var SK=(ovScore=='opp'?'opp':'ad');
   el('st-ad').textContent=Math.max.apply(null,MARKETS.map(function(m){return m.ad;}));
   var gems=ovFilter(MARKETS).filter(function(m){return m.gem;}).sort(function(a,b){return b[SK]-a[SK];});
   el('panel-gems').innerHTML=gems.length?topList(gems,30,function(m){return pill(m[SK],m,SK);},function(m){return fmtK(m.pop)+' · comp '+m.comp+'/10 · '+lcFmt(m.leadCost)+'/lead · D '+(m.distress==null?'N/A':m.distress)+' · X '+(m.exitspeed==null?'N/A':m.exitspeed);}):'<div class="trow"><span class="tcity" style="color:#6e6c86">No hidden gems in this view filter.</span></div>';
-  el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b[SK]-a[SK];}),25,function(m){return pill(m[SK],m,SK);});
+  el('panel-ad').innerHTML=topList(base.slice().sort(function(a,b){return b.ad-a.ad;}),25,function(m){return pill(m.ad,m,'ad');});
   var expPool=(ovView==='ACTIVE')?base:MARKETS.filter(function(m){return !m.active;});
   expPool=ovFilter(expPool).sort(function(a,b){return b[SK]-a[SK];});
   el('panel-exp').innerHTML=topList(expPool,25,function(m){return pill(m[SK],m,SK);});
