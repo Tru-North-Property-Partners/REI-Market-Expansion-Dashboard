@@ -1,0 +1,74 @@
+# Tru North REI Dashboard - monthly auto-fetch of the four direct-fetch data feeds
+#
+# WHAT THIS DOES
+# On a monthly schedule (and on demand) this workflow downloads the four feeds that can be
+# fetched directly (Zillow ZHVI, Zillow ZORI, CFPB serious delinquency, CFPB early-stage
+# delinquency), trims the large Zillow value file to the columns the dashboard uses, and commits
+# them into a data/ folder. It does NOT touch index.html and does NOT change any market scores.
+# The Redfin and Census feeds are private manual uploads and are left for you; see DATA_SOURCES.md.
+#
+# HOW TO ENABLE
+# 1. Commit this file at .github/workflows/refresh-feeds.yml.
+# 2. Repo Settings then Actions then General: allow workflows, and set Workflow permissions to
+#    Read and write so the job can commit the data files.
+# 3. Actions tab, pick "Refresh data feeds", click Run workflow once to test. Then it runs monthly.
+
+name: Refresh data feeds
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Write the ZHVI trim helper
+        run: |
+          cat > trim_zhvi.py <<'PY'
+          import csv, os
+          src, dst = 'data/zhvi_city_full.csv', 'data/zhvi_city.csv'
+          keep = {'RegionName', 'State', 'CountyName'}
+          with open(src, newline='', encoding='utf-8') as f:
+              rows = list(csv.reader(f))
+          head = rows[0]
+          months = [i for i, h in enumerate(head) if len(h) == 10 and h[4] == '-' and h[7] == '-']
+          ids = [i for i, h in enumerate(head) if h in keep]
+          cols = ids + months[-3:]
+          with open(dst, 'w', newline='', encoding='utf-8') as f:
+              w = csv.writer(f)
+              for row in rows:
+                  w.writerow([row[i] if i < len(row) else '' for i in cols])
+          os.remove(src)
+          PY
+
+      - name: Download and trim the four direct-fetch feeds
+        run: |
+          mkdir -p data
+          curl -fsSL "https://files.zillowstatic.com/research/public_csvs/zhvi/City_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv" -o data/zhvi_city_full.csv
+          curl -fsSL "https://files.zillowstatic.com/research/public_csvs/zori/City_zori_uc_sfrcondomfr_sm_month.csv" -o data/zori_city.csv
+          curl -fsSL "https://gist.githubusercontent.com/raw/3c0553f5a9a86dab92c6695f4059caeb" -o data/cfpb_serious.csv
+          curl -fsSL "https://gist.githubusercontent.com/raw/4c605d6baff8844aa38e3634f02fb2f9" -o data/cfpb_early.csv
+          python3 trim_zhvi.py
+          rm -f trim_zhvi.py
+          date -u +"Feeds refreshed: %Y-%m-%d %H:%M UTC" > data/LAST_REFRESH.txt
+          ls -lh data
+
+      - name: Commit refreshed feeds
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "No feed changes this run."
+          else
+            git commit -m "Auto-refresh direct-fetch data feeds (Zillow + CFPB)"
+            git push
+          fi
